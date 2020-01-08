@@ -1,0 +1,128 @@
+/* test */
+
+.hgap-1 > *{
+    margin-right: 0.2rem;
+}
+
+.hgap-2 > *{
+    margin-right: 0.4rem;
+}
+
+.hgap-3 > *{
+    margin-right: 0.6rem;
+}
+
+.hgap-4 > *{
+    margin-right: 0.8rem;
+}
+
+.hgap-5 > *{
+    margin-right: 1.0rem;
+}
+.vgap-1 > *{
+    margin-bottom: 0.2rem;
+}
+
+.vgap-2 > *{
+    margin-bottom: 0.4rem;
+}
+
+.vgap-3 > *{
+    margin-bottom: 0.6rem;
+}
+
+.vgap-4 > *{
+    margin-bottom: 0.8rem;
+}
+
+.vgap-5 > *{
+    margin-bottom: 1.0rem;
+}
+
+a.nav-item.nav-link.active {
+    color: #73a7bd;
+    border-bottom: 1px #73a7bd solid;
+}
+
+a.nav-item.nav-link {
+    color: white;
+}
+
+a.nav-link {
+    color: white;
+}
+
+.modal > .sd_dropdown {
+    z-index: 1100;
+}
+
+.sd_dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 1rem;
+    text-align: left;
+    list-style: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+}
+
+.sd_dropdown_item {
+    margin: 0.25rem;
+    padding: 0.25rem;
+    cursor: pointer;
+}
+
+.sd_dropdown_item:hover, .sd_selected {
+    /* darken */
+    box-shadow:inset 0 0 0 99999px rgba(0,0,0,0.2);
+}
+
+div.kf-multiple-edit,
+div.kf-single-edit {
+    height: auto;
+}
+.kf-multiple-edit-input,
+.kf-single-edit-input{
+    margin: 0;
+    padding: 0;
+    width: 0;
+    border:none;
+}
+
+.form-control .kf-multiple-edit-input:focus,
+.form-control .kf-single-edit-input:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    width: 8rem;
+    margin-left: 0.25rem;
+    border-radius: 0.20rem;
+    border-style: dashed;
+    border-width: 1px;
+}
+
+.kf-multiple-edit .sd_dropdown_item {
+    min-width: 24rem;
+}
+
+/* multi value badge fields */
+.badge.badge-multi-value {
+    font-size: 90%;
+    font-weight: 400;
+    background-color: #17a2b8 ; /* bg-info */
+    color: white ; /* text-white */
+    margin-right: 0.25rem !important;
+}
+
+/** Highligh selected tags/valueset editor*/
+.form-control.list-group-item.selected {
+    color: #8DFF54;
+    background-color: #117a8b;
+}
