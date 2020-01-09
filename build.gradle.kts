@@ -1,5 +1,5 @@
 plugins {
-    kotlin("js") version ("1.3.61")
+    kotlin("js")
 }
 
 group = "dk.rheasoft"
