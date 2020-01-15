@@ -84,6 +84,13 @@ open class NavigationElement(val name: String) {
         })
     }
 
+    fun componentDynamicAll(name: String, setup: NavigationSetupOnNavigateTo) {
+        val dynamicElement = object : NavigationElement(name) {
+            override fun dynamicMatch(path: String) = true
+        }
+        dynamicElement.setupOnNavigateTo = setup
+        add(dynamicElement)
+    }
 
     fun remove(elementName: String) = childMap.remove(elementName)
     fun remove(element: NavigationElement) = remove(element.name)
@@ -106,6 +113,7 @@ open class NavigationElement(val name: String) {
                 // Look for dynamic match
                 children.forEach {
                     if (it.dynamicMatch(path.head)) {
+                        it.navigateTo(path)
                     }
                 }
             }

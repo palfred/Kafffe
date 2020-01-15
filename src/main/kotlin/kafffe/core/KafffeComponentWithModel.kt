@@ -19,7 +19,6 @@ open class KafffeComponentWithModel<T : Any?>(model: Model<T>) : KafffeComponent
 
     override fun detach() {
         super.detach()
-        // will this work - or do we need to save the "change listener" in a val ??
         model.listeners.remove(onModelChanged)
     }
 

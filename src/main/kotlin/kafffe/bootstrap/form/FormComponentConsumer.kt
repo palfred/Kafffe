@@ -41,6 +41,10 @@ interface FormComponentConsumer<T : Any, F : Any> {
         return FormGroupInputString(property.name, labelStrategy.label(property.name), model.property(property)).also { addChild(it) }
     }
 
+    fun inputNum(idInput: String, labelModel: Model<String>, valueModel: Model<Int>): FormGroupInputInt {
+        return FormGroupInputInt(idInput, labelModel, valueModel).also { addChild(it) }
+    }
+
     /**
      * Property based
      */
