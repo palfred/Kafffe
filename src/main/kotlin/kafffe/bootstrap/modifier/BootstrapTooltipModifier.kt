@@ -19,7 +19,7 @@ class BootstrapTooltipModifier(val model: Model<String>) : HtmlElementModifier {
 
     companion object {
         fun remove() {
-            bsJquery(".tooltip").remove();
+            bsJquery("[data-toggle='tooltip']").remove();
         }
     }
 }
