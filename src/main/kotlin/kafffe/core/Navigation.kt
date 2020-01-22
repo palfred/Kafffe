@@ -62,8 +62,9 @@ open class NavigationElement(val name: String) {
 
     var parent: NavigationElement? = null
     var componentConsumer: ComponentConsumer? = null
+
     /**
-     * May construct compoonet, create sub navigation and/or set new ComponentConsumer ( = container)
+     * May construct component, create sub navigation and/or set new ComponentConsumer ( = container)
      */
     var setupOnNavigateTo: NavigationSetupOnNavigateTo? = null
 
@@ -123,7 +124,6 @@ open class NavigationElement(val name: String) {
     open fun beforeNavigateToChild(path: NavigationPath): KafffeComponent? {
         val setup = setupOnNavigateTo
         if (setup != null) {
-            @Suppress("UNUSED_EXPRESSION")
             val comp = setup(path)
             componentReceiver()?.let {
                 if (comp != null) {

@@ -10,7 +10,11 @@ open class KafffeComponentWithModel<T : Any?>(model: Model<T>) : KafffeComponent
             onModelChanged()
         }
 
-    val onModelChanged = ModelChangeListener(::rerender)
+    val onModelChanged = ModelChangeListener(::modelChanged)
+
+    open fun modelChanged() {
+        rerender()
+    }
 
     override fun attach() {
         super.attach()
