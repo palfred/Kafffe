@@ -198,7 +198,6 @@ open class KafffeComponent {
     fun noRerender(block: KafffeComponent.() -> Unit) {
         try {
             renderingEnabled = false
-            @Suppress("UNUSED_EXPRESSION")
             block()
         } finally {
             renderingEnabled = true
