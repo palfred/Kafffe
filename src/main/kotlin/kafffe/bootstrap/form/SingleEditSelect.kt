@@ -1,8 +1,10 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
-import kotlinx.html.InputType
-import org.w3c.dom.*
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.asList
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import kotlin.browser.window
@@ -15,8 +17,8 @@ import kotlin.reflect.KProperty1
  * An input field will open on click or focus, and a dropdown will open with potential matches, up and down arrow keys will move through current choices and enter will select the current one.
  * Code is based on FormGroupSingleEditSelectString
  */
-abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>, val choiceModel: Model<List<T>>)
-    : KafffeComponentWithModel<T?>(valueModel), FormValueProvider {
+abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>, val choiceModel: Model<List<T>>) :
+    KafffeComponentWithModel<T?>(valueModel), FormValueProvider {
 
     val changeListeners = mutableListOf<ChangeListenerWithValue<SingleEditSelect<T>, T?>>()
 
@@ -41,19 +43,22 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
     }
 
     private inner class BadgeComponent() : KafffeComponent() {
-        override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut {
-            return a {
+        override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut =
+            span {
                 addClass(valueCssClasses(currentChoice))
-                text(display(currentChoice))
+                choiceRender(currentChoice)
                 modifiersValue.forEach { mv -> mv(currentChoice).modify(element!!) }
             }
-        }
+    }
+
+    protected open fun <H : HTMLElement> KafffeHtml<H>.choiceRender(choice: T?) {
+        text(display(choice))
     }
 
     private var badge: BadgeComponent = BadgeComponent()
-    private var formControl: KafffeHtml<HTMLDivElement>? = null
     private var inputControl: KafffeHtml<HTMLInputElement>? = null
     private var dropdown: KafffeHtml<HTMLDivElement>? = null
+
     private var haveFocus = false
         get() = field
         set(value) {
@@ -76,10 +81,11 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
             addClass("form-control kf-single-edit")
             renderInput()
             add(badge.html)
-            onClick {
-                inputControl?.element?.focus()
+            withElement {
+                onclick = {
+                    focusClaim()
+                }
             }
-            formControl = this
         }
 
     /**
@@ -96,18 +102,22 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
                 with(style) {
                     display = "inline-block"
                     position = "relative"
+                    width = "1%"
                 }
             }
+            val container = this.element!!
             inputControl = input {
                 addClass("kf-single-edit-input ml-1")
                 withElement {
                     type = "text"
                     onfocus = {
+                        container.style.width = "100%"
                         haveFocus = true
                         it
                     }
                     onblur = {
                         haveFocus = false
+                        container.style.width = "1%"
                         window.setTimeout({
                             hideDropdown();
                         }, 300)
@@ -121,6 +131,7 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
             }
             dropdown = div {
                 addClass("sd_dropdown bg-light")
+                withElement { style.width = "100%" }
             }
         }
     }
@@ -204,7 +215,7 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
         for (match in matches) {
             htmlConsumer.div {
                 addClass("sd_dropdown_item")
-                text(display(match))
+                choiceRender(match)
                 withElement {
                     onclick = { evt: MouseEvent ->
                         updateChoice(match)
@@ -231,7 +242,7 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
 }
 
 class SingleEditSelectString(idInput: String, valueModel: Model<String?>, choiceModel: Model<List<String>>) :
-        SingleEditSelect<String>(idInput, valueModel, choiceModel) {
+    SingleEditSelect<String>(idInput, valueModel, choiceModel) {
     override fun display(choice: String?) = choice ?: ""
 }
 
