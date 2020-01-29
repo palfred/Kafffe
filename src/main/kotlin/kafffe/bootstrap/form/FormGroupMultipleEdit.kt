@@ -2,11 +2,13 @@ package kafffe.bootstrap.form
 
 import kafffe.core.KafffeHtml
 import kafffe.core.Model
+import kafffe.core.property
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.window
+import kotlin.reflect.KProperty1
 
 /**
  * Holds an editor thats allows editing of multiple string values (list og String)
@@ -185,4 +187,11 @@ open class FormGroupMultipleEdit(idInput: String, labelModel: Model<String>, val
 // DSL function for form component consumer DSL
 fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>): FormGroupMultipleEdit {
     return FormGroupMultipleEdit(idInput, labelModel, valueModel).also { addChild(it) }
+}
+
+/**
+ * Property based
+ */
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(property: KProperty1<T, List<String>>): FormGroupMultipleEdit {
+    return FormGroupMultipleEdit(property.name, labelStrategy.label(property.name), model.property(property)).also { addChild(it) }
 }
