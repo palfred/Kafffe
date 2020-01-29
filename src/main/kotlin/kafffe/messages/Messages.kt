@@ -54,10 +54,14 @@ interface Messages {
             hour = "2-digit"
             minute = "2-digit"
         }
+        val timeOptions = dateLocaleOptions {
+            hour = "2-digit"
+            minute = "2-digit"
+        }
 
         fun Date.formatDateTime() = toLocaleString(get().locale, dateTimeOptions)
         fun Date.formatDate() = toLocaleDateString(get().locale, dateOptions)
-        fun Date.formatTime() = toLocaleTimeString(get().locale)
+        fun Date.formatTime() = toLocaleTimeString(get().locale, timeOptions)
     }
 
     val language: String
