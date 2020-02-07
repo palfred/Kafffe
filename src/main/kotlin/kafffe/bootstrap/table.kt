@@ -6,6 +6,7 @@ import org.w3c.dom.HTMLTableCellElement
 import org.w3c.dom.get
 
 class BootstrapTableColumn<Data : Any>(val title: Model<String>) {
+    var rowClick: Boolean = true
     var headerCell: (title: Model<String>) -> KafffeComponent = ::Label
     var contentCell: (row: Data, cell: HTMLTableCellElement) -> KafffeComponent = { _, _ -> Label("content goes here") }
 
@@ -96,11 +97,13 @@ class BootstrapTable<Data : Any>(data: Model<List<Data>>) : KafffeComponentWithM
                 tbody {
                     for (row in data) {
                         tr {
-                            withElement {
-                                onclick = { rowClickHandler(row) }
-                            }
                             for (col in columns) {
                                 td {
+                                    if (col.rowClick) {
+                                        withElement {
+                                            onclick = { rowClickHandler(row) }
+                                        }
+                                    }
                                     val contentCell = col.contentCell(row, this.element!!)
                                     addCell(contentCell)
                                     add(contentCell.html)
