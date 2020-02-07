@@ -35,10 +35,12 @@ open class FormDialog<T : Any>(val title: Model<String>, formModel: Model<T>) : 
             size = this@FormDialog.size
             attach()
         }
+        super.attachChildrenRecursive()
     }
 
     override fun detach() {
         modal.detach()
+        super.detachChildrenRecursive()
     }
 
 }
