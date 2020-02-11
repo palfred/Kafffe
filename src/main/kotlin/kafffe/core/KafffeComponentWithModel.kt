@@ -11,9 +11,20 @@ open class KafffeComponentWithModel<T : Any?>(model: Model<T>) : KafffeComponent
         }
 
     val onModelChanged = ModelChangeListener(::modelChanged)
+    /**
+     * Behavior on model changed if modelChanged not overridden.
+     * @see #modelChangedNoop default
+     * @see #modelChangedRerender
+     * @see #modelChangedRerenderRecursive
+     */
+    var modelChangedStandardBehavior: () -> Unit = {}
+
+    fun setModelChangedRerender() { modelChangedStandardBehavior = ::rerender }
+    fun setModelChangedRerenderRecursive() { modelChangedStandardBehavior = ::rerenderRecursive }
+    fun setModelChangedNoop() { modelChangedStandardBehavior = {} }
 
     open fun modelChanged() {
-        rerender()
+        modelChangedStandardBehavior()
     }
 
     override fun attach() {

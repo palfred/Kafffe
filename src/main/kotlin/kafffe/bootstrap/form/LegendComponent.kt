@@ -3,6 +3,10 @@ package kafffe.bootstrap.form
 import kafffe.core.*
 
 class LegendComponent(textModel: Model<String>) : KafffeComponentWithModel<String>(textModel) {
+    init {
+        setModelChangedRerender()
+    }
+
     /**
      * Overwrite bootstrap 100% width
      */

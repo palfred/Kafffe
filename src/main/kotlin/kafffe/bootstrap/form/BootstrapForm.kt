@@ -1,12 +1,15 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLFormElement
 import org.w3c.dom.events.Event
 import kotlin.dom.addClass
 
 open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>(model), FormComponentConsumer<T, T> {
+    init {
+        setModelChangedNoop()
+    }
+
     override val form = this
 
     var inline: Boolean by rerenderOnChange(false)
@@ -49,18 +52,18 @@ open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>
     var onCancelClick: () -> Unit = {}
 
     override fun KafffeHtmlBase.kafffeHtml() =
-            form {
-                withElement {
-                    onsubmit = this@BootstrapForm::onSubmit
-                    noValidate = true // Disable browserdefault
-                    addClass("needs-validation")
-                    if (inline) {
-                        addClass("form-inline")
-                    }
-                }
-                for (child in children) {
-                    add(child.html)
+        form {
+            withElement {
+                onsubmit = this@BootstrapForm::onSubmit
+                noValidate = true // Disable browserdefault
+                addClass("needs-validation")
+                if (inline) {
+                    addClass("form-inline")
                 }
             }
+            for (child in children) {
+                add(child.html)
+            }
+        }
 
 }

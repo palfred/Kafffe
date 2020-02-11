@@ -27,6 +27,9 @@ enum class BootstrapTableStyles(val cssClass: String) {
 
 
 class BootstrapTable<Data : Any>(data: Model<List<Data>>) : KafffeComponentWithModel<List<Data>>(data) {
+    init {
+        setModelChangedRerender()
+    }
     val columns = mutableListOf<BootstrapTableColumn<Data>>()
     val modifiersHeader = mutableListOf<HtmlElementModifier>()
     val modifiersBody = mutableListOf<HtmlElementModifier>()
