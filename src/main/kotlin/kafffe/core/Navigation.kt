@@ -48,12 +48,9 @@ interface NavigationTarget {
 }
 
 
-/**
- * May construct component, create sub navigation and/or set new ComponentConsumer ( = container)
- */
-typealias NavigationSetupOnNavigateTo = NavigationElement.(path: NavigationPath) -> KafffeComponent?
-
 typealias ComponentConsumer = (KafffeComponent) -> Unit
+typealias NavigateTo = NavigationElement.(path: NavigationPath) -> Unit
+typealias NavigateToComponent = NavigationElement.(path: NavigationPath) -> KafffeComponent
 
 open class NavigationElement(val name: String) {
     companion object {
@@ -61,12 +58,13 @@ open class NavigationElement(val name: String) {
     }
 
     var parent: NavigationElement? = null
-    var componentConsumer: ComponentConsumer? = null
+    var componentNavigator: ComponentConsumer? = null
 
     /**
-     * May construct component, create sub navigation and/or set new ComponentConsumer ( = container)
+     * Called on navigation to. May construct sub navigation or navigation to component.
+     * @see #consumeComponent
      */
-    var setupOnNavigateTo: NavigationSetupOnNavigateTo? = null
+    var onNavigateTo: NavigateTo = {}
 
     private val childMap = mutableMapOf<String, NavigationElement>()
     val children get() = childMap.values
@@ -79,19 +77,36 @@ open class NavigationElement(val name: String) {
 
     fun sub(name: String, block: NavigationElement.() -> Unit = {}) = add(NavigationElement(name), block)
 
-    fun component(name: String, setup: NavigationSetupOnNavigateTo) {
-        add(NavigationElement(name).apply {
-            setupOnNavigateTo = setup
-        })
-    }
-
-    fun componentDynamicAll(name: String, setup: NavigationSetupOnNavigateTo) {
+    fun dynamicAll(name: String, navigation: NavigateTo) {
         val dynamicElement = object : NavigationElement(name) {
             override fun dynamicMatch(path: String) = true
         }
-        dynamicElement.setupOnNavigateTo = setup
+        dynamicElement.onNavigateTo = navigation
         add(dynamicElement)
     }
+
+    fun component(name: String, navigation: NavigateToComponent) {
+        add(NavigationElement(name).apply {
+            onNavigateTo = componentNavigation(navigation)
+        })
+    }
+
+    // convert component navigation to simple navigation
+    private fun componentNavigation(navigation: NavigateToComponent): NavigationElement.(NavigationPath) -> Unit {
+        return { path: NavigationPath ->
+            val comp = navigation(path)
+            navigateToComponent(comp)
+        }
+    }
+
+    fun componentDynamicAll(name: String, navigation: NavigateToComponent) {
+        val dynamicElement = object : NavigationElement(name) {
+            override fun dynamicMatch(path: String) = true
+        }
+        dynamicElement.onNavigateTo = componentNavigation(navigation)
+        add(dynamicElement)
+    }
+
 
     fun remove(elementName: String) = childMap.remove(elementName)
     fun remove(element: NavigationElement) = remove(element.name)
@@ -121,33 +136,28 @@ open class NavigationElement(val name: String) {
         }
     }
 
-    open fun beforeNavigateToChild(path: NavigationPath): KafffeComponent? {
-        val setup = setupOnNavigateTo
-        if (setup != null) {
-            val comp = setup(path)
-            componentReceiver()?.let {
-                if (comp != null) {
-                    it(comp)
-                }
-            }
-            return comp;
-        }
-        return null;
+    open fun beforeNavigateToChild(path: NavigationPath) {
+        onNavigateTo(path)
     }
 
     val root: NavigationElement
         get() = if (parent == null) this else parent!!.root
 
-    private fun componentReceiver(): ComponentConsumer? = if (componentConsumer != null) componentConsumer else parent?.componentReceiver()
+    private fun componentConsumer(): ComponentConsumer? = if (componentNavigator != null) componentNavigator else parent?.componentConsumer()
+
+    /**
+     * "Navigation" to component
+     */
+    fun navigateToComponent(comp : KafffeComponent) = componentConsumer()?.let{it(comp)}
 }
 
 fun NavigationExampleSetup() {
     val container = KafffeComponent()
     NavigationElement.create("root") {
-        componentConsumer = { container.addChild(it) }
+        componentNavigator = { container.addChild(it) }
         component("about") { Label("About") }
         sub("customer") {
-            setupOnNavigateTo = {
+            onNavigateTo = {
                 Label("Customer DivContainer and Navigation")
                 // SETUP componentReceiver and sub Navigation in here in place of outside
             }

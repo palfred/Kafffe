@@ -9,7 +9,6 @@ import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.get
 import kotlin.browser.window
-import kotlin.js.Json
 
 fun initServices() {
     ServiceRegistry.register("msg_en", Messages_en())
@@ -56,7 +55,7 @@ fun addStuff() {
         }
         BootstrapRoot().apply {
             val container = BootstrapContainer.fluid()
-            rootNavigation.componentConsumer = { container.replaceContent(it) }
+            rootNavigation.componentNavigator = { container.replaceContent(it) }
             addChild(Nav.create(rootNavigation) {
                 addExpand(ResponsiveSize.md)
                 style = ColorStrength.dark

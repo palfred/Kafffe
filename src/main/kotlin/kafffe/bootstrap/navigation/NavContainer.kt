@@ -1,7 +1,6 @@
 package kafffe.bootstrap.navigation
 
 import kafffe.core.*
-import org.w3c.dom.HTMLElement
 import kotlin.dom.addClass
 
 open class NavContainer(val navigationTarget: NavigationElement) : NavElement() {
