@@ -1,11 +1,7 @@
 package kafffe.bootstrap.form
 
-import kafffe.core.HtmlElementModifier
-import kafffe.core.KafffeHtml
-import kafffe.core.Model
-import kafffe.core.property
+import kafffe.core.*
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.asList
 import org.w3c.dom.events.KeyboardEvent
@@ -20,8 +16,11 @@ import kotlin.reflect.KProperty1
  * left and right arrow keys will move insertion point in the current values.
  * Backspace will delete previous value if at start of input field and Delete will delete next value if at the end.
  */
-abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel: Model<String>, valueModel: Model<List<T>>, val choiceModel: Model<List<T>>)
-    : FormGroup<HTMLElement, List<T>>(idInput, labelModel, valueModel) {
+abstract class MultipleEditSelect<T : Any>(
+    override val htmlId: String,
+    valueModel: Model<List<T>>,
+    val choiceModel: Model<List<T>>
+) : KafffeComponentWithModel<List<T>>(valueModel), FormInput {
 
     var allowDuplicates = false
 
@@ -33,7 +32,7 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
     val modifiersValue = mutableListOf<(value: T) -> HtmlElementModifier>()
 
     private fun choicesToIndexes(values: List<T>, choices: List<T>): MutableList<Int> =
-            choices.mapIndexed { i, c -> if (c in values) i else -1 }.filter { it >= 0 }.toMutableList()
+        choices.mapIndexed { i, c -> if (c in values) i else -1 }.filter { it >= 0 }.toMutableList()
 
     private fun displayToChoice(displayValue: String): T? = choiceModel.data.find { display(it) == displayValue }
 
@@ -45,24 +44,24 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
     }
 
     override fun updateValueModel() {
-        valueModel.data = currentChoices()
+        model.data = currentChoices()
     }
 
     private var inputIx = 1000;
-    private var formControl: KafffeHtml<HTMLDivElement>? = null
-    private var inputControl: KafffeHtml<HTMLInputElement>? = null
-    private var dropdown: KafffeHtml<HTMLDivElement>? = null
+    private lateinit var formControl: KafffeHtml<HTMLDivElement>
+    private lateinit var inputControl: KafffeHtml<HTMLInputElement>
+    private lateinit var dropdown: KafffeHtml<HTMLDivElement>
     private var haveFocus: Boolean = false
 
-    override fun KafffeHtml<HTMLDivElement>.createInputElement(): HTMLElement {
+    override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut {
         formControl = div {
             addClass("form-control kf-multiple-edit")
             renderBadgesAndEdit()
             onClick {
-                inputControl?.element?.focus()
+                inputControl.element?.focus()
             }
         }
-        return formControl!!.element!!
+        return formControl
     }
 
 
@@ -133,7 +132,7 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
                         renderMatches()
                     }
                     if (haveFocus) {
-                        window.setTimeout({ inputControl?.element?.focus() }, 200);
+                        window.setTimeout({ inputControl.element?.focus() }, 200);
                     }
                 }
             }
@@ -144,15 +143,15 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
     }
 
     private fun hideDropdown() {
-        dropdown?.element?.style?.display = "none"
+        dropdown.element?.style?.display = "none"
     }
 
     private fun showDropdown() {
-        dropdown?.element?.style?.display = "block"
+        dropdown.element?.style?.display = "block"
     }
 
     private fun onkey(keyEvent: KeyboardEvent) {
-        if (inputControl?.element?.value?.isBlank() ?: false) {
+        if (inputControl.element?.value?.isBlank() ?: false) {
             when (keyEvent.key) {
                 "ArrowLeft" -> {
                     inputIx--
@@ -209,7 +208,7 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
         val matches = matches()
         if (index in 0 until matches.size) {
             // set and remove "sd_selected" class
-            dropdown?.element?.children?.asList()?.forEachIndexed { i, element ->
+            dropdown.element?.children?.asList()?.forEachIndexed { i, element ->
                 if (i == index) {
                     element.addClass("sd_selected")
                 } else {
@@ -220,13 +219,13 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
     }
 
     fun matches(): List<T> {
-        val txt = inputControl?.element?.value ?: ""
+        val txt = inputControl.element?.value ?: ""
         return if (txt.length > 0) {
             (
                     choiceModel.data.filter { display(it).startsWith(txt, ignoreCase = true) }
-                            .union(choiceModel.data.filter { display(it).contains(txt, ignoreCase = true) })
+                        .union(choiceModel.data.filter { display(it).contains(txt, ignoreCase = true) })
                     )
-                    .take(maxMatches).toList()
+                .take(maxMatches).toList()
         } else {
             choiceModel.data.take(maxMatches).toList()
         }
@@ -234,8 +233,8 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
 
     fun renderMatches() {
         selectIndex = -1
-        dropdown?.element?.innerHTML = ""
-        val htmlConsumer = KafffeHtml(dropdown?.element)
+        dropdown.element?.innerHTML = ""
+        val htmlConsumer = KafffeHtml(dropdown.element)
         val matches = matches()
 
         for (match in matches) {
@@ -271,30 +270,34 @@ abstract class FormGroupMultipleEditSelect<T : Any>(idInput: String, labelModel:
 
     abstract fun display(choice: T): String
 
-    // Internal string value commaseparated list of selected indexes. Obs not stable for changes in available choices
-    override fun valueFromString(strValue: String): List<T> = strValue.split(",").map { choiceModel.data[it.toInt()] }.toList()
-
-    override fun valueToString(value: List<T>): String = choicesToIndexes(value, choiceModel.data).joinToString(",")
-
+    override fun component(): KafffeComponent = this
+    override fun validate(): Boolean = true
+    override var validationMessageModel: Model<String> = Model.of("")
 }
 
-class FormGroupMultipleEditSelectString(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>, choiceModel: Model<List<String>>) :
-        FormGroupMultipleEditSelect<String>(idInput, labelModel, valueModel, choiceModel) {
-
+class FormGroupMultipleEditSelectString(
+    idInput: String,
+    valueModel: Model<List<String>>,
+    choiceModel: Model<List<String>>
+) : MultipleEditSelect<String>(idInput, valueModel, choiceModel) {
     override fun display(choice: String) = choice
 }
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any>
-        FormComponentConsumer<T, F>.editSelectMultiple(idInput: String,
-                                                       labelModel: Model<String>,
-                                                       valueModel: Model<List<String>>,
-                                                       choiceModel: Model<List<String>>): FormGroupMultipleEditSelectString {
-    return FormGroupMultipleEditSelectString(idInput, labelModel, valueModel, choiceModel).also { addChild(it) }
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectMultiple(
+    idInput: String,
+    labelModel: Model<String>,
+    valueModel: Model<List<String>>,
+    choiceModel: Model<List<String>>
+): FormGroupMultipleEditSelectString {
+    val input = FormGroupMultipleEditSelectString(idInput, valueModel, choiceModel)
+    val group = formGroupFactory(labelModel, input)
+    addChild(group)
+    return input
 }
 
-fun <T : Any, F : Any>
-        FormComponentConsumer<T, F>.editSelectMultiple(property: KProperty1<T, List<String>>,
-                                                       choiceModel: Model<List<String>>): FormGroupMultipleEditSelectString {
-    return editSelectMultiple(property.name, labelStrategy.label(property.name), model.property(property), choiceModel)
-}
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectMultiple(
+    property: KProperty1<T, List<String>>,
+    choiceModel: Model<List<String>>
+): FormGroupMultipleEditSelectString =
+    editSelectMultiple(property.name, labelStrategy.label(property.name), model.property(property), choiceModel)

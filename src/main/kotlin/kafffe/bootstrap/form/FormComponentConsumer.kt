@@ -25,45 +25,48 @@ interface FormComponentConsumer<T : Any, F : Any> {
      */
     var labelStrategy: LabelStrategy
 
+    var formGroupFactory: (labelModel: Model<String>, inputComp: FormInput) -> KafffeComponent
+
     /**
      * The model of the form or sub form that is used to construct submodels for input compoennts
      */
     abstract var model: Model<T>
 
-    fun input(idInput: String, labelModel: Model<String>, valueModel: Model<String>): FormGroupInput<String> {
-        return FormGroupInputString(idInput, labelModel, valueModel).also { addChild(it) }
+    fun input(idInput: String, labelModel: Model<String>, valueModel: Model<String>): InputString {
+        val input = InputString(idInput, valueModel)
+        val group = formGroupFactory(labelModel, input)
+        addChild(group)
+        return input
     }
 
     /**
      * Property based
      */
-    fun input(property: KProperty1<T, String>): FormGroupInputString {
-        return FormGroupInputString(property.name, labelStrategy.label(property.name), model.property(property)).also { addChild(it) }
-    }
+    fun input(property: KProperty1<T, String>): InputString =
+        input(property.name, labelStrategy.label(property.name), model.property(property))
 
-    fun inputNum(idInput: String, labelModel: Model<String>, valueModel: Model<Int>): FormGroupInputInt {
-        return FormGroupInputInt(idInput, labelModel, valueModel).also { addChild(it) }
+
+    fun inputNum(idInput: String, labelModel: Model<String>, valueModel: Model<Int>): InputInt {
+        val input = InputInt(idInput, valueModel)
+        val group = formGroupFactory(labelModel, input)
+        addChild(group)
+        return input
     }
 
     /**
      * Property based
      */
-    fun inputNum(property: KProperty1<T, Int>): FormGroupInputInt {
-        return FormGroupInputInt(property.name, labelStrategy.label(property.name), model.property(property)).also { addChild(it) }
-    }
+    fun inputNum(property: KProperty1<T, Int>): InputInt =
+        inputNum(property.name, labelStrategy.label(property.name), model.property(property))
 
-    fun readonly(idInput: String, labelModel: Model<String>, valueModel: Model<String>): FormGroupInput<String> {
-        return FormGroupInputString(idInput, labelModel, valueModel).also {
-            it.readOnly = true
-            addChild(it)
-        }
-    }
+    fun readonly(idInput: String, labelModel: Model<String>, valueModel: Model<String>): InputString =
+        input(idInput, labelModel, valueModel).apply { readOnly = true }
 
-    fun readonly(property: KProperty1<T, String>): FormGroupInput<String> =
-            readonly(property.name, labelStrategy.label(property.name), model.property(property))
+    fun readonly(property: KProperty1<T, String>): InputString =
+        readonly(property.name, labelStrategy.label(property.name), model.property(property))
 
-    fun readonly(labelModel: Model<String>, valueModel: Model<String>): FormGroupInput<String> =
-            readonly(labelModel.data, labelModel, valueModel)
+    fun readonly(labelModel: Model<String>, valueModel: Model<String>): InputString =
+        readonly(labelModel.data, labelModel, valueModel)
 
     fun submit(label: Model<String>): BootstrapButton {
         return BootstrapButton(label, {}).also {
@@ -100,26 +103,33 @@ interface FormComponentConsumer<T : Any, F : Any> {
         }
     }
 
-    fun button(labelKey: String, onClick: (source: BootstrapButton) -> Unit): BootstrapButton = button(labelStrategy.label(labelKey), onClick)
+    fun button(labelKey: String, onClick: (source: BootstrapButton) -> Unit): BootstrapButton =
+        button(labelStrategy.label(labelKey), onClick)
 
     // Layout
     fun row(block: FormLayout<T, T, F>.() -> Unit): FormLayout<T, T, F> = row(model, block)
 
-    fun <S : Any> row(subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> = FormLayout<S, T, F>(this, subModel).also {
-        it.modifiers.add(CssClassModifier("form-row"))
-        it.block()
-        addChild(it)
-    }
+    fun <S : Any> row(subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> =
+        FormLayout<S, T, F>(this, subModel).also {
+            it.modifiers.add(CssClassModifier("form-row"))
+            it.block()
+            addChild(it)
+        }
 
     fun group(block: FormLayout<T, T, F>.() -> Unit): FormLayout<T, T, F> = group(model, block)
 
-    fun <S : Any> group(subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> = FormLayout<S, T, F>(this, subModel).also {
-        it.modifiers.add(CssClassModifier("form-group"))
-        it.block()
-        addChild(it)
-    }
+    fun <S : Any> group(subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> =
+        FormLayout<S, T, F>(this, subModel).also {
+            it.modifiers.add(CssClassModifier("form-group"))
+            it.block()
+            addChild(it)
+        }
 
-    fun <S : Any> col1(width: Array<out ColWidth>, subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> = FormLayout<S, T, F>(this, subModel).also {
+    fun <S : Any> col1(
+        width: Array<out ColWidth>,
+        subModel: Model<S>,
+        block: FormLayout<S, T, F>.() -> Unit
+    ): FormLayout<S, T, F> = FormLayout<S, T, F>(this, subModel).also {
         with(it.modifiers) {
             for (w in width) {
                 add(w.cssClassModifer)
@@ -130,8 +140,14 @@ interface FormComponentConsumer<T : Any, F : Any> {
     }
 
 
-    fun <S : Any> col(vararg width: ColWidth, subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> = col1(width, subModel, block)
-    fun col(vararg width: ColWidth, block: FormLayout<T, T, F>.() -> Unit): FormLayout<T, T, F> = col1(width, model, block)
+    fun <S : Any> col(
+        vararg width: ColWidth,
+        subModel: Model<S>,
+        block: FormLayout<S, T, F>.() -> Unit
+    ): FormLayout<S, T, F> = col1(width, subModel, block)
+
+    fun col(vararg width: ColWidth, block: FormLayout<T, T, F>.() -> Unit): FormLayout<T, T, F> =
+        col1(width, model, block)
 
     fun legend(textModel: Model<String>) = LegendComponent(textModel).also { addChild(it) }
     fun legend(textKey: String) = legend(labelStrategy.label(textKey))

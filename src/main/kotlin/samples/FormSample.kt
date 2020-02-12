@@ -13,6 +13,9 @@ class FormSample : KafffeComponent() {
 
     val personModel = Model.of<Person>(Person("Jens", "Hansen", 45, "Second", listOf("Fourth", "Other")))
     val form = BootstrapForm<Person>(personModel).apply {
+        formGroupFactory = { labelModel, inputComp ->
+            BootstrapFormGroup(labelModel, inputComp).apply { useToolipValidationMessages = true }
+        }
         // We need some hgap because we do not apply whitespace "\n" between buttons.
         modifiers.add(CssClassModifier("hgap-2"))
         input("fn", Model.of("First Name"), personModel.property(Person::firstName)).apply {
@@ -86,11 +89,13 @@ class FormSample : KafffeComponent() {
                     }
                 }
 
-                val drop2 = FormGroupDropdownString("selId2", Model.of("Dropdown"), Model.of("Second"), choices)
+                val drop2 = DropdownString("selId2", Model.of("Second"), choices)
                 drop2.useCustom = false
-                addChild(drop2)
+                labelWrapperInput(Model.of("Custom"), drop2)
             }
         }
+
+        labelWrapperInput(Model.of("Custom validation"), CustomInput("custom", Model.of("")))
 
         submit("testIt").color = BasicColor.primary
         submit("showIt", ::alertSubmit).color = BasicColor.secondary
@@ -119,4 +124,18 @@ class FormSample : KafffeComponent() {
                     }
                 }
             }
+}
+
+class CustomInput(idInput: String, model: Model<String>) : InputString (idInput, model) {
+    init {
+        modifiers.add(HtmlElementModifier.create {
+            htmlInput.formNoValidate = true
+        })
+    }
+    override fun validate(): Boolean {
+        val valid = htmlInput.value.equals("Peter", ignoreCase = true)
+        htmlInput.applyInputValidCssClasses(valid)
+        return valid
+    }
+    override var validationMessageModel: Model<String> = Model.of("Custom message for field that needs to Peter")
 }

@@ -1,9 +1,11 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLFormElement
 import org.w3c.dom.events.Event
 import kotlin.dom.addClass
+import kotlin.dom.removeClass
 
 open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>(model), FormComponentConsumer<T, T> {
     init {
@@ -25,25 +27,46 @@ open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>
         }
     }
 
+    /**
+     * Updates value model by recursive visit of value providing children
+     */
+    fun updateValueModel() {
+        noRerender {
+            visitChildrenRecusive {
+                if (this is FormValueProvider) {
+                    updateValueModel()
+                }
+            }
+        }
+    }
+
+    /**
+     * Validates model by recursive visit of value providing children and checking HTML Form validity (HTML5 Form validity.
+     */
+    fun validate(): Boolean {
+        val form = (html as HTMLFormElement);
+        val htmlValidity = form.checkValidity()
+        var kafffeValidity = true
+        visitChildrenRecusive {
+            if (this is FormValidityProvider) {
+                if (!validate()) kafffeValidity = false
+            }
+        }
+        return htmlValidity && kafffeValidity
+    }
+
     fun processForm(onOk: () -> Unit, onError: () -> Unit = {}) {
         if (isRendered) {
             val form = (html as HTMLFormElement);
-            if (form.checkValidity()) {
-                noRerender {
-                    visitChildrenRecusive {
-                        if (this is FormValueProvider) {
-                            updateValueModel()
-                        }
-                    }
-                }
-
+            if (validate()) {
+                updateValueModel()
                 onOk()
             } else {
                 onError()
             }
-            form.addClass("was-validated")
         }
     }
+
 
     open fun onCancel() {
         onCancelClick()
@@ -56,7 +79,6 @@ open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>
             withElement {
                 onsubmit = this@BootstrapForm::onSubmit
                 noValidate = true // Disable browserdefault
-                addClass("needs-validation")
                 if (inline) {
                     addClass("form-inline")
                 }
@@ -66,4 +88,20 @@ open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>
             }
         }
 
+    override var formGroupFactory: (labelModel: Model<String>, inputComp: FormInput) -> KafffeComponent =
+        ::BootstrapFormGroup
+
+}
+
+/**
+ * Applies the bootstrap classes for custom marking valid on form-control input
+ */
+fun HTMLElement.applyInputValidCssClasses(valid: Boolean) {
+    if (valid) {
+        removeClass("is-invalid")
+        // element.addClass("is-valid") we not want to make the interface to noisy, so we not apply valid as default
+    } else {
+        addClass("is-invalid")
+        removeClass("is-valid")
+    }
 }

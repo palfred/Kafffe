@@ -17,8 +17,12 @@ import kotlin.reflect.KProperty1
  * An input field will open on click or focus, and a dropdown will open with potential matches, up and down arrow keys will move through current choices and enter will select the current one.
  * Code is based on FormGroupSingleEditSelectString
  */
-abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>, val choiceModel: Model<List<T>>) :
-    KafffeComponentWithModel<T?>(valueModel), FormValueProvider {
+abstract class SingleEditSelect<T : Any>(
+    override val htmlId: String,
+    valueModel: Model<T?>,
+    val choiceModel: Model<List<T>>
+) :
+    KafffeComponentWithModel<T?>(valueModel), FormInput {
 
     val changeListeners = mutableListOf<ChangeListenerWithValue<SingleEditSelect<T>, T?>>()
 
@@ -56,24 +60,24 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
     }
 
     private var badge: BadgeComponent = BadgeComponent()
-    private var inputControl: KafffeHtml<HTMLInputElement>? = null
-    private var dropdown: KafffeHtml<HTMLDivElement>? = null
+    private lateinit var inputControl: KafffeHtml<HTMLInputElement>
+    private lateinit var dropdown: KafffeHtml<HTMLDivElement>
 
     private var haveFocus = false
         get() = field
         set(value) {
             field = value
             if (value) {
-                inputControl?.element?.value = display(currentChoice)
+                inputControl.element?.value = display(currentChoice)
                 badge.html.style.display = "none"
             } else {
-                inputControl?.element?.value = ""
+                inputControl.element?.value = ""
                 badge.html.style.display = "inline-block"
             }
         }
 
     fun focusClaim() {
-        inputControl?.element?.focus()
+        inputControl.element?.focus()
     }
 
     override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut =
@@ -109,6 +113,7 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
             inputControl = input {
                 addClass("kf-single-edit-input ml-1")
                 withElement {
+                    id = htmlId
                     type = "text"
                     onfocus = {
                         container.style.width = "100%"
@@ -137,11 +142,11 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
     }
 
     private fun hideDropdown() {
-        dropdown?.element?.style?.display = "none"
+        dropdown.element?.style?.display = "none"
     }
 
     private fun showDropdown() {
-        dropdown?.element?.style?.display = "block"
+        dropdown.element?.style?.display = "block"
     }
 
     protected open fun onkey(keyEvent: KeyboardEvent) {
@@ -190,7 +195,7 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
     }
 
     fun matches(): List<T> {
-        val txt = inputControl?.element?.value ?: ""
+        val txt = inputControl.element?.value ?: ""
         return if (txt.length > 0) {
             matchesText(txt)
         } else {
@@ -208,8 +213,8 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
 
     fun renderMatches() {
         selectIndex = -1
-        dropdown?.element?.innerHTML = ""
-        val htmlConsumer = KafffeHtml(dropdown?.element)
+        dropdown.element?.innerHTML = ""
+        val htmlConsumer = KafffeHtml(dropdown.element)
         val matches = matches()
 
         for (match in matches) {
@@ -232,13 +237,17 @@ abstract class SingleEditSelect<T : Any>(idInput: String, valueModel: Model<T?>,
         currentChoice = newChoice
         badge.rerender()
         if (haveFocus) {
-            window.setTimeout({ inputControl?.element?.blur() /* how to focus next focusable element */ }, 200)
+            window.setTimeout({ inputControl.element?.blur() /* how to focus next focusable element */ }, 200)
         }
     }
 
     private fun isSelected(choice: T): Boolean = currentChoice == choice
 
     abstract fun display(choice: T?): String
+
+    override fun component(): KafffeComponent = this
+    override fun validate(): Boolean = true
+    override var validationMessageModel: Model<String> = Model.of("")
 }
 
 class SingleEditSelectString(idInput: String, valueModel: Model<String?>, choiceModel: Model<List<String>>) :
@@ -261,4 +270,23 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingleNoLabel(
     choiceModel: Model<List<String>>
 ): SingleEditSelectString {
     return editSelectSingle(property.name, model.property(property), choiceModel)
+}
+
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingle(
+    idInput: String,
+    labelModel: Model<String>,
+    valueModel: Model<String?>,
+    choiceModel: Model<List<String>>
+): SingleEditSelectString {
+    val input = SingleEditSelectString(idInput, valueModel, choiceModel)
+    val group = formGroupFactory(labelModel, input)
+    addChild(group)
+    return input
+}
+
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingle(
+    property: KProperty1<T, String?>,
+    choiceModel: Model<List<String>>
+): SingleEditSelectString {
+    return editSelectSingle(property.name, labelStrategy.label(property.name), model.property(property), choiceModel)
 }

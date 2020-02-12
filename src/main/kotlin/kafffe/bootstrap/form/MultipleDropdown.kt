@@ -1,27 +1,26 @@
 package kafffe.bootstrap.form
 
-import kafffe.core.HtmlElementModifier
-import kafffe.core.KafffeHtml
-import kafffe.core.Model
-import kafffe.core.property
+import kafffe.core.*
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
 import kotlin.reflect.KProperty1
 
 /**
  * Holds a HTML form element select
  */
-abstract class FormGroupMultipleDropdown<T : Any>(idInput: String, labelModel: Model<String>, valueModel: Model<List<T>>, val choiceModel: Model<List<T>>)
-    : FormGroup<HTMLElement, List<T>>(idInput, labelModel, valueModel) {
+abstract class MultipleDropdown<T : Any>(
+    override val htmlId: String,
+    valueModel: Model<List<T>>,
+    val choiceModel: Model<List<T>>
+) : KafffeComponentWithModel<List<T>>(valueModel), FormInput {
 
     val currentChoiceIndexes: MutableSet<Int> = choicesToIndexes(valueModel.data, choiceModel.data)
 
     private fun choicesToIndexes(values: List<T>, choices: List<T>): MutableSet<Int> =
-            choices.mapIndexed { i, c -> if (c in values) i else -1 }.filter { it >= 0 }.toMutableSet()
+        choices.mapIndexed { i, c -> if (c in values) i else -1 }.filter { it >= 0 }.toMutableSet()
 
     override fun updateValueModel() {
-        valueModel.data = currentChoices()
+        model.data = currentChoices()
     }
 
     /**
@@ -32,10 +31,13 @@ abstract class FormGroupMultipleDropdown<T : Any>(idInput: String, labelModel: M
     private var dropdownButton: KafffeHtml<HTMLButtonElement>? = null
     private var dropdownMenu: KafffeHtml<HTMLDivElement>? = null
 
-    override fun KafffeHtml<HTMLDivElement>.createInputElement(): HTMLElement {
+    override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut {
         val currentChoices = currentChoices()
         return div {
             addClass("dropdown")
+            withElement {
+                id = htmlId
+            }
             dropdownButton = button {
                 addClass("form-control dropdown-toggle")
                 withElement {
@@ -58,7 +60,7 @@ abstract class FormGroupMultipleDropdown<T : Any>(idInput: String, labelModel: M
                 }
                 renderDropdownChoices(currentChoices)
             }
-        }.element!!
+        }
     }
 
     private fun KafffeHtml<HTMLDivElement>.renderDropdownChoices(currentChoices: List<T>) {
@@ -131,31 +133,32 @@ abstract class FormGroupMultipleDropdown<T : Any>(idInput: String, labelModel: M
 
     abstract fun display(choice: T): String
 
-    // Internal string value commaseparated list of selected indexes. Obs not stable for changes in available choices
-    override fun valueFromString(strValue: String): List<T> = strValue.split(",").map { choiceModel.data[it.toInt()] }.toList()
-
-    override fun valueToString(value: List<T>): String = choicesToIndexes(value, choiceModel.data).joinToString(",")
-
+    override fun component(): KafffeComponent = this
+    override fun validate(): Boolean = true
+    override var validationMessageModel: Model<String> = Model.of("")
 }
 
-class FormGroupMultipleDropdownString(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>, choiceModel: Model<List<String>>) :
-        FormGroupMultipleDropdown<String>(idInput, labelModel, valueModel, choiceModel) {
-
+class MultipleDropdownString(idInput: String, valueModel: Model<List<String>>, choiceModel: Model<List<String>>) :
+    MultipleDropdown<String>(idInput, valueModel, choiceModel) {
     override fun display(choice: String) = choice
 }
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any>
-        FormComponentConsumer<T, F>.dropdownMultiple(idInput: String,
-                                                     labelModel: Model<String>,
-                                                     valueModel: Model<List<String>>,
-                                                     choiceModel: Model<List<String>>): FormGroupMultipleDropdownString {
-    return FormGroupMultipleDropdownString(idInput, labelModel, valueModel, choiceModel).also { addChild(it) }
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownMultiple(
+    idInput: String,
+    labelModel: Model<String>,
+    valueModel: Model<List<String>>,
+    choiceModel: Model<List<String>>
+): MultipleDropdownString {
+    val inp = MultipleDropdownString(idInput, valueModel, choiceModel)
+    val group = formGroupFactory(labelModel, inp)
+    addChild(group)
+    return inp
 }
 
 // Property based
-fun <T : Any, F : Any>
-        FormComponentConsumer<T, F>.dropdownMultiple(property: KProperty1<T, List<String>>,
-                                                     choiceModel: Model<List<String>>): FormGroupMultipleDropdownString {
-    return dropdownMultiple(property.name, labelStrategy.label(property.name), model.property(property), choiceModel)
-}
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownMultiple(
+    property: KProperty1<T, List<String>>,
+    choiceModel: Model<List<String>>
+): MultipleDropdownString =
+    dropdownMultiple(property.name, labelStrategy.label(property.name), model.property(property), choiceModel)

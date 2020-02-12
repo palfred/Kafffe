@@ -57,3 +57,8 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.labelWrapper(labelModel: Mode
     addChild(wrapper)
     return wrapper
 }
+
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.labelWrapperInput(labelModel: Model<String>, component: FormInput)  {
+    val wrapper = formGroupFactory(labelModel, component)
+    addChild(wrapper)
+}

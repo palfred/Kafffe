@@ -1,10 +1,7 @@
 package kafffe.bootstrap.form
 
-import kafffe.core.KafffeHtml
-import kafffe.core.Model
-import kafffe.core.property
+import kafffe.core.*
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.window
@@ -17,8 +14,8 @@ import kotlin.reflect.KProperty1
  * if at start of a tekst it will move to an empty text between the current text and the previous (likewise for right arrow).
  * Backspace will delete previous value if at start of input field and Delete will delete next value if at the end.
  */
-open class FormGroupMultipleEdit(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>)
-    : FormGroup<HTMLElement, List<String>>(idInput, labelModel, valueModel) {
+open class MultipleEdit(override val htmlId: String, valueModel: Model<List<String>>)
+    : KafffeComponentWithModel<List<String>>(valueModel), FormInput {
 
     private val currentValues: MutableList<String> = valueModel.data.toMutableList()
 
@@ -27,23 +24,23 @@ open class FormGroupMultipleEdit(idInput: String, labelModel: Model<String>, val
     // the value that was at current input index when starting the input field
     private var inputIx = 1000;
 
-    private var formControl: KafffeHtml<HTMLDivElement>? = null
-    private var inputControl: KafffeHtml<HTMLInputElement>? = null
+    private lateinit var formControl: KafffeHtml<HTMLDivElement>
+    private lateinit var inputControl: KafffeHtml<HTMLInputElement>
     private var haveFocus: Boolean = false
 
     override fun updateValueModel() {
-        valueModel.data = currentValues.toList()
+        model.data = currentValues.toList()
     }
 
-    override fun KafffeHtml<HTMLDivElement>.createInputElement(): HTMLElement {
+    override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut {
         formControl = div {
             addClass("form-control kf-multiple-edit")
             renderBadges()
             onClick {
-                inputControl?.element?.focus()
+                inputControl.element?.focus()
             }
         }
-        return formControl!!.element!!
+        return formControl
     }
 
 
@@ -98,7 +95,7 @@ open class FormGroupMultipleEdit(idInput: String, labelModel: Model<String>, val
                     }
                     onkeydown = { onkey(it) }
                     if (haveFocus) {
-                        window.setTimeout({ inputControl?.element?.focus() }, 200);
+                        window.setTimeout({ inputControl.element?.focus() }, 200);
                     }
                 }
             }
@@ -106,7 +103,7 @@ open class FormGroupMultipleEdit(idInput: String, labelModel: Model<String>, val
     }
 
     private fun onkey(keyEvent: KeyboardEvent) {
-        inputControl?.element?.let { input ->
+        inputControl.element?.let { input ->
             val atStart = input.selectionStart == 0
             val atEnd = input.selectionStart == input.value.length
             val hasValue = input.value.isNotBlank()
@@ -176,22 +173,24 @@ open class FormGroupMultipleEdit(idInput: String, labelModel: Model<String>, val
         }
     }
 
-    // Internal string value ¤ list of the values.
-    override fun valueFromString(strValue: String): List<String> = strValue.split("¤").toList()
-
-    override fun valueToString(value: List<String>): String = value.joinToString("¤")
+    override fun component(): KafffeComponent = this
+    override fun validate(): Boolean = true
+    override var validationMessageModel: Model<String> = Model.of("")
 
 }
 
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>): FormGroupMultipleEdit {
-    return FormGroupMultipleEdit(idInput, labelModel, valueModel).also { addChild(it) }
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>): MultipleEdit {
+    val input = MultipleEdit(idInput, valueModel)
+    val group = formGroupFactory(labelModel, input)
+    addChild(group)
+    return input
 }
 
 /**
  * Property based
  */
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(property: KProperty1<T, List<String>>): FormGroupMultipleEdit {
-    return FormGroupMultipleEdit(property.name, labelStrategy.label(property.name), model.property(property)).also { addChild(it) }
+fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(property: KProperty1<T, List<String>>): MultipleEdit {
+    return editMultiple(property.name, labelStrategy.label(property.name), model.property(property))
 }
