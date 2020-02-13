@@ -1,6 +1,9 @@
 package kafffe.bootstrap.form
 
-import kafffe.core.*
+import kafffe.core.KafffeComponentWithModel
+import kafffe.core.KafffeHtmlBase
+import kafffe.core.Model
+import kafffe.core.modifyStyle
 
 class LegendComponent(textModel: Model<String>) : KafffeComponentWithModel<String>(textModel) {
     init {

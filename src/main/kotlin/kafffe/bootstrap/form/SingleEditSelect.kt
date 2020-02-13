@@ -279,7 +279,7 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingle(
     choiceModel: Model<List<String>>
 ): SingleEditSelectString {
     val input = SingleEditSelectString(idInput, valueModel, choiceModel)
-    val group = formGroupFactory(labelModel, input)
+    val group = inputDecorator(labelModel, input)
     addChild(group)
     return input
 }

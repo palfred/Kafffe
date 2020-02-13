@@ -25,16 +25,34 @@ interface FormComponentConsumer<T : Any, F : Any> {
      */
     var labelStrategy: LabelStrategy
 
-    var formGroupFactory: (labelModel: Model<String>, inputComp: FormInput) -> KafffeComponent
+    /**
+     * Decoration of inputs. Default wraps with formgroup with label and validation feedback.
+     */
+    var inputDecorator: (labelModel: Model<String>, inputComp: FormInput) -> KafffeComponent
 
     /**
      * The model of the form or sub form that is used to construct submodels for input compoennts
      */
     abstract var model: Model<T>
 
+    /**
+     * Applies inputDecorator to input component and adds.
+     */
+    fun decorator(labelModel: Model<String>, component: FormInput)  {
+        val wrapper = inputDecorator(labelModel, component)
+        addChild(wrapper)
+    }
+
+    /**
+     * Applies inputDecorator to input component and adds.
+     */
+    fun decoratorComponent(labelModel: Model<String>, component: KafffeComponent) {
+        decorator(labelModel, KaffeeComponentAsInputAdapter(component))
+    }
+
     fun input(idInput: String, labelModel: Model<String>, valueModel: Model<String>): InputString {
         val input = InputString(idInput, valueModel)
-        val group = formGroupFactory(labelModel, input)
+        val group = inputDecorator(labelModel, input)
         addChild(group)
         return input
     }
@@ -48,7 +66,7 @@ interface FormComponentConsumer<T : Any, F : Any> {
 
     fun inputNum(idInput: String, labelModel: Model<String>, valueModel: Model<Int>): InputInt {
         val input = InputInt(idInput, valueModel)
-        val group = formGroupFactory(labelModel, input)
+        val group = inputDecorator(labelModel, input)
         addChild(group)
         return input
     }

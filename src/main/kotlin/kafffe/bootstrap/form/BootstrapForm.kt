@@ -1,5 +1,6 @@
 package kafffe.bootstrap.form
 
+import kafffe.bootstrap.form.FormInputGroupDecorator.Companion.feedback
 import kafffe.core.*
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLFormElement
@@ -88,8 +89,8 @@ open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>
             }
         }
 
-    override var formGroupFactory: (labelModel: Model<String>, inputComp: FormInput) -> KafffeComponent =
-        ::BootstrapFormGroup
+    override var inputDecorator: (labelModel: Model<String>, inputComp: FormInput) -> KafffeComponent =
+        FormInputGroupDecorator.Companion::feedback
 
 }
 

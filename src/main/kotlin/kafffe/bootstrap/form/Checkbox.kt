@@ -1,9 +1,11 @@
 package kafffe.bootstrap.form
 
-import kafffe.core.*
+import kafffe.core.KafffeComponent
+import kafffe.core.KafffeComponentWithModel
+import kafffe.core.KafffeHtmlBase
+import kafffe.core.Model
 import kafffe.messages.Messages
 import org.w3c.dom.HTMLInputElement
-import kotlin.reflect.KProperty1
 
 /**
  * Holds a HTML form element checkbox
@@ -43,10 +45,10 @@ class Checkbox(val idInput: String, valueModel: Model<Boolean>, val labelModel: 
     override val htmlId: String get() = idInput
     override fun component(): KafffeComponent = this
     override fun updateValueModel() {
-        model.data = htmlInput.checked ?: false
+        model.data = htmlInput.checked
     }
 
-    override fun validate(): Boolean = htmlInput.checkValidity() ?: true
+    override fun validate(): Boolean = htmlInput.checkValidity()
     override var validationMessageModel: Model<String> =
         Model.ofGet { if (required) Messages.get().validation_required else htmlInput.validationMessage }
 }

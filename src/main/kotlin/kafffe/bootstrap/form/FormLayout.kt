@@ -1,11 +1,13 @@
 package kafffe.bootstrap.form
 
-import kafffe.core.*
+import kafffe.core.KafffeComponentWithModel
+import kafffe.core.KafffeHtmlBase
+import kafffe.core.Model
 
 open class FormLayout<T : Any, ContainerT : Any, F : Any>(val container: FormComponentConsumer<ContainerT, F>, model: Model<T>) : KafffeComponentWithModel<T>(model), FormComponentConsumer<T, F> {
     override val form = container.form
     override var labelStrategy = container.labelStrategy
-    override var formGroupFactory = container.formGroupFactory
+    override var inputDecorator = container.inputDecorator
 
     private var useFieldset: Boolean = false
     fun useFieldset() { useFieldset = true }

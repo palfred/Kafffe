@@ -183,7 +183,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
 // DSL function for form component consumer DSL
 fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>): MultipleEdit {
     val input = MultipleEdit(idInput, valueModel)
-    val group = formGroupFactory(labelModel, input)
+    val group = inputDecorator(labelModel, input)
     addChild(group)
     return input
 }

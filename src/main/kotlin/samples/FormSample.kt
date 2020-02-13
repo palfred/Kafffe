@@ -13,8 +13,8 @@ class FormSample : KafffeComponent() {
 
     val personModel = Model.of<Person>(Person("Jens", "Hansen", 45, "Second", listOf("Fourth", "Other")))
     val form = BootstrapForm<Person>(personModel).apply {
-        formGroupFactory = { labelModel, inputComp ->
-            BootstrapFormGroup(labelModel, inputComp).apply { useToolipValidationMessages = true }
+        inputDecorator = { labelModel, inputComp ->
+            FormInputGroupDecorator(labelModel, inputComp).apply { useToolipValidationMessages = true }
         }
         // We need some hgap because we do not apply whitespace "\n" between buttons.
         modifiers.add(CssClassModifier("hgap-2"))
@@ -91,11 +91,11 @@ class FormSample : KafffeComponent() {
 
                 val drop2 = DropdownString("selId2", Model.of("Second"), choices)
                 drop2.useCustom = false
-                labelWrapperInput(Model.of("Custom"), drop2)
+                inputDecorator(Model.of("Custom"), drop2)
             }
         }
 
-        labelWrapperInput(Model.of("Custom validation"), CustomInput("custom", Model.of("")))
+        inputDecorator(Model.of("Custom validation"), CustomInput("custom", Model.of("")))
 
         submit("testIt").color = BasicColor.primary
         submit("showIt", ::alertSubmit).color = BasicColor.secondary

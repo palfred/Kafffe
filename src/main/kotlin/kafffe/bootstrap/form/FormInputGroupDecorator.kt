@@ -7,7 +7,7 @@ import org.w3c.dom.HTMLElement
 /**
  * Bootstrap form group that wrap input componenten with label and validation message
  **/
-class BootstrapFormGroup(val labelModel: Model<String>, val inputComponent: FormInput) : KafffeComponent() {
+class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent: FormInput) : KafffeComponent() {
     val modifiersLabel = mutableListOf<HtmlElementModifier>()
     val validationMessageModel: Model<String> get() = inputComponent.validationMessageModel
     val idInput: String get() = inputComponent.htmlId
@@ -66,6 +66,14 @@ class BootstrapFormGroup(val labelModel: Model<String>, val inputComponent: Form
                 }
             }
         }
+    }
+
+    companion object {
+        fun feedback(labelModel: Model<String>, inputComponent: FormInput) =
+            FormInputGroupDecorator(labelModel, inputComponent)
+
+        fun tooltip(labelModel: Model<String>, inputComponent: FormInput) =
+            FormInputGroupDecorator(labelModel, inputComponent).apply { useToolipValidationMessages = true }
     }
 }
 
