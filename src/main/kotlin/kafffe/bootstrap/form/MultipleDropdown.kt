@@ -144,7 +144,7 @@ class MultipleDropdownString(idInput: String, valueModel: Model<List<String>>, c
 }
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownMultiple(
+fun <T : Any> FormComponentConsumer<T>.dropdownMultiple(
     idInput: String,
     labelModel: Model<String>,
     valueModel: Model<List<String>>,
@@ -157,7 +157,7 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownMultiple(
 }
 
 // Property based
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownMultiple(
+fun <T : Any> FormComponentConsumer<T>.dropdownMultiple(
     property: KProperty1<T, List<String>>,
     choiceModel: Model<List<String>>
 ): MultipleDropdownString =

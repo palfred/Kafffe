@@ -9,11 +9,11 @@ import kotlin.reflect.KProperty1
  * Interface for form and form components containers like form layout and fieldsets- To be used to build child components.
  *
  */
-interface FormComponentConsumer<T : Any, F : Any> {
+interface FormComponentConsumer<T : Any> {
     /**
      * Reference to the form this is part of.
      */
-    val form: BootstrapForm<F>
+    val form: BootstrapForm<*>
 
     /**
      * Adds a child component to the hierarchy
@@ -125,19 +125,19 @@ interface FormComponentConsumer<T : Any, F : Any> {
         button(labelStrategy.label(labelKey), onClick)
 
     // Layout
-    fun row(block: FormLayout<T, T, F>.() -> Unit): FormLayout<T, T, F> = row(model, block)
+    fun row(block: FormLayout<T>.() -> Unit): FormLayout<T> = row(model, block)
 
-    fun <S : Any> row(subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> =
-        FormLayout<S, T, F>(this, subModel).also {
+    fun <S : Any> row(subModel: Model<S>, block: FormLayout<S>.() -> Unit): FormLayout<S> =
+        FormLayout<S>(this, subModel).also {
             it.modifiers.add(CssClassModifier("form-row"))
             it.block()
             addChild(it)
         }
 
-    fun group(block: FormLayout<T, T, F>.() -> Unit): FormLayout<T, T, F> = group(model, block)
+    fun group(block: FormLayout<T>.() -> Unit): FormLayout<T> = group(model, block)
 
-    fun <S : Any> group(subModel: Model<S>, block: FormLayout<S, T, F>.() -> Unit): FormLayout<S, T, F> =
-        FormLayout<S, T, F>(this, subModel).also {
+    fun <S : Any> group(subModel: Model<S>, block: FormLayout<S>.() -> Unit): FormLayout<S> =
+        FormLayout<S>(this, subModel).also {
             it.modifiers.add(CssClassModifier("form-group"))
             it.block()
             addChild(it)
@@ -146,8 +146,8 @@ interface FormComponentConsumer<T : Any, F : Any> {
     fun <S : Any> col1(
         width: Array<out ColWidth>,
         subModel: Model<S>,
-        block: FormLayout<S, T, F>.() -> Unit
-    ): FormLayout<S, T, F> = FormLayout<S, T, F>(this, subModel).also {
+        block: FormLayout<S>.() -> Unit
+    ): FormLayout<S> = FormLayout<S>(this, subModel).also {
         with(it.modifiers) {
             for (w in width) {
                 add(w.cssClassModifer)
@@ -161,10 +161,10 @@ interface FormComponentConsumer<T : Any, F : Any> {
     fun <S : Any> col(
         vararg width: ColWidth,
         subModel: Model<S>,
-        block: FormLayout<S, T, F>.() -> Unit
-    ): FormLayout<S, T, F> = col1(width, subModel, block)
+        block: FormLayout<S>.() -> Unit
+    ): FormLayout<S> = col1(width, subModel, block)
 
-    fun col(vararg width: ColWidth, block: FormLayout<T, T, F>.() -> Unit): FormLayout<T, T, F> =
+    fun col(vararg width: ColWidth, block: FormLayout<T>.() -> Unit): FormLayout<T> =
         col1(width, model, block)
 
     fun legend(textModel: Model<String>) = LegendComponent(textModel).also { addChild(it) }

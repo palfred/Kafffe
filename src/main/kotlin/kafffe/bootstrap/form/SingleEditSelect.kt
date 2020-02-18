@@ -184,7 +184,7 @@ abstract class SingleEditSelect<T : Any>(
         val matches = matches()
         if (index in 0 until matches.size) {
             // set and remove "sd_selected" class
-            dropdown?.element?.children?.asList()?.forEachIndexed { i, element ->
+            dropdown.element?.children?.asList()?.forEachIndexed { i, element ->
                 if (i == index) {
                     element.addClass("sd_selected")
                 } else {
@@ -256,8 +256,8 @@ class SingleEditSelectString(idInput: String, valueModel: Model<String?>, choice
 }
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any>
-        FormComponentConsumer<T, F>.editSelectSingle(
+fun <T : Any>
+        FormComponentConsumer<T>.editSelectSingle(
     idInput: String,
     valueModel: Model<String?>,
     choiceModel: Model<List<String>>
@@ -265,14 +265,14 @@ fun <T : Any, F : Any>
     return SingleEditSelectString(idInput, valueModel, choiceModel).also { addChild(it) }
 }
 
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingleNoLabel(
+fun <T : Any> FormComponentConsumer<T>.editSelectSingleNoLabel(
     property: KProperty1<T, String?>,
     choiceModel: Model<List<String>>
 ): SingleEditSelectString {
     return editSelectSingle(property.name, model.property(property), choiceModel)
 }
 
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingle(
+fun <T : Any> FormComponentConsumer<T>.editSelectSingle(
     idInput: String,
     labelModel: Model<String>,
     valueModel: Model<String?>,
@@ -284,7 +284,7 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingle(
     return input
 }
 
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectSingle(
+fun <T : Any> FormComponentConsumer<T>.editSelectSingle(
     property: KProperty1<T, String?>,
     choiceModel: Model<List<String>>
 ): SingleEditSelectString {

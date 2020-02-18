@@ -284,7 +284,7 @@ class FormGroupMultipleEditSelectString(
 }
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectMultiple(
+fun <T : Any> FormComponentConsumer<T>.editSelectMultiple(
     idInput: String,
     labelModel: Model<String>,
     valueModel: Model<List<String>>,
@@ -296,7 +296,7 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectMultiple(
     return input
 }
 
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editSelectMultiple(
+fun <T : Any> FormComponentConsumer<T>.editSelectMultiple(
     property: KProperty1<T, List<String>>,
     choiceModel: Model<List<String>>
 ): FormGroupMultipleEditSelectString =

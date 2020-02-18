@@ -5220,7 +5220,7 @@
 
           $$$1(this.element).trigger(this.constructor.Event.INSERTED);
           this._popper = new Popper(this.element, tip, {
-            placement: attachment,
+            placement: placement,
             modifiers: {
               offset: {
                 offset: this.config.offset

@@ -59,7 +59,7 @@ abstract class Dropdown<T : Any>(val idInput: String, valueModel: Model<T>, choi
 
     override val htmlId: String get() = idInput
     override fun component(): KafffeComponent = this
-    override fun validate(): Boolean = htmlSelect.checkValidity() ?: true
+    override fun validate(): Boolean = htmlSelect.checkValidity()
     override var validationMessageModel: Model<String> =
         Model.ofGet { if (required) Messages.get().validation_required else htmlSelect.validationMessage }
 }
@@ -73,7 +73,7 @@ class DropdownString(idInput: String, valueModel: Model<String>, choiceModel: Mo
 }
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdown(
+fun <T : Any> FormComponentConsumer<T>.dropdown(
     idInput: String,
     labelModel: Model<String>,
     valueModel: Model<String>,
@@ -85,7 +85,7 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdown(
     return inp
 }
 
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownNoFormGroup(
+fun <T : Any> FormComponentConsumer<T>.dropdownNoFormGroup(
     idInput: String,
     valueModel: Model<String>,
     choiceModel: Model<List<String>>
@@ -96,13 +96,13 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownNoFormGroup(
 /**
  * Property based
  */
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdown(
+fun <T : Any> FormComponentConsumer<T>.dropdown(
     property: KProperty1<T, String>,
     choiceModel: Model<List<String>>
 ): DropdownString =
     dropdown(property.name, labelStrategy.label(property.name), model.property(property), choiceModel)
 
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.dropdownNoFormGroup(
+fun <T : Any> FormComponentConsumer<T>.dropdownNoFormGroup(
     property: KProperty1<T, String>,
     choiceModel: Model<List<String>>
 ): DropdownString {

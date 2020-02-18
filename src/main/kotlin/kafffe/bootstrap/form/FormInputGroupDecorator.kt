@@ -34,10 +34,8 @@ class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent:
     protected lateinit var labelElement: HTMLElement
 
     override fun modifyHtml(element: HTMLElement): HTMLElement {
-        labelElement?.let {
-            for (m in modifiersLabel) {
-                m.modify(it)
-            }
+        for (m in modifiersLabel) {
+            m.modify(labelElement)
         }
         return super.modifyHtml(element)
     }

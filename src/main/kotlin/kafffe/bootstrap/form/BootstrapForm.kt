@@ -8,7 +8,7 @@ import org.w3c.dom.events.Event
 import kotlin.dom.addClass
 import kotlin.dom.removeClass
 
-open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>(model), FormComponentConsumer<T, T> {
+open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>(model), FormComponentConsumer<T> {
     init {
         setModelChangedNoop()
     }
@@ -58,6 +58,7 @@ open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>
 
     fun processForm(onOk: () -> Unit, onError: () -> Unit = {}) {
         if (isRendered) {
+            @Suppress("UNUSED_VARIABLE")
             val form = (html as HTMLFormElement);
             if (validate()) {
                 updateValueModel()

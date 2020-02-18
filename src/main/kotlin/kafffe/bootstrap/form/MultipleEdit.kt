@@ -181,7 +181,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
 
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>): MultipleEdit {
+fun <T : Any> FormComponentConsumer<T>.editMultiple(idInput: String, labelModel: Model<String>, valueModel: Model<List<String>>): MultipleEdit {
     val input = MultipleEdit(idInput, valueModel)
     val group = inputDecorator(labelModel, input)
     addChild(group)
@@ -191,6 +191,6 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(idInput: String,
 /**
  * Property based
  */
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.editMultiple(property: KProperty1<T, List<String>>): MultipleEdit {
+fun <T : Any> FormComponentConsumer<T>.editMultiple(property: KProperty1<T, List<String>>): MultipleEdit {
     return editMultiple(property.name, labelStrategy.label(property.name), model.property(property))
 }

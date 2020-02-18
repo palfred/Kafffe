@@ -5,7 +5,7 @@ import kafffe.core.property
 import kotlin.reflect.KProperty1
 
 // DSL function for form component consumer DSL
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.checkbox(
+fun <T : Any> FormComponentConsumer<T>.checkbox(
     idInput: String,
     valueModel: Model<Boolean>,
     labelModel: Model<String>
@@ -16,6 +16,6 @@ fun <T : Any, F : Any> FormComponentConsumer<T, F>.checkbox(
 /**
  * Property based
  */
-fun <T : Any, F : Any> FormComponentConsumer<T, F>.checkbox(property: KProperty1<T, Boolean>): Checkbox {
+fun <T : Any> FormComponentConsumer<T>.checkbox(property: KProperty1<T, Boolean>): Checkbox {
     return checkbox(property.name, model.property(property), labelStrategy.label(property.name))
 }
