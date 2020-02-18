@@ -148,10 +148,8 @@ interface FormComponentConsumer<T : Any> {
         subModel: Model<S>,
         block: FormLayout<S>.() -> Unit
     ): FormLayout<S> = FormLayout<S>(this, subModel).also {
-        with(it.modifiers) {
-            for (w in width) {
-                add(w.cssClassModifer)
-            }
+        for (w in width) {
+            it.modifiers.add(w.cssClassModifer)
         }
         it.block()
         addChild(it)
