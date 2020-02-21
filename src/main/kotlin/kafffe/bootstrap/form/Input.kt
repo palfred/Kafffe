@@ -8,7 +8,7 @@ import kotlin.dom.addClass
 /**
  * Holds a HTML form INPUT element
  */
-abstract class Input<T : Any>(val idInput: String, valueModel: Model<T>) : KafffeComponentWithModel<T>(valueModel), FormInput {
+abstract class Input<T : Any>(var idInput: String, valueModel: Model<T>) : KafffeComponentWithModel<T>(valueModel), FormInput {
     override val htmlId: String
         get() = idInput
 

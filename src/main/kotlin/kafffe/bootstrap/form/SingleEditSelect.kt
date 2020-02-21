@@ -31,6 +31,11 @@ abstract class SingleEditSelect<T : Any>(
      */
     val modifiersValue = mutableListOf<(value: T?) -> HtmlElementModifier>()
 
+    /**
+     * Modifiers to tweak HTMLInputElement
+     */
+    val modifiersInputControl = mutableListOf<HtmlElementModifier>()
+
     var currentChoice: T? by ChangeDelegateWithValue(valueModel.data, changeListeners)
 
     private fun displayToChoice(displayValue: String): T? = choiceModel.data.find { display(it) == displayValue }
@@ -132,10 +137,11 @@ abstract class SingleEditSelect<T : Any>(
                     oninput = {
                         renderMatches()
                     }
+                    modifiersInputControl.forEach { it.modify(this) }
                 }
             }
             dropdown = div {
-                addClass("sd_dropdown bg-light")
+                addClass("sd_dropdown bg-light text-dark")
                 withElement { style.width = "100%" }
             }
         }

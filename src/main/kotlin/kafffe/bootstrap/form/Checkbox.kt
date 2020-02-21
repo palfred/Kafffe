@@ -10,7 +10,7 @@ import org.w3c.dom.HTMLInputElement
 /**
  * Holds a HTML form element checkbox
  */
-class Checkbox(val idInput: String, valueModel: Model<Boolean>, val labelModel: Model<String>) :
+class Checkbox(var idInput: String, valueModel: Model<Boolean>, val labelModel: Model<String>) :
     KafffeComponentWithModel<Boolean>(valueModel), FormInput {
 
     var required: Boolean by rerenderOnChange(false)
