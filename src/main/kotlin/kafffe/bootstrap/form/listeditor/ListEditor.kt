@@ -15,21 +15,22 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
         rerender()
     }
 
-    private fun removeField(t: T) {
-        val ix = currentList.indexOf(t)
+    fun removeElement(element: T) {
+        val ix = currentList.indexOf(element)
         if (ix != -1) {
             currentList.removeAt(ix)
         }
     }
 
-    private fun moveField(t: T, offset: Int) {
-        val ix = currentList.indexOf(t)
+    fun moveElement(element: T, offset: Int) {
+        val ix = currentList.indexOf(element)
         val newIx = ix + offset
         focusAfterRerender = newIx
         if (ix != -1 && newIx in (0 until currentList.size)) {
             currentList.removeAt(ix)
-            currentList.add(newIx, t)
+            currentList.add(newIx, element)
         }
+        rerender()
     }
 
     override fun updateValueModel() {
@@ -59,8 +60,7 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
                                 withElement {
                                     type = "button"
                                     onclick = {
-                                        moveField(element, -1)
-                                        rerender()
+                                        moveElement(element, -1)
                                     }
                                     disabled = (index == 0)
                                 }
@@ -73,8 +73,7 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
                                 withElement {
                                     type = "button"
                                     onclick = {
-                                        moveField(element, +1)
-                                        rerender()
+                                        moveElement(element, +1)
                                     }
                                     disabled = (index >= currentList.size - 1)
                                 }
@@ -87,7 +86,7 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
                                 withElement {
                                     type = "button"
                                     onclick = {
-                                        removeField(element)
+                                        removeElement(element)
                                         rerender()
                                     }
                                 }
@@ -131,13 +130,11 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
             when (keyEvent.key) {
                 "ArrowUp" -> {
                     keyEvent.preventDefault()
-                    moveField(t, -1)
-                    rerender()
+                    moveElement(t, -1)
                 }
                 "ArrowDown" -> {
                     keyEvent.preventDefault()
-                    moveField(t, 1)
-                    rerender()
+                    moveElement(t, 1)
                 }
             }
         }
@@ -178,5 +175,23 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
         currentList.add(element)
         rerender()
     }
+
+    /**
+     * Tobe called when the add comes from a key event, to prevent default and do a rerender
+     */
+    protected fun onNewKey(keyEvent: KeyboardEvent) {
+        //TODO input validation on new
+        addElement()
+        keyEvent.preventDefault()
+    }
+
+    /**
+     * Tobe called when the move comes from a key event, to prevent default and do a rerender
+     */
+    protected fun onMoveKey(keyEvent: KeyboardEvent, element: T, offset: Int ) {
+        moveElement(element, offset)
+        keyEvent.preventDefault()
+    }
+
 
 }
