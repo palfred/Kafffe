@@ -10,6 +10,9 @@ import kotlin.browser.window
 abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithModel<List<T>>(model), FormValueProvider {
     protected var currentList: MutableList<T> = model.data.toMutableList()
 
+    var useButtons: Boolean = true
+    var useCreateElement: Boolean = true
+
     fun reloadListFromModel() {
         currentList = model.data.toMutableList()
         rerender()
@@ -52,46 +55,47 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
                     div {
                         addClass("form-inline")
                         elementEditor(element, index)
-
-                        span {
-                            addClass("btn-group")
-                            button {
-                                addClass("btn btn-info")
-                                withElement {
-                                    type = "button"
-                                    onclick = {
-                                        moveElement(element, -1)
+                        if (useButtons) {
+                            span {
+                                addClass("btn-group")
+                                button {
+                                    addClass("btn btn-info")
+                                    withElement {
+                                        type = "button"
+                                        onclick = {
+                                            moveElement(element, -1)
+                                        }
+                                        disabled = (index == 0)
                                     }
-                                    disabled = (index == 0)
-                                }
-                                i {
-                                    addClass("fas fa-arrow-up")
-                                }
-                            }
-                            button {
-                                addClass("btn btn-info")
-                                withElement {
-                                    type = "button"
-                                    onclick = {
-                                        moveElement(element, +1)
-                                    }
-                                    disabled = (index >= currentList.size - 1)
-                                }
-                                i {
-                                    addClass("fas fa-arrow-down")
-                                }
-                            }
-                            button {
-                                addClass("btn btn-warning")
-                                withElement {
-                                    type = "button"
-                                    onclick = {
-                                        removeElement(element)
-                                        rerender()
+                                    i {
+                                        addClass("fas fa-arrow-up")
                                     }
                                 }
-                                i {
-                                    addClass("fas fa-trash")
+                                button {
+                                    addClass("btn btn-info")
+                                    withElement {
+                                        type = "button"
+                                        onclick = {
+                                            moveElement(element, +1)
+                                        }
+                                        disabled = (index >= currentList.size - 1)
+                                    }
+                                    i {
+                                        addClass("fas fa-arrow-down")
+                                    }
+                                }
+                                button {
+                                    addClass("btn btn-warning")
+                                    withElement {
+                                        type = "button"
+                                        onclick = {
+                                            removeElement(element)
+                                            rerender()
+                                        }
+                                    }
+                                    i {
+                                        addClass("fas fa-trash")
+                                    }
                                 }
                             }
                         }
@@ -99,20 +103,24 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
                     }
 
                 }
-                div {
-                    addClass("form-inline")
-                    newElementEditor()
-                    button {
-                        addClass("btn btn-info")
-                        withElement {
-                            type = "button"
-                            onclick = {addElement()}
+                if (useCreateElement) {
+                    div {
+                        addClass("form-inline")
+                        newElementEditor()
+                        if (useButtons) {
+                            button {
+                                addClass("btn btn-info")
+                                withElement {
+                                    type = "button"
+                                    onclick = { addElement() }
+                                }
+                                i {
+                                    addClass("fas fa-plus")
+                                }
                             }
-                        i {
-                            addClass("fas fa-plus")
                         }
-                    }
 
+                    }
                 }
 
             }
