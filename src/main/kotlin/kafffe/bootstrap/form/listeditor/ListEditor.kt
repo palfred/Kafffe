@@ -10,8 +10,15 @@ import kotlin.browser.window
 abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithModel<List<T>>(model), FormValueProvider {
     protected var currentList: MutableList<T> = model.data.toMutableList()
 
-    var useButtons: Boolean = true
-    var useCreateElement: Boolean = true
+    var haveButtons: Boolean = true
+    var haveCreate: Boolean = true
+    var haveHeaders: Boolean = true
+
+    fun onlyEdit() {
+        haveButtons = false
+        haveCreate = false
+        haveHeaders = false
+    }
 
     fun reloadListFromModel() {
         currentList = model.data.toMutableList()
@@ -50,12 +57,14 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
             addClass("form-group")
             div {
                 addClass("list-group")
-                columnHeaders()
+                if (haveHeaders) {
+                    columnHeaders()
+                }
                 currentList.forEachIndexed() { index, element ->
                     div {
                         addClass("form-inline")
                         elementEditor(element, index)
-                        if (useButtons) {
+                        if (haveButtons) {
                             span {
                                 addClass("btn-group")
                                 button {
@@ -103,11 +112,11 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
                     }
 
                 }
-                if (useCreateElement) {
+                if (haveCreate) {
                     div {
                         addClass("form-inline")
                         newElementEditor()
-                        if (useButtons) {
+                        if (haveButtons) {
                             button {
                                 addClass("btn btn-info")
                                 withElement {
