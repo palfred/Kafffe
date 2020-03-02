@@ -81,7 +81,7 @@ class Nav(navigationTarget: NavigationElement, val navType: NavType = NavType.ba
 
     fun currentActivePath(navPath: NavigationPath) {
         visitChildrenRecusive {
-            if (this is Item && navPath.startsWith(this.path)) {
+            if (this is NavItem && navPath.startsWith(this.path)) {
                 currentActive = this
             }
         }

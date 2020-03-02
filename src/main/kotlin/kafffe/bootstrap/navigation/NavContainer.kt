@@ -7,81 +7,46 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
 
     val thisContainer = this
 
-    inner class Item(val titleModel: Model<String>, val path: NavigationPath, val icon: String = "") : NavElement() {
-        constructor(title: String, path: NavigationPath, icon: String = "") : this(Model.of(title), path, icon)
-
-        override fun attach() {
-            super.attach()
-            titleModel.listeners.add(onModelChanged)
-        }
-
-        override fun detach() {
-            super.detach()
-            titleModel.listeners.remove(onModelChanged)
-        }
-
-        val onModelChanged = ModelChangeListener(::rerender)
-
+    inner class Brand(
+        val title: String,
+        val imageUrl: String = "",
+        val path: NavigationPath = NavigationPath.fromString("/")
+    ) : NavElement() {
         override fun KafffeHtmlBase.kafffeHtml() =
-                a {
-                    withElement {
-                        href = "#"
-                        if (!(nav?.navType?.isPills ?: true)) {
-                            addClass("nav-item")
-                        }
-                        addClass("nav-link")
-                        onclick = {
-                            nav?.currentActive = this@Item
-                            navigationTarget.navigateTo(path)
-                        }
+            a {
+                withElement {
+                    href = "#"
+                    addClass("navbar-brand")
+                    onclick = {
+                        navigationTarget.navigateTo(path)
                     }
-                    if (!icon.isEmpty()) {
-                        i() {
-                            addClass(icon)
-                        }
-                        text(" ")
-                    }
-                    text(titleModel.data)
                 }
-
-    }
-
-    inner class Brand(val title: String, val imageUrl: String = "", val path: NavigationPath = NavigationPath.fromString("/")) : NavElement() {
-        override fun KafffeHtmlBase.kafffeHtml() =
-                a {
-                    withElement {
-                        href = "#"
-                        addClass("navbar-brand")
-                        onclick = {
-                            navigationTarget.navigateTo(path)
-                        }
+                if (!imageUrl.isEmpty()) {
+                    img {
+                        withElement { src = imageUrl }
                     }
-                    if (!imageUrl.isEmpty()) {
-                        img {
-                            withElement { src = imageUrl }
-                        }
-                    }
-                    text(this@Brand.title)
                 }
+                text(this@Brand.title)
+            }
 
     }
 
     inner class Toggle(val toggleId: String) : NavElement() {
         override fun KafffeHtmlBase.kafffeHtml() =
-                button {
-                    withElement {
-                        addClass("navbar-toggler")
-                        type = "button"
-                        setAttribute("data-toggle", "collapse")
-                        setAttribute("data-target", "#" + toggleId)
-                        setAttribute("aria-controls", toggleId)
-                        setAttribute("aria-expanded", "false")
-                        setAttribute("aria-label", "Toggle navigation")
-                    }
-                    span() {
-                        addClass("navbar-toggler-icon")
-                    }
+            button {
+                withElement {
+                    addClass("navbar-toggler")
+                    type = "button"
+                    setAttribute("data-toggle", "collapse")
+                    setAttribute("data-target", "#" + toggleId)
+                    setAttribute("aria-controls", toggleId)
+                    setAttribute("aria-expanded", "false")
+                    setAttribute("aria-label", "Toggle navigation")
                 }
+                span() {
+                    addClass("navbar-toggler-icon")
+                }
+            }
     }
 
     inner class NavbarNav() : NavContainer(navigationTarget) {
@@ -111,8 +76,16 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
     }
 
 
-    fun item(titleModel: Model<String>, path: NavigationPath, icon: String = "") = Item(titleModel, path, icon).apply { thisContainer.addChild(this) }
-    fun item(title: String, path: NavigationPath, icon: String = "") = Item(title, path, icon).apply { thisContainer.addChild(this) }
+    fun item(titleModel: Model<String>, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
+        NavItem(navigationTarget, titleModel, path, icon, labelCssClass)
+            .apply { thisContainer.addChild(this) }
+
+    fun item(title: String, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
+        NavItem(navigationTarget, Model.of(title), path, icon, labelCssClass)
+            .apply { thisContainer.addChild(this) }
+
+    fun dropdown(titleModel: Model<String>, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
+        NavDropdown(navigationTarget, titleModel, icon, labelCssClass).also { addChild(it) }
 
     fun toggle(toggleId: String) = Toggle(toggleId).apply { thisContainer.addChild(this) }
 
@@ -130,6 +103,7 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
         return tb
     }
 
-    fun brand(title: String, imageUrl: String, path: NavigationPath = NavigationPath.fromString("/")) = Brand(title, imageUrl, path).apply { thisContainer.addChild(this) }
+    fun brand(title: String, imageUrl: String, path: NavigationPath = NavigationPath.fromString("/")) =
+        Brand(title, imageUrl, path).apply { thisContainer.addChild(this) }
 
 }
