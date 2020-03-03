@@ -2,6 +2,7 @@ package kafffe.bootstrap
 
 import kafffe.core.KafffeComponent
 import kafffe.core.KafffeHtmlBase
+import kotlin.browser.window
 
 data class Alert(val text: String, val level: BootstrapLevel = BootstrapLevel.error)
 class AlertsPanel : KafffeComponent() {
@@ -17,6 +18,16 @@ class AlertsPanel : KafffeComponent() {
 
     fun addAlert(alert: Alert) {
         alerts += alert
+    }
+
+    fun setAlertWithDismiss(alert: Alert, dismissAfterSeconds: Int = 5) {
+        alerts = setOf(alert)
+        window.setTimeout({removeAlert(alert)}, dismissAfterSeconds * 1000)
+    }
+
+    fun addAlertWithDismiss(alert: Alert, dismissAfterSeconds: Int = 5) {
+        alerts += alert
+        window.setTimeout({removeAlert(alert)}, dismissAfterSeconds * 1000)
     }
 
     fun info(msg: String) {
