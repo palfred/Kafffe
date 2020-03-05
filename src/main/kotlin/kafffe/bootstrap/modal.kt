@@ -31,7 +31,12 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
         /**
          * Constructs and shows confirm dialog
          */
-        fun confirm(title: Model<String>, question: Model<String>, absolutePosition: DOMPoint? = null, yesHandler: () -> Unit) {
+        fun confirm(
+            title: Model<String>,
+            question: Model<String>,
+            absolutePosition: DOMPoint?,
+            yesHandler: () -> Unit
+        ) {
             val confirm = TextDialog(title, question)
             confirm.absolutePosition = absolutePosition
             confirm.yesNo({
@@ -40,6 +45,9 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
             })
             confirm.attach()
         }
+
+        fun confirm(title: Model<String>, question: Model<String>, yesHandler: () -> Unit) =
+            confirm(title, question, null, yesHandler)
     }
 
     // The components rendered as footer

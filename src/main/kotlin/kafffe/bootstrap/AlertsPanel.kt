@@ -30,17 +30,27 @@ class AlertsPanel : KafffeComponent() {
         window.setTimeout({removeAlert(alert)}, dismissAfterSeconds * 1000)
     }
 
-    fun info(msg: String) {
-        addAlert(Alert(msg, BootstrapLevel.info))
-    }
+    var infoDismissSeconds = 5
+    var warnDismissSeconds = 8
+    var errorDismissSeconds = 12
+    /**
+     * Shorthand for default info message
+     */
+    fun infoAdd(message: String) = addAlertWithDismiss(Alert(message, BootstrapLevel.info), infoDismissSeconds)
+    fun infoSet(message: String) = setAlertWithDismiss(Alert(message, BootstrapLevel.info), infoDismissSeconds)
 
-    fun warn(msg: String) {
-        addAlert(Alert(msg, BootstrapLevel.warning))
-    }
+    /**
+     * Shorthand for default warning message
+     */
+    fun warnAdd(message: String) = addAlertWithDismiss(Alert(message, BootstrapLevel.warning), warnDismissSeconds)
+    fun warnSet(message: String) = setAlertWithDismiss(Alert(message, BootstrapLevel.warning), warnDismissSeconds)
 
-    fun error(msg: String) {
-        addAlert(Alert(msg, BootstrapLevel.danger))
-    }
+    /**
+     * Shorthand for default error message
+     */
+    fun errorAdd(message: String) = addAlertWithDismiss(Alert(message, BootstrapLevel.error), errorDismissSeconds)
+    fun errorSet(message: String) = setAlertWithDismiss(Alert(message, BootstrapLevel.error), errorDismissSeconds)
+
 
     fun removeAlert(alert: Alert) {
         alerts -= alert
