@@ -1,6 +1,8 @@
 package kafffe.bootstrap.form
 
-import kafffe.bootstrap.external.*
+import kafffe.bootstrap.external.PopoverOption
+import kafffe.bootstrap.external.bsJquery
+import kafffe.bootstrap.external.jsCreate
 import kafffe.core.HtmlElementModifier
 import kafffe.core.KafffeHtml
 import org.w3c.dom.HTMLElement

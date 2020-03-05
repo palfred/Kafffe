@@ -5,7 +5,6 @@ import kafffe.messages.Messages
 import kafffe.messages.i18nText
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
 import kotlin.dom.addClass
 
 enum class ModalSize(val css: String) {

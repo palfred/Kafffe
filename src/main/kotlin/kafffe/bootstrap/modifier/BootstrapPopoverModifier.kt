@@ -5,7 +5,6 @@ import kafffe.bootstrap.external.bsJquery
 import kafffe.bootstrap.external.jsCreate
 import kafffe.core.HtmlElementModifier
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.get
 
 class BootstrapPopoverModifier() : HtmlElementModifier {
     val options: PopoverOption = jsCreate()

@@ -1,9 +1,7 @@
 package kafffe.bootstrap
 
 import kafffe.core.KafffeHtmlBase
-import kafffe.core.KafffeHtmlOut
 import kafffe.core.RootComponent
-import org.w3c.dom.HTMLElement
 
 class BootstrapRoot : RootComponent() {
     init {
