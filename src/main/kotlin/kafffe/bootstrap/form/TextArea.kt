@@ -47,8 +47,7 @@ class TextArea(override val htmlId: String, valueModel: Model<String>)
 // DSL function for form component consumer DSL
 fun <T : Any> FormComponentConsumer<T>.textArea(idInput: String, labelModel: Model<String>, valueModel: Model<String>): TextArea {
     val input = TextArea(idInput, valueModel)
-    val group = inputDecorator(labelModel, input)
-    addChild(group)
+    decorateAndAdd(labelModel, input)
     return input
 }
 

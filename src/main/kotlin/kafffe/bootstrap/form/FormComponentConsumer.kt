@@ -27,6 +27,7 @@ interface FormComponentConsumer<T : Any> {
 
     /**
      * Decoration of inputs. Default wraps with formgroup with label and validation feedback.
+     * NOT INTENDED to be called from outside use #decoratorAndAdd or #decorateAndAddComponent to call this and also *add* to the this consumer
      */
     var inputDecorator: (labelModel: Model<String>, inputComp: FormInput) -> KafffeComponent
 
@@ -38,7 +39,7 @@ interface FormComponentConsumer<T : Any> {
     /**
      * Applies inputDecorator to input component and adds.
      */
-    fun decorator(labelModel: Model<String>, component: FormInput)  {
+    fun decorateAndAdd(labelModel: Model<String>, component: FormInput)  {
         val wrapper = inputDecorator(labelModel, component)
         addChild(wrapper)
     }
@@ -46,14 +47,13 @@ interface FormComponentConsumer<T : Any> {
     /**
      * Applies inputDecorator to input component and adds.
      */
-    fun decoratorComponent(labelModel: Model<String>, component: KafffeComponent) {
-        decorator(labelModel, KaffeeComponentAsInputAdapter(component))
+    fun decorateAndAddComponent(labelModel: Model<String>, component: KafffeComponent) {
+        decorateAndAdd(labelModel, KaffeeComponentAsInputAdapter(component))
     }
 
     fun input(idInput: String, labelModel: Model<String>, valueModel: Model<String>): InputString {
         val input = InputString(idInput, valueModel)
-        val group = inputDecorator(labelModel, input)
-        addChild(group)
+        decorateAndAdd(labelModel, input)
         return input
     }
 
@@ -66,8 +66,7 @@ interface FormComponentConsumer<T : Any> {
 
     fun inputNum(idInput: String, labelModel: Model<String>, valueModel: Model<Int>): InputInt {
         val input = InputInt(idInput, valueModel)
-        val group = inputDecorator(labelModel, input)
-        addChild(group)
+        decorateAndAdd(labelModel, input)
         return input
     }
 

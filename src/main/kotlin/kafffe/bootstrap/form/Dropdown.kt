@@ -80,8 +80,7 @@ fun <T : Any> FormComponentConsumer<T>.dropdown(
     choiceModel: Model<List<String>>
 ): DropdownString {
     val inp = DropdownString(idInput, valueModel, choiceModel)
-    val group = inputDecorator(labelModel, inp)
-    addChild(group)
+    decorateAndAdd(labelModel, inp)
     return inp
 }
 

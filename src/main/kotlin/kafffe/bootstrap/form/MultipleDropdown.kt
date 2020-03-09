@@ -151,8 +151,7 @@ fun <T : Any> FormComponentConsumer<T>.dropdownMultiple(
     choiceModel: Model<List<String>>
 ): MultipleDropdownString {
     val inp = MultipleDropdownString(idInput, valueModel, choiceModel)
-    val group = inputDecorator(labelModel, inp)
-    addChild(group)
+    decorateAndAdd(labelModel, inp)
     return inp
 }
 

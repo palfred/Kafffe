@@ -291,8 +291,7 @@ fun <T : Any> FormComponentConsumer<T>.editSelectMultiple(
     choiceModel: Model<List<String>>
 ): FormGroupMultipleEditSelectString {
     val input = FormGroupMultipleEditSelectString(idInput, valueModel, choiceModel)
-    val group = inputDecorator(labelModel, input)
-    addChild(group)
+    decorateAndAdd(labelModel, input)
     return input
 }
 
