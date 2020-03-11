@@ -50,7 +50,7 @@ open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>
         var kafffeValidity = true
         visitChildrenRecusive {
             if (this is FormValidityProvider) {
-                if (!validate()) kafffeValidity = false
+                if (!validateAndNotify()) kafffeValidity = false
             }
         }
         return htmlValidity && kafffeValidity

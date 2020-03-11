@@ -44,11 +44,14 @@ open class KafffeComponent {
         }
     }
 
-    fun <T : KafffeComponent> ancestorOfType(aType: KClass<T>): T? {
+    /**
+     * Find a parent of the given type, usually a KafffeComponent of some kind.
+     */
+    fun <T : Any> parentOfType(aType: KClass<T>): T? {
         val p = parent
         return if (p == null) null
         else if (aType.isInstance(p)) p.unsafeCast<T>()
-        else p.ancestorOfType(aType)
+        else p.parentOfType(aType)
     }
 
     val modifiers = mutableListOf<HtmlElementModifier>()

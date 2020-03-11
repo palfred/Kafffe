@@ -1,31 +1,37 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
-import kafffe.messages.Messages
 import org.w3c.dom.HTMLElement
 
 /**
  * Bootstrap form group that wrap input componenten with label and validation message
  **/
-class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent: FormInput) : KafffeComponent() {
+class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent: FormInput) : KafffeComponent(),
+    FormValidityConsumer {
+
     val modifiersLabel = mutableListOf<HtmlElementModifier>()
-    val validationMessageModel: Model<String> get() = inputComponent.validationMessageModel
+    val validationModel: Model<ValidationEvent> = Model.of(ValidationEvent(this))
     val idInput: String get() = inputComponent.htmlId
-    var useToolipValidationMessages: Boolean by rerenderOnChange(false)
+
+    private val messageComponent = addChild(FormInputValidationMessage(validationModel))
+    var useTooltipValidationMessages: Boolean
+        get() = messageComponent.useTooltip
+        set(value) {
+            messageComponent.useTooltip = value
+        }
 
     init {
         addChild(inputComponent.component())
     }
 
+    // TODO rewrite to use kafffe component for label
     override fun attach() {
         super.attach()
         labelModel.listeners.add(onModelChanged)
-        validationMessageModel.listeners.add(onModelChanged)
     }
 
     override fun detach() {
         labelModel.listeners.remove(onModelChanged)
-        validationMessageModel.listeners.remove(onModelChanged)
         super.detach()
     }
 
@@ -43,7 +49,7 @@ class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent:
     override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut {
         return div {
             addClass("form-group")
-            if (useToolipValidationMessages) {
+            if (useTooltipValidationMessages) {
                 element?.style?.position = "relative"
             }
             labelElement = label {
@@ -51,18 +57,7 @@ class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent:
                 text(labelModel.data)
             }.element!!
             add(inputComponent.component().html)
-            small {
-                if (useToolipValidationMessages) {
-                    addClass("invalid-tooltip")
-                } else {
-                    addClass("invalid-feedback")
-                }
-                if (validationMessageModel.data.isEmpty()) {
-                    text(Messages.get().validation_required)
-                } else {
-                    text(validationMessageModel.data)
-                }
-            }
+            add(messageComponent.html)
         }
     }
 
@@ -71,7 +66,11 @@ class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent:
             FormInputGroupDecorator(labelModel, inputComponent)
 
         fun tooltip(labelModel: Model<String>, inputComponent: FormInput) =
-            FormInputGroupDecorator(labelModel, inputComponent).apply { useToolipValidationMessages = true }
+            FormInputGroupDecorator(labelModel, inputComponent).apply { useTooltipValidationMessages = true }
+    }
+
+    override fun onValidation(event: ValidationEvent) {
+        validationModel.data = event
     }
 }
 

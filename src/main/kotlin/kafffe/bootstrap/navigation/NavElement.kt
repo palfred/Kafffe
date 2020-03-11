@@ -14,7 +14,7 @@ open class NavElement() : KafffeComponent() {
             }
         }
 
-    val nav: Nav? get() = ancestorOfType(Nav::class)
+    val nav: Nav? get() = parentOfType(Nav::class)
 
     init {
         modifiers.add(activeClass)

@@ -14,7 +14,7 @@ class FormSample : KafffeComponent() {
     val personModel = Model.of<Person>(Person("Jens", "Hansen", 45, "Second", listOf("Fourth", "Other")))
     val form = BootstrapForm<Person>(personModel).apply {
         inputDecorator = { labelModel, inputComp ->
-            FormInputGroupDecorator(labelModel, inputComp).apply { useToolipValidationMessages = true }
+            FormInputGroupDecorator(labelModel, inputComp).apply { useTooltipValidationMessages = true }
         }
         // We need some hgap because we do not apply whitespace "\n" between buttons.
         modifiers.add(CssClassModifier("hgap-2"))
