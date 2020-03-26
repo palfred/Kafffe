@@ -2,8 +2,8 @@ package kafffe.core
 
 /**
  * General interface and classes for Navigation support in Kafffe
- * The basic idea is to have navgation target that support nvagate to a path that could like a rest like path ie "/company/<cloud partners id>/employee/list"
- * This could be handled by a navigation target that understands company + company id and that delegate to sub navigation target taht understands the ramining part of the path.
+ * The basic idea is to have navgation target that support navigate to a path that could like a rest like path ie "/company/<cloud partners id>/employee/list"
+ * This could be handled by a navigation target that understands company + company id and that delegate to sub navigation target that understands the ramining part of the path.
  **/
 data class NavigationPath(val elements: List<String>, val absolute: Boolean = false) {
 
