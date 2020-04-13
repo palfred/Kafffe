@@ -3,6 +3,7 @@ package kafffe.core
 import kotlinx.html.dom.create
 import kotlinx.html.svg
 import org.w3c.dom.*
+import org.w3c.dom.css.CSSStyleDeclaration
 import org.w3c.dom.events.Event
 import kotlin.browser.document
 import kotlin.dom.addClass
@@ -51,10 +52,17 @@ class KafffeHtml<T : HTMLElement>(val element: T?) {
         return kafffeHtml
     }
 
-    // Do with element if not null
+    /** Do with element if not null */
     inline fun withElement(block: T.() -> Unit) {
         element?.let {
             element.block()
+        }
+    }
+
+    /** Do with element style if not null */
+    inline fun withStyle(block: CSSStyleDeclaration.() -> Unit) {
+        element?.style?.let { style: CSSStyleDeclaration ->
+            style.block()
         }
     }
 

@@ -52,6 +52,7 @@ fun addStuff() {
             component("simplenav") { path: NavigationPath -> SimpleNav(path) }
             component("tablesample") { TableSample() }
             component("formsample") { FormSample() }
+            component("calendarsample") { CalendarSample() }
         }
         BootstrapRoot().apply {
             val container = BootstrapContainer.fluid()
@@ -69,6 +70,7 @@ fun addStuff() {
                     item(Model.of("Form Sample 1"), NavigationPath.fromString("root/formsample"), "fab fa-wpforms")
                     item(Model.of("Table Sample Nest"), NavigationPath.fromString("root/simplenav/tabs/table"), "fas fa-table")
                     item(Model.of("Form Sample Nest"), NavigationPath.fromString("root/simplenav/pills/form"), "fab fa-wpforms")
+                    item(Model.of("Calendar"), NavigationPath.fromString("root/calendarsample"), "fas fa-calendar")
                     addChild(NavLanguageSelector(i18nText(Messages::languageSelect)))
                 }
             })
