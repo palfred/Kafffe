@@ -1,7 +1,6 @@
 package samples
 
 import kafffe.calendar.WeekCalendar
-import kafffe.calendar.WeekCalendar2
 import kafffe.core.KafffeComponent
 import kafffe.core.KafffeHtmlBase
 import org.w3c.dom.events.Event
