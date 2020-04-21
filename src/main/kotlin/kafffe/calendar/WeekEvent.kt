@@ -11,14 +11,16 @@ data class WeekEvent(
 ) {
 
     companion object {
-        val demoEvents = (1..50).map {
-            val startTime = TimeOfDay(Random.nextInt(8, 15), Random.nextInt(0, 4) * 15)
-            val duration = Random.nextInt(1,10) * 10
+        val demoEvents = (1..30).map {
+            val startTime = TimeOfDay(Random.nextInt(8, 15), Random.nextInt(0, 60))
+            val duration = Random.nextInt(30,91)
+            val time = WeekRange(WeekDay.values()[Random.nextInt(0, 5)], startTime, duration)
             WeekEvent(
                 it.toString(),
-                WeekRange(WeekDay.values()[Random.nextInt(0, 7)],  startTime, duration),
+                time,
                 "Hello ($it)",
-                "Description ($it)"
+                """${startTime.formatted} ${time.weekDay} 
+                   |$duration min.""".trimMargin()
             )
         }
     }
