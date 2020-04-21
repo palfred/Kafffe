@@ -1,11 +1,12 @@
 package kafffe.calendar
 
 import kafffe.core.*
+import org.w3c.dom.DragEvent
 import org.w3c.dom.HTMLDivElement
 import kotlin.browser.window
-import kotlin.random.Random
 
-class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() {
+open class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() {
+    var currentEvent: WeekEvent? = null
 
     var startTime: TimeOfDay = TimeOfDay(8, 0)
     var endTime: TimeOfDay = TimeOfDay(16, 0)
@@ -26,13 +27,14 @@ class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() 
     var totalWidth: Int by rerenderOnChange(window.innerWidth - 30)
     var totalHeight: Int by rerenderOnChange(window.innerHeight - 100)
 
-    val cellHeight: Int by rerenderOnChange(30)
+    val cellHeight: Int by rerenderOnChange(27)
     val cellWidth: Int get() = (totalWidth - timeWidth) / (days.size)
     private val hourHeight = cellHeight * stepsPerHour
     private val minutesHeight = (cellHeight * stepsPerHour) / 60.0
 
     var headerColor: String by rerenderOnChange("#343")
-    var cellColor: String by rerenderOnChange("#555")
+    var cellColorEvenHour: String by rerenderOnChange("#555")
+    var cellColorOddHour: String by rerenderOnChange("#777")
     var textColor: String by rerenderOnChange("#fdf")
     var gridColor: String by rerenderOnChange("#000")
 
@@ -50,7 +52,7 @@ class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() 
         div {
             addClass("wc_container")
             withStyle {
-                backgroundColor = cellColor
+                backgroundColor = cellColorEvenHour
                 color = textColor
                 position = "relative"
                 width = "${totalWidth}px"
@@ -77,7 +79,7 @@ class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() 
                         position = "relative"
                         width = "${totalWidth}px"
                         maxHeight = "${times.size * cellHeight}px"
-                        backgroundColor = cellColor
+                        backgroundColor = cellColorEvenHour
                     }
 
                     renderTimeColumn()
@@ -157,24 +159,75 @@ class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() 
                 height = "${times.size * cellHeight}px"
                 top = "0px"
                 left = "${dayIndex * cellWidth + timeWidth}px"
-                backgroundColor = cellColor
+                backgroundColor = cellColorEvenHour
             }
             for ((index, current) in times.withIndex()) {
                 div {
                     addClass("wc_cell")
+                    withElement {
+                        val elm = this
+                        ondragenter = {
+                            if (isDropAllowed(day, current)) {
+                                cellHighlight(elm)
+                            }
+
+                        }
+                        ondragleave  = {
+                            cellResetStyle(elm, current)
+                            it
+                        }
+                        ondragover = {dragEvent ->
+                            if (isDropAllowed(day, current)) {
+                                dragEvent.preventDefault()
+                            }
+                        }
+                        ondrop = { dropEvent: DragEvent ->
+                            cellResetStyle(elm, current)
+                            currentEvent?.let {
+                                it.time = WeekRange(day, current, it.time.durationMinutes)
+                                // TODO do not change description (for testing only)
+                                it.description = """
+                                    |${current.formatted} ${day} 
+                                    |${it.time.durationMinutes} min.
+                                    |""".trimMargin()
+                                renderEvent(it)
+                            }
+                            dropEvent
+                        }
+                    }
                     withStyle {
-                        border = "1px solid #000"
                         position = "absolute"
                         top = "${cellHeight * index}px"
                         width = "${cellWidth}px"
                         height = "${cellHeight}px"
-
                     }
+                    cellResetStyle(element!!, current)
                     text(" ")
                 }
             }
         }
     }
+
+    private fun cellResetStyle(elm: HTMLDivElement, current: TimeOfDay) {
+        elm.style.border = "1px solid #000"
+        elm.style.backgroundColor = if (current.hour % 2 == 0) cellColorEvenHour else cellColorOddHour
+    }
+
+    private fun cellHighlight(elm: HTMLDivElement) {
+        elm.style.border = "1px dashed #000"
+        elm.style.backgroundColor = "#595"
+    }
+
+    protected fun isDropAllowed(day: WeekDay, time: TimeOfDay): Boolean {
+        if (currentEvent != null) {
+            // TODO some check, this is just not saturday for now
+            return (day != WeekDay.saturday)
+        } else {
+            return false
+        }
+    }
+
+
 
     private fun renderEvents() {
         removeEventNodesNotInModel()
@@ -202,31 +255,46 @@ class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() 
             val durationPx = event.time.durationMinutes * minutesHeight
             dayContainer.div {
                 eventElementMap[event.id] = this
-                this.withStyle {
-                    this.border = "1px solid black"
-                    this.backgroundColor = "#060"
-                    this.color = "#FFF"
-                    this.opacity = "0.8"
+                withElement {
+                    val elm = this
+                    draggable = true
+                    ondragstart = { ev ->
+                        elm.style.opacity = "1.0"
+                        currentEvent = event
+                        ev.dataTransfer?.setDragImage(elm, 100, 100)
+                        elm.style.opacity = "0.1"
+                        ev
+                    }
+                    ondragend = { ev ->
+                        elm.style.opacity = "0.8"
+                        ev
+                    }
+                }
+                withStyle {
+                    border = "1px solid black"
+                    backgroundColor = "#060"
+                    color = "#FFF"
+                    opacity = "0.8"
 
                     // TODO handler overlaps
-                    this.left = "5%"
-                    this.width = "90%"
+                    left = "5%"
+                    width = "90%"
 
-                    this.top = "${topPx}px"
-                    this.height = "${durationPx}px"
+                    top = "${topPx}px"
+                    height = "${durationPx}px"
 
-                    this.position = "absolute"
-                    this.padding = "0.1rem"
-                    this.overflowX = "hidden"
-                    this.overflowY = "hidden"
+                    position = "absolute"
+                    padding = "0.1rem"
+                    overflowX = "hidden"
+                    overflowY = "hidden"
                 }
                 div {
                     element?.style?.fontWeight = "700"
-                    this.text(event.title)
+                    text(event.title)
                 }
                 div {
                     element?.style?.whiteSpace = "pre-wrap"
-                    this.text(event.description)
+                    text(event.description)
                 }
             }
         }
