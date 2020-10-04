@@ -16,6 +16,7 @@ dependencies {
     implementation(kotlin("stdlib-js"))
     implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.6.12")
     implementation("kotlin.js.externals:kotlin-js-jquery:2.0.0-0")
+    implementation(npm("interactjs", "1.9.10"))
 }
 
 kotlin.target {
@@ -36,6 +37,7 @@ kotlin.target {
     val assembleWeb by tasks.creating(Copy::class) {
         dependsOn("build")
         configurations["compileClasspath"].forEach {
+            println(it.absolutePath)
             from(zipTree(it.absolutePath)) {
                 includeEmptyDirs = false
                 include("**/*")
