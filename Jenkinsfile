@@ -3,8 +3,7 @@ pipeline {
   stages {
     stage('Fetch') {
       steps {
-        sh '''sh \'git checkout -f origin/master\'
-'''
+        sh 'sh \'git checkout -f origin/master\''
       }
     }
 
