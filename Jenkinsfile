@@ -5,6 +5,7 @@ pipeline {
       steps {
         // sh 'git checkout -f origin/master'
         echo 'Hello world!'
+        sh 'git checkout -f origin/master'
       }
     }
 
