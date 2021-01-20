@@ -3,7 +3,7 @@ package kafffe.calendar
 import kafffe.core.*
 import org.w3c.dom.DragEvent
 import org.w3c.dom.HTMLDivElement
-import kotlin.browser.window
+import kotlinx.browser.window
 
 open class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeComponent() {
     var currentEvent: WeekEvent? = null

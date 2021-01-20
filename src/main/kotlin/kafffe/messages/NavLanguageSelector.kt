@@ -2,7 +2,7 @@ package kafffe.messages
 
 import kafffe.core.*
 import org.w3c.dom.asList
-import kotlin.dom.removeClass
+import kotlinx.dom.removeClass
 
 /**
  * Dropdown selector for UI language to be put in a navbar

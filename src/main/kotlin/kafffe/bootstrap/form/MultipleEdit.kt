@@ -4,7 +4,7 @@ import kafffe.core.*
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
-import kotlin.browser.window
+import kotlinx.browser.window
 import kotlin.reflect.KProperty1
 
 /**

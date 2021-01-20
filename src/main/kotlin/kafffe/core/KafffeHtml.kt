@@ -5,11 +5,11 @@ import kotlinx.html.svg
 import org.w3c.dom.*
 import org.w3c.dom.css.CSSStyleDeclaration
 import org.w3c.dom.events.Event
-import kotlin.browser.document
-import kotlin.dom.addClass
+import kotlinx.browser.document
+import kotlinx.dom.addClass
 
 /**
- * Helps to build HTMLElements directly using kotlin.browser.document.
+ * Helps to build HTMLElements directly using kotlinx.browser.document.
  * This makes it easier to embed Kaffee Componets directly in the HTML Dom,
  * where kotlinx.html does not allow to access a "current HTMLElement" during the nested DSL.
  * It is possible to use it ase a wrapper for an existing HTMLElement in order to work with that.

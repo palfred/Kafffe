@@ -1,7 +1,7 @@
 package kafffe.core
 
-import kotlin.browser.document
-import kotlin.browser.window
+import kotlinx.browser.document
+import kotlinx.browser.window
 
 /**
  * A root component that roughly corresponds to a HTML page, or could be used as base for SinglePage APP.

@@ -5,9 +5,9 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.asList
 import org.w3c.dom.events.KeyboardEvent
-import kotlin.browser.window
-import kotlin.dom.addClass
-import kotlin.dom.removeClass
+import kotlinx.browser.window
+import kotlinx.dom.addClass
+import kotlinx.dom.removeClass
 import kotlin.reflect.KProperty1
 
 /**

@@ -5,7 +5,7 @@ import kafffe.core.*
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.KeyboardEvent
-import kotlin.browser.window
+import kotlinx.browser.window
 
 abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithModel<List<T>>(model), FormValueProvider {
     protected var currentList: MutableList<T> = model.data.toMutableList()
