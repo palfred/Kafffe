@@ -3,7 +3,7 @@ package kafffe.bootstrap.form
 import kafffe.core.*
 import kafffe.messages.Messages
 import org.w3c.dom.HTMLInputElement
-import kotlin.dom.addClass
+import kotlinx.dom.addClass
 
 /**
  * Holds a HTML form INPUT element

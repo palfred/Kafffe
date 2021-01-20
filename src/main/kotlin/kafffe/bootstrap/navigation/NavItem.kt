@@ -1,7 +1,7 @@
 package kafffe.bootstrap.navigation
 
 import kafffe.core.*
-import kotlin.dom.addClass
+import kotlinx.dom.addClass
 
 class NavItem(
     val navigationTarget: NavigationElement,

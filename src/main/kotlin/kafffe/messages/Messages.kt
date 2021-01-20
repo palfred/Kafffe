@@ -4,7 +4,7 @@ import kafffe.core.FunctionalModel
 import kafffe.core.FunctionalSubModel
 import kafffe.core.Model
 import kafffe.core.ServiceRegistry
-import kotlin.browser.window
+import kotlinx.browser.window
 import kotlin.js.Date
 import kotlin.reflect.KProperty1
 

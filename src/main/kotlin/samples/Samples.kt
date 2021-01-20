@@ -8,7 +8,7 @@ import kafffe.messages.*
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.get
-import kotlin.browser.window
+import kotlinx.browser.window
 
 fun initServices() {
     ServiceRegistry.register("msg_en", Messages_en())

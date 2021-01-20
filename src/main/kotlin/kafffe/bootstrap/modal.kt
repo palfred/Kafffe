@@ -5,7 +5,7 @@ import kafffe.messages.Messages
 import kafffe.messages.i18nText
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLDivElement
-import kotlin.dom.addClass
+import kotlinx.dom.addClass
 
 enum class ModalSize(val css: String) {
     small("modal-sm"), medium("modal-md"), large("modal-lg")

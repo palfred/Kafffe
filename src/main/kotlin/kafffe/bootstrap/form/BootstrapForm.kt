@@ -5,8 +5,8 @@ import kafffe.core.*
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLFormElement
 import org.w3c.dom.events.Event
-import kotlin.dom.addClass
-import kotlin.dom.removeClass
+import kotlinx.dom.addClass
+import kotlinx.dom.removeClass
 
 open class BootstrapForm<T : Any>(model: Model<T>) : KafffeComponentWithModel<T>(model), FormComponentConsumer<T> {
     init {

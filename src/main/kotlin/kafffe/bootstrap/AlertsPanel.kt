@@ -2,7 +2,7 @@ package kafffe.bootstrap
 
 import kafffe.core.KafffeComponent
 import kafffe.core.KafffeHtmlBase
-import kotlin.browser.window
+import kotlinx.browser.window
 
 data class Alert(val text: String, val level: BootstrapLevel = BootstrapLevel.error)
 class AlertsPanel : KafffeComponent() {

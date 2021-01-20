@@ -6,7 +6,7 @@ import kafffe.core.KafffeComponent
 import kafffe.core.KafffeHtmlBase
 import kafffe.core.Model
 import org.w3c.dom.events.Event
-import kotlin.browser.window
+import kotlinx.browser.window
 
 class CalendarSample : KafffeComponent() {
 

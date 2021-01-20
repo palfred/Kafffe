@@ -3,7 +3,7 @@ package kafffe.bootstrap.form
 import kafffe.core.*
 import kafffe.messages.Messages
 import org.w3c.dom.HTMLTextAreaElement
-import kotlin.dom.addClass
+import kotlinx.dom.addClass
 import kotlin.reflect.KProperty1
 
 /**

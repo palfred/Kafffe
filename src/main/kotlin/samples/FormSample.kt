@@ -3,7 +3,7 @@ package samples
 import kafffe.bootstrap.*
 import kafffe.bootstrap.form.*
 import kafffe.core.*
-import kotlin.browser.window
+import kotlinx.browser.window
 
 class FormSample : KafffeComponent() {
 
