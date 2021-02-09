@@ -72,6 +72,15 @@ class DropdownString(idInput: String, valueModel: Model<String>, choiceModel: Mo
     override fun valueFromString(strValue: String) = strValue
 }
 
+class DropdownInt(idInput: String, valueModel: Model<Int>, choiceModel: Model<List<Int>>) :
+    Dropdown<Int>(idInput, valueModel, choiceModel) {
+
+    override fun display(choice: Int) = choice.toString()
+    override fun valueToString(value: Int) = value.toString()
+    override fun valueFromString(strValue: String) = strValue.toInt()
+}
+
+
 // DSL function for form component consumer DSL
 fun <T : Any> FormComponentConsumer<T>.dropdown(
     idInput: String,
