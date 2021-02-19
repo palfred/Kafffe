@@ -28,7 +28,7 @@ class Nav(navigationTarget: NavigationElement, val navType: NavType = NavType.ba
         }
 
     private var _bg: CssClassModifier? = null
-    var background: BasicColor = BasicColor.normal
+    var background: BasicColor = BasicColor.secondary
         set(value: BasicColor) {
             field = value
             if (_bg != null) {

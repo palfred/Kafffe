@@ -11,7 +11,7 @@ open class BootstrapButton(label: Model<String>, val onClick: (source: Bootstrap
 
     var label: String by delegateToModel()
     var btnType: ButtonType by rerenderOnChange(ButtonType.button)
-    var color: BasicColor by rerenderOnChange(BasicColor.normal)
+    var color: BasicColor by rerenderOnChange(BasicColor.secondary)
     var iconClasses: String by rerenderOnChange("")
     var iconBefore: Boolean by rerenderOnChange(false)
     var disabled: Boolean by rerenderOnChange(false)

@@ -183,7 +183,7 @@ open class KafffeComponent {
     }
 
     /**
-     * Do some operation with this component hierachy detached
+     * Do some operation with this component hierarchy detached
      */
     fun doDetached(block: KafffeComponent.() -> Unit) {
         try {
