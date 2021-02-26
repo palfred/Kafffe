@@ -82,4 +82,5 @@ fun addStuff() {
 
 
 fun main(args: Array<String>) {
+    addStuff()
 }
