@@ -10,19 +10,6 @@ class StringListEditor(model: Model<List<String>>) : ListEditor<String>(model) {
 
     override fun createNewElement(): String = newInput.value
 
-    override fun KafffeHtml<HTMLDivElement>.newElementEditor() {
-        input {
-            addClass("form-control")
-            withElement {
-                newInput = this
-                value = ""
-                type = "text"
-                onkeydown = ::newElementKeyHandler
-                if (focusAfterRerender == -1) {delayedFocus()}
-            }
-        }
-    }
-
     override fun KafffeHtml<HTMLDivElement>.elementEditor(listElement: String, index: Int) {
         input {
             addClass("form-control")
