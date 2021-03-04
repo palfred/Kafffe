@@ -70,3 +70,18 @@ open class InputInt(idInput: String, valueModel: Model<Int>) : Input<Int>(idInpu
     override fun valueToString(value: Int): String = value.toString()
     override fun valueFromString(strValue: String): Int = strValue.toInt()
 }
+
+
+open class InputLong(idInput: String, valueModel: Model<Long>) : Input<Long>(idInput, valueModel) {
+    var minimum: Long = 0
+    var maximum: Long = Long.MAX_VALUE
+
+    init {
+        inputType = "number"
+        modifiers.add(AttributeSetModifier("min", FunctionalModel({ minimum.toString() })))
+        modifiers.add(AttributeSetModifier("max", FunctionalModel({ maximum.toString() })))
+    }
+
+    override fun valueToString(value: Long): String = value.toString()
+    override fun valueFromString(strValue: String): Long = strValue.toLong()
+}
