@@ -6,22 +6,8 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
 
 class StringListEditor(model: Model<List<String>>) : ListEditor<String>(model) {
-    private lateinit var newInput: HTMLInputElement
 
-    override fun createNewElement(): String = newInput.value
-
-    override fun KafffeHtml<HTMLDivElement>.newElementEditor() {
-        input {
-            addClass("form-control")
-            withElement {
-                newInput = this
-                value = ""
-                type = "text"
-                onkeydown = ::newElementKeyHandler
-                if (focusAfterRerender == -1) {delayedFocus()}
-            }
-        }
-    }
+    override fun createNewElement(): String = ""
 
     override fun KafffeHtml<HTMLDivElement>.elementEditor(listElement: String, index: Int) {
         input {
