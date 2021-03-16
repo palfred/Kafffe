@@ -70,11 +70,19 @@ interface FormComponentConsumer<T : Any> {
         return input
     }
 
-    /**
-     * Property based
-     */
     fun inputNum(property: KProperty1<T, Int>): InputInt =
         inputNum(property.name, labelStrategy.label(property.name), model.property(property))
+
+
+    fun inputLong(idInput: String, labelModel: Model<String>, valueModel: Model<Long>): InputLong {
+        val input = InputLong(idInput, valueModel)
+        decorateAndAdd(labelModel, input)
+        return input
+    }
+
+    fun inputLong(property: KProperty1<T, Long>): InputLong =
+        inputLong(property.name, labelStrategy.label(property.name), model.property(property))
+
 
     fun readonly(idInput: String, labelModel: Model<String>, valueModel: Model<String>): InputString =
         input(idInput, labelModel, valueModel).apply { readOnly = true }
