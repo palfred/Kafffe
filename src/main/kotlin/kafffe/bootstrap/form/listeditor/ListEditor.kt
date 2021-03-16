@@ -58,7 +58,7 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
     /**
      * Index to reclaim focus after rerender -1 = new row
      */
-    protected var focusAfterRerender: Int = -2
+    var focusAfterRerender: Int = -2
 
    override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut {
        // make sure allways at least one element
