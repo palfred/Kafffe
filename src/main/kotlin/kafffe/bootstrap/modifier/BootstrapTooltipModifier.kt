@@ -3,7 +3,7 @@ package kafffe.bootstrap.modifier
 import kafffe.bootstrap.external.TooltipOption
 import kafffe.bootstrap.external.bsJquery
 import kafffe.bootstrap.external.jsCreate
-import kafffe.core.HtmlElementModifier
+import kafffe.core.modifiers.HtmlElementModifier
 import kafffe.core.Model
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.get

@@ -1,6 +1,8 @@
 package kafffe.bootstrap
 
 import kafffe.core.*
+import kafffe.core.modifiers.CssClassModifier
+import kafffe.core.modifiers.HtmlElementModifier
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTableCellElement
 import org.w3c.dom.get

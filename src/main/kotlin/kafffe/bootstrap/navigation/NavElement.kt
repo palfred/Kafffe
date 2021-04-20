@@ -1,6 +1,6 @@
 package kafffe.bootstrap.navigation
 
-import kafffe.core.CssClassModifier
+import kafffe.core.modifiers.CssClassModifier
 import kafffe.core.KafffeComponent
 
 open class NavElement() : KafffeComponent() {

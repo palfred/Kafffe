@@ -1,6 +1,6 @@
 package kafffe.bootstrap
 
-import kafffe.core.CssClassModifier
+import kafffe.core.modifiers.CssClassModifier
 import kafffe.core.DivContainer
 
 enum class BootstrapContainerClass(val cssClass: String) {

@@ -3,6 +3,9 @@ package samples
 import kafffe.bootstrap.*
 import kafffe.bootstrap.form.*
 import kafffe.core.*
+import kafffe.core.modifiers.CssClassModifier
+import kafffe.core.modifiers.HtmlElementModifier
+import kafffe.core.modifiers.StyleModifier
 import kotlinx.browser.window
 
 class FormSample : KafffeComponent() {

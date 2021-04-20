@@ -4,6 +4,7 @@ import kafffe.bootstrap.*
 import kafffe.bootstrap.ResponsiveSize.md
 import kafffe.bootstrap.navigation.Nav
 import kafffe.core.*
+import kafffe.core.modifiers.HtmlElementModifier
 import kafffe.messages.*
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLImageElement

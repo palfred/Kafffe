@@ -1,6 +1,7 @@
 package kafffe.bootstrap
 
 import kafffe.core.*
+import kafffe.core.modifiers.HtmlElementModifier
 import kafffe.messages.Messages
 import kafffe.messages.i18nText
 import org.w3c.dom.DOMPoint

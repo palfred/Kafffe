@@ -1,6 +1,7 @@
 package kafffe.bootstrap
 
 import kafffe.core.*
+import kafffe.core.modifiers.CssClassModifier
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLElement
 

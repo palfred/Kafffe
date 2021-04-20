@@ -1,6 +1,7 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
+import kafffe.core.modifiers.HtmlElementModifier
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import kotlin.reflect.KProperty1

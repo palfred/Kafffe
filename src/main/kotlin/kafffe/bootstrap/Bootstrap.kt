@@ -1,6 +1,6 @@
 package kafffe.bootstrap
 
-import kafffe.core.CssClassModifier
+import kafffe.core.modifiers.CssClassModifier
 
 enum class ResponsiveSize {
     sm, md, lg, xl;
