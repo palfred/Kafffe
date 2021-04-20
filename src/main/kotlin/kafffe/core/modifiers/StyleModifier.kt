@@ -8,9 +8,12 @@ class StyleModifier(val block: CSSStyleDeclaration.() -> Unit) : HtmlElementModi
     override fun modify(element: HTMLElement) {
         element.style.block()
     }
+
+    companion object {
+        /**
+         * Helper to shorted add if StyleModifier
+         */
+        fun KafffeComponent.styleModifier(block: CSSStyleDeclaration.() -> Unit) = this.modifiers.add(StyleModifier(block))
+    }
 }
 
-/**
- * Helper to shorted add if StyleModifier
- */
-fun KafffeComponent.modifyStyle(block: CSSStyleDeclaration.() -> Unit) = this.modifiers.add(StyleModifier(block))
