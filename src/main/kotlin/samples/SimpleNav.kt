@@ -4,14 +4,14 @@ import kafffe.bootstrap.navigation.NavSimpleContainer
 import kafffe.bootstrap.navigation.NavType
 import kafffe.core.Model
 import kafffe.core.NavigationPath
-import kafffe.core.addClass
+import kafffe.core.modifiers.CssClassModifier.Companion.cssClassModifier
 
 class SimpleNav(path: NavigationPath) : NavSimpleContainer(NavType.tabs, "simplenav") {
 
     fun nestedNav(navPath: NavigationPath, navType: NavType): NavSimpleContainer =
             NavSimpleContainer(navType, "samples").also {
-                nav.addClass("bg-info txt-info")
-                it.nav.addClass("bg-success txt-success")
+                nav.cssClassModifier("bg-info txt-info")
+                it.nav.cssClassModifier("bg-success txt-success")
                 it.add("table", Model.of("Table"), "fas fa-table") { TableSample() }
                 it.add("form", Model.of("Form"), "fab fa-wpforms") { FormSample() }
                 println("NestedNav $navPath")

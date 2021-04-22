@@ -1,5 +1,7 @@
 package kafffe.core
 
+import kafffe.core.modifiers.AttachAwareModifier
+import kafffe.core.modifiers.HtmlElementModifier
 import org.w3c.dom.HTMLElement
 import kotlin.reflect.KClass
 
@@ -54,8 +56,14 @@ open class KafffeComponent {
         else p.parentOfType(aType)
     }
 
-    val modifiers = mutableListOf<HtmlElementModifier>()
-
+    /**
+     * modifiers can be any mofiger, ie HtmlElementModifier or behaviors, they my be aware of lifecycle like AttachAwareModifier.
+     * HtmlElementModifiers are called after HTML is generated.
+     * AttachAwareModifiers are called when the component is attached or detached, which can be used to attach or detach listeners on other object.
+     */
+    val modifiers = mutableListOf<Any>()
+    inline fun <reified T> modifiersTyped(): List<T> = modifiers.filter { it is T }.map { it as T}
+    
     private var _html: HTMLElement? = null
 
     var html: HTMLElement
@@ -108,7 +116,7 @@ open class KafffeComponent {
     protected fun render(): HTMLElement = modifyHtml(createHtml())
 
     protected open fun modifyHtml(element: HTMLElement): HTMLElement {
-        modifiers.forEach { it.modify(element) }
+        modifiersTyped<HtmlElementModifier>().forEach { it.modify(element) }
         return element
     }
 
@@ -160,13 +168,17 @@ open class KafffeComponent {
      * This components is being attached to a component hierarchy.
      * Override this to add listeners to models and other components needed.
      */
-    open fun attach() {}
+    open fun attach() {
+        modifiersTyped<AttachAwareModifier>().forEach { it.attach() }
+    }
 
     /**
      * This components is being detached from a component hierarchy.
      * Override this to remove listeners to models and other components setup in attach.
      */
-    open fun detach() {}
+    open fun detach() {
+        modifiersTyped<AttachAwareModifier>().reversed().forEach { it.detach() }
+    }
 
     fun attachChildrenRecursive() = visitChildrenRecusive(KafffeComponent::attach)
 
@@ -188,7 +200,6 @@ open class KafffeComponent {
     fun doDetached(block: KafffeComponent.() -> Unit) {
         try {
             detachHierarchy()
-            @Suppress("UNUSED_EXPRESSION")
             block()
         } finally {
             attachHierarchy()

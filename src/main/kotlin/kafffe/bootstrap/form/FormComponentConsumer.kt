@@ -3,6 +3,7 @@ package kafffe.bootstrap.form
 import kafffe.bootstrap.BootstrapButton
 import kafffe.bootstrap.ColWidth
 import kafffe.core.*
+import kafffe.core.modifiers.CssClassModifier
 import kotlin.reflect.KProperty1
 
 /**

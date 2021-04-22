@@ -1,6 +1,8 @@
 package kafffe.bootstrap.navigation
 
 import kafffe.core.*
+import kafffe.core.modifiers.CssClassModifier
+import kafffe.core.modifiers.CssClassModifier.Companion.cssClassModifier
 
 open class NavSimpleContainer(navType: NavType = NavType.tabs, val containerName: String = "container") : KafffeComponent() {
     val navigator = NavigationElement.create(containerName)
@@ -16,9 +18,9 @@ open class NavSimpleContainer(navType: NavType = NavType.tabs, val containerName
     init {
         navigator.componentNavigator = { container.replaceContent(it) }
         if (nav.navType.isVertical) {
-            addClass("d-flex hgap-4")
-            nav.addClass("flex-grow-0")
-            container.addClass("flex-grow-1")
+            cssClassModifier("d-flex hgap-4")
+            nav.cssClassModifier("flex-grow-0")
+            container.cssClassModifier("flex-grow-1")
         }
     }
 

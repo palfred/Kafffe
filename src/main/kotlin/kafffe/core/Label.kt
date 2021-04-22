@@ -1,5 +1,7 @@
 package kafffe.core
 
+import kafffe.core.modifiers.StyleModifier
+
 class Label(textModel: Model<String>) : KafffeComponentWithModel<String>(textModel) {
     constructor(text: String) : this(Model.of(text))
     init {

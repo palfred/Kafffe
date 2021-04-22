@@ -3,7 +3,7 @@ package kafffe.bootstrap.modifier
 import kafffe.bootstrap.external.PopoverOption
 import kafffe.bootstrap.external.bsJquery
 import kafffe.bootstrap.external.jsCreate
-import kafffe.core.HtmlElementModifier
+import kafffe.core.modifiers.HtmlElementModifier
 import org.w3c.dom.HTMLElement
 
 class BootstrapPopoverModifier() : HtmlElementModifier {

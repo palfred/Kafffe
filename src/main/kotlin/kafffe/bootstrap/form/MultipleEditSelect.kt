@@ -1,6 +1,7 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
+import kafffe.core.modifiers.HtmlElementModifier
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.asList

@@ -1,6 +1,7 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
+import kafffe.core.modifiers.AttributeSetModifier
 import kafffe.messages.Messages
 import org.w3c.dom.HTMLInputElement
 import kotlinx.dom.addClass

@@ -4,6 +4,8 @@ import kafffe.bootstrap.BasicColor
 import kafffe.bootstrap.ColorStrength
 import kafffe.bootstrap.ResponsiveSize
 import kafffe.core.*
+import kafffe.core.modifiers.CssClassModifier
+import kafffe.core.modifiers.HtmlElementModifier
 
 class Nav(navigationTarget: NavigationElement, val navType: NavType = NavType.bar) : NavContainer(navigationTarget) {
     companion object {
