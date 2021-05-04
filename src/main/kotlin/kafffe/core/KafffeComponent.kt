@@ -169,7 +169,7 @@ open class KafffeComponent {
      * Override this to add listeners to models and other components needed.
      */
     open fun attach() {
-        modifiersTyped<AttachAwareModifier>().forEach { it.attach() }
+        modifiersTyped<AttachAwareModifier>().forEach { it.attach(this) }
     }
 
     /**
@@ -177,7 +177,7 @@ open class KafffeComponent {
      * Override this to remove listeners to models and other components setup in attach.
      */
     open fun detach() {
-        modifiersTyped<AttachAwareModifier>().reversed().forEach { it.detach() }
+        modifiersTyped<AttachAwareModifier>().reversed().forEach { it.detach(this) }
     }
 
     fun attachChildrenRecursive() = visitChildrenRecusive(KafffeComponent::attach)
