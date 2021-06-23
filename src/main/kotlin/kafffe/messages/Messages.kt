@@ -47,6 +47,12 @@ interface Messages {
             day = "2-digit"
             year = "numeric"
         }
+
+        val dateNoYearOptions = dateLocaleOptions {
+            month = "2-digit"
+            day = "2-digit"
+        }
+
         val dateTimeOptions = dateLocaleOptions {
             month = "2-digit"
             day = "2-digit"
@@ -61,6 +67,7 @@ interface Messages {
 
         fun Date.formatDateTime() = toLocaleString(get().locale, dateTimeOptions)
         fun Date.formatDate() = toLocaleDateString(get().locale, dateOptions)
+        fun Date.formatDateNoYear() = toLocaleDateString(get().locale, dateNoYearOptions)
         fun Date.formatTime() = toLocaleTimeString(get().locale, timeOptions)
     }
 
