@@ -4,6 +4,7 @@ import kafffe.bootstrap.*
 import kafffe.bootstrap.ResponsiveSize.md
 import kafffe.bootstrap.navigation.Nav
 import kafffe.core.*
+import kafffe.core.modifiers.CssClassModifier.Companion.cssClassModifier
 import kafffe.core.modifiers.HtmlElementModifier
 import kafffe.messages.*
 import org.w3c.dom.DOMPoint
@@ -23,6 +24,7 @@ fun addStuff() {
         val rootNavigation = NavigationElement.create("root") {
             component("config") {
                 bootstrapRowComponent {
+                    cssClassModifier("mt-")
                     val labelModel = Model.of("Here goes result")
 
                     val btn1 = BootstrapButton(Model.of("Open Dialog"), {
@@ -35,10 +37,12 @@ fun addStuff() {
                     )
                     cell(btn1, md.col(2))
 
-                    val btn2 = BootstrapButton(Model.of("Open Dialog Position at Button"), {
+                    val btn2 = BootstrapButton(Model.of("Open Dialog Position at Button"), onClick = { thisBtn: BootstrapButton ->
                         labelModel.data = "Here goes"
-                        val top = it.html.getBoundingClientRect().top + it.html.clientHeight
-                        val left = it.html.getBoundingClientRect().left
+                        val btnElement = thisBtn.html
+                        val btnRect = btnElement.getBoundingClientRect()
+                        val top = btnRect.top + btnElement.clientHeight
+                        val left = btnRect.left
                         Modal.confirm(Model.of("Please Confirm"), Model.of("Is this a position dialog ?"), absolutePosition = DOMPoint(left, top)) {
                             println("Yes Pressed")
                             labelModel.data = "Yes pressed"
