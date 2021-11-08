@@ -229,6 +229,7 @@ abstract class SingleEditSelect<T : Any>(
                 addClass("sd_dropdown_item")
                 choiceRender(match)
                 withElement {
+                    tabIndex = -1
                     onclick = { evt: MouseEvent ->
                         updateChoice(match)
                         evt.preventDefault()
@@ -244,6 +245,7 @@ abstract class SingleEditSelect<T : Any>(
         currentChoice = newChoice
         badge.rerender()
         if (haveFocus) {
+            hideDropdown()
             window.setTimeout({ inputControl.element?.blur() /* how to focus next focusable element */ }, 200)
         }
     }
