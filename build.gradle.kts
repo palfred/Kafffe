@@ -6,16 +6,11 @@ group = "dk.rheasoft"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    jcenter()
-    maven {
-        setUrl("https://kotlin.bintray.com/js-externals")
-    }
+    mavenCentral()
 }
 
 dependencies {
     implementation(kotlin("stdlib-js"))
-    implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.6.12")
-    implementation("kotlin.js.externals:kotlin-js-jquery:2.0.0-0")
 }
 
 kotlin.target {
