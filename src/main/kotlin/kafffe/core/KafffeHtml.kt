@@ -1,7 +1,5 @@
 package kafffe.core
 
-import kotlinx.html.dom.create
-import kotlinx.html.svg
 import org.w3c.dom.*
 import org.w3c.dom.css.CSSStyleDeclaration
 import org.w3c.dom.events.Event
@@ -171,13 +169,6 @@ class KafffeHtml<T : HTMLElement>(val element: T?) {
     fun u(block: KafffeHtmlConsumer<HTMLElement> = {}) = createElement("u", block)
     fun ul(block: KafffeHtmlConsumer<HTMLUListElement> = {}) = createElement("ul", block)
     fun varTag(block: KafffeHtmlConsumer<HTMLElement> = {}) = createElement("var", block)
-
-    fun svg(block: KafffeHtmlConsumer<HTMLElement> = {}): KafffeHtml<HTMLElement> {
-        val child = document.create.svg() {}
-        val kafffeHtml = add(child)
-        kafffeHtml.block()
-        return kafffeHtml
-    }
 
     fun faIcon(vararg classes: String) = i { for (c in classes) addClass(c) }
 
