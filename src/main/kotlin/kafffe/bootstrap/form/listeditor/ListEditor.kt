@@ -112,7 +112,6 @@ abstract class ListEditor<T: Any>(model: Model<List<T>>) : KafffeComponentWithMo
                                         withElement {
                                             type = "button"
                                             onclick = { addElement(index + 1) }
-                                            title = "Tilføj nedenfor"
                                         }
                                         i {
                                             addClass("fas fa-plus")
