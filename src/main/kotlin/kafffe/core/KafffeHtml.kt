@@ -1,10 +1,13 @@
 package kafffe.core
 
+import kafffe.svg.KafffeSvg
+import kafffe.svg.KafffeSvgConsumer
 import org.w3c.dom.*
 import org.w3c.dom.css.CSSStyleDeclaration
 import org.w3c.dom.events.Event
 import kotlinx.browser.document
 import kotlinx.dom.addClass
+import org.w3c.dom.svg.SVGSVGElement
 
 /**
  * Helps to build HTMLElements directly using kotlinx.browser.document.
@@ -171,6 +174,14 @@ class KafffeHtml<T : HTMLElement>(val element: T?) {
     fun varTag(block: KafffeHtmlConsumer<HTMLElement> = {}) = createElement("var", block)
 
     fun faIcon(vararg classes: String) = i { for (c in classes) addClass(c) }
+
+    fun svg(block: KafffeSvgConsumer<SVGSVGElement> = {}): KafffeSvg<SVGSVGElement> {
+        val svg = document.createElementNS("http://www.w3.org/2000/svg", "svg") as SVGSVGElement
+        element!!.appendChild(svg)
+        val kafffeSvg = KafffeSvg(svg)
+        kafffeSvg.block()
+        return kafffeSvg
+    }
 
     /**
      * Shorthand for adding text inside an kafffe html build ie:
