@@ -5,6 +5,8 @@ import kafffe.core.KafffeHtmlBase
 import kafffe.svg.center
 import kafffe.svg.radius
 import kafffe.svg.*
+import kotlin.math.PI
+import kotlin.random.Random
 
 class SvgSample : KafffeComponent() {
 
@@ -61,28 +63,22 @@ class SvgSample : KafffeComponent() {
                         withStyle { fontSize = "2.5rem" }
                         textAnchor(TextAnchor.middle)
                     }
-                    pathBuild({
-                        donutSlice(150.0, 250.0, 0.0, 0.5)
-                    }, {
-                        stroke("darkgrey")
-                        strokeWidth(3)
-                        fill("green")
-                    })
-                    pathBuild({
-                        donutSlice(150.0, 350.0, 0.5, 1.5)
-                    }, {
-                        stroke("darkgrey")
-                        strokeWidth(3)
-                        fill("url('#greens')")
-                    })
-                    pathBuild({
-                        donutSlice(150.0, 320.0, 1.5, 1.8)
-                    }, {
-                        stroke("darkgrey")
-                        strokeWidth(3)
-                        fill("url('#greens')")
-                    })
-
+                    val radStart = - PI / 2.0
+                    val count = Random.nextInt(2, 15)
+                    val radSlice = (2 * PI) / count
+                    for (i in 1..count ) {
+                        val curStart = radStart + (i - 1) * radSlice
+//                        pathDonutSlice(150.0, 498.0, curStart, curStart + radSlice) {
+//                            stroke("darkgrey")
+//                            strokeWidth(2)
+//                            fill("wheat")
+//                        }
+                        pathDonutSlice(150.0, Random.nextDouble(170.0, 400.0), curStart, curStart + radSlice) {
+                            stroke("darkgrey")
+                            strokeWidth(3)
+                            fill("url('#greens')")
+                        }
+                    }
                 }
 
             }

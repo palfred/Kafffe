@@ -66,35 +66,32 @@ class KafffeSvg<T : SVGElement>(val element: T) {
         element.setAttribute("d", psb.build())
         block()
     }
+    fun pathDonutSlice(
+        innerRadius: Double,
+        outerRadius: Double,
+        startAngelRadians: Double,
+        endAngelRadians: Double,
+        block: KafffeSvgConsumer<SVGPathElement> = {}
+    ) = pathBuild({donutSlice(innerRadius, outerRadius, startAngelRadians, endAngelRadians)}, block)
 
     fun circle(block: KafffeSvgConsumer<SVGCircleElement> = {}) = createElement("circle", block)
     fun circle(centerX: Number, centerY: Number, radius: Number, block: KafffeSvgConsumer<SVGCircleElement> = {}) = circle() {
-        withElement {
-            setAttribute("cx", centerX.toString())
-            setAttribute("cy", centerY.toString())
-            setAttribute("r", radius.toString())
-        }
+        center(centerX, centerY)
+        radius(radius)
         block()
         }
 
     fun rectangle(block: KafffeSvgConsumer<SVGRectElement> = {}) = createElement("rect", block)
     fun rectangle(x: Number, y: Number, width: Number, height: Number,  block: KafffeSvgConsumer<SVGRectElement> = {}) = rectangle() {
-        withElement {
-            setAttribute("x", x.toString())
-            setAttribute("y", y.toString())
-            setAttribute("width", width.toString())
-            setAttribute("height", height.toString())
-        }
+        pos(x,y)
+        dim(width, height)
         block()
     }
 
     fun text(block: KafffeSvgConsumer<SVGTextElement> = {}) = createElement("text", block)
     fun text(x: Number, y: Number, textContent: String, block: KafffeSvgConsumer<SVGTextElement> = {}) = text {
-        withElement {
-            setAttribute("x", x.toString())
-            setAttribute("y", y.toString())
-            this.append(textContent)
-        }
+        pos(x,y)
+        element.append(textContent)
         block()
     }
 

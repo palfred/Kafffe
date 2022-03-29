@@ -77,7 +77,7 @@ fun addStuff() {
                     item(Model.of("Table Sample Nest"), NavigationPath.fromString("root/simplenav/tabs/table"), "fas fa-table")
                     item(Model.of("Form Sample Nest"), NavigationPath.fromString("root/simplenav/pills/form"), "fab fa-wpforms")
                     item(Model.of("Calendar"), NavigationPath.fromString("root/calendarsample"), "fas fa-calendar")
-                    item(Model.of("SVG"), NavigationPath.fromString("root/svgsample"), "fas fa-graph")
+                    item(Model.of("SVG"), NavigationPath.fromString("root/svgsample"), "fas fa-chart-pie")
                     addChild(NavLanguageSelector(i18nText(Messages::languageSelect)))
                 }
             })
