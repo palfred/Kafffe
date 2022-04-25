@@ -1,7 +1,6 @@
 package kafffe.core
 
-import kafffe.svg.KafffeSvg
-import kafffe.svg.KafffeSvgConsumer
+import kafffe.svg.SvgDsl
 import org.w3c.dom.*
 import org.w3c.dom.css.CSSStyleDeclaration
 import org.w3c.dom.events.Event
@@ -175,12 +174,11 @@ class KafffeHtml<T : HTMLElement>(val element: T?) {
 
     fun faIcon(vararg classes: String) = i { for (c in classes) addClass(c) }
 
-    fun svg(block: KafffeSvgConsumer<SVGSVGElement> = {}): KafffeSvg<SVGSVGElement> {
-        val svg = document.createElementNS("http://www.w3.org/2000/svg", "svg") as SVGSVGElement
-        element!!.appendChild(svg)
-        val kafffeSvg = KafffeSvg(svg)
-        kafffeSvg.block()
-        return kafffeSvg
+    fun svg(block: SvgDsl<SVGSVGElement>.() -> Unit = {}): SvgDsl<SVGSVGElement> {
+        val svgDsl = SvgDsl<SVGSVGElement>("svg")
+        element!!.appendChild(svgDsl.element)
+        svgDsl.block()
+        return svgDsl
     }
 
     /**

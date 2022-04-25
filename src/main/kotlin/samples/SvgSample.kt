@@ -2,8 +2,6 @@ package samples
 
 import kafffe.core.KafffeComponent
 import kafffe.core.KafffeHtmlBase
-import kafffe.svg.center
-import kafffe.svg.radius
 import kafffe.svg.*
 import kotlin.math.PI
 import kotlin.random.Random
@@ -14,18 +12,24 @@ class SvgSample : KafffeComponent() {
         div {
             svg {
                 defs {
-                    radialGradiant("redGold") {
-                        gradiantStop("40%", "gold")
-                        gradiantStop("99%", "red")
+                    radialGradient("redGold") {
+                        stop("40%", "gold")
+                        stop("99%", "red")
                     }
-                    linearGradiant("greens") {
-                        element.setAttribute("gradientTransform", "rotate(45)")
-                        gradiantStop("1%", "#004400")
-                        gradiantStop("99%", "#AAFFAA")
+                    linearGradient("redGold2") {
+                        set("gradientTransform", "rotate(90)")
+                        stop("1%", "red")
+                        stop("50%", "gold")
+                        stop("90%", "pink")
+                    }
+                    linearGradient("greens") {
+                        set("gradientTransform", "rotate(45)")
+                        stop("1%", "#004400")
+                        stop("99%", "#AAFFAA")
                     }
                 }
-                width(1000)
-                height(1000)
+                set("width", "1000")
+                set("height", "1000")
                 circle {
                     center(500, 500)
                     radius(400)
@@ -44,7 +48,7 @@ class SvgSample : KafffeComponent() {
                 text(200, 100, "Test middle") {
                     stroke("red")
                     strokeWidth(2)
-                    textAnchor(TextAnchor.middle)
+                    textAnchor(SvgDsl.Text.Anchor.middle)
                     withStyle {
                         fontSize = "4rem"
                     }
@@ -58,10 +62,17 @@ class SvgSample : KafffeComponent() {
                         fill("url('#redGold')")
                     }
                     text {
+                        val thisText: SvgDsl.Text = this
+                        var rotate = 45
+                        element.onclick = {
+                            rotate += 10
+                            if (rotate > 365) rotate = rotate - 365
+                            thisText.transform("rotate($rotate)")
+                        }
                         transform("rotate(45)")
                         element.textContent = "SVG Test"
                         withStyle { fontSize = "2.5rem" }
-                        textAnchor(TextAnchor.middle)
+                        textAnchor(SvgDsl.Text.Anchor.middle)
                     }
                     val radStart = - PI / 2.0
                     val count = Random.nextInt(2, 15)
@@ -74,9 +85,13 @@ class SvgSample : KafffeComponent() {
 //                            fill("wheat")
 //                        }
                         pathDonutSlice(150.0, Random.nextDouble(170.0, 400.0), curStart, curStart + radSlice) {
+                            element.onclick = { rerender()}
                             stroke("darkgrey")
                             strokeWidth(3)
-                            fill("url('#greens')")
+                            if (i % 2 == 0)
+                                fill("url('#greens')")
+                            else
+                                fill("url('#redGold2')")
                         }
                     }
                 }
