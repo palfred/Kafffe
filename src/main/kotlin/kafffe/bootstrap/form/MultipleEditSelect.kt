@@ -276,7 +276,7 @@ abstract class MultipleEditSelect<T : Any>(
     override var validationMessageModel: Model<String> = Model.of("")
 }
 
-class FormGroupMultipleEditSelectString(
+class MultipleEditSelectString(
     idInput: String,
     valueModel: Model<List<String>>,
     choiceModel: Model<List<String>>
@@ -290,8 +290,8 @@ fun <T : Any> FormComponentConsumer<T>.editSelectMultiple(
     labelModel: Model<String>,
     valueModel: Model<List<String>>,
     choiceModel: Model<List<String>>
-): FormGroupMultipleEditSelectString {
-    val input = FormGroupMultipleEditSelectString(idInput, valueModel, choiceModel)
+): MultipleEditSelectString {
+    val input = MultipleEditSelectString(idInput, valueModel, choiceModel)
     decorateAndAdd(labelModel, input)
     return input
 }
@@ -299,5 +299,5 @@ fun <T : Any> FormComponentConsumer<T>.editSelectMultiple(
 fun <T : Any> FormComponentConsumer<T>.editSelectMultiple(
     property: KProperty1<T, List<String>>,
     choiceModel: Model<List<String>>
-): FormGroupMultipleEditSelectString =
+): MultipleEditSelectString =
     editSelectMultiple(property.name, labelStrategy.label(property.name), model.property(property), choiceModel)
