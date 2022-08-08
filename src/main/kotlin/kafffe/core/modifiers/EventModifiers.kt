@@ -31,6 +31,30 @@ fun <T> debounceEvent(waitMs: Int, func: (T) -> Unit) : (T) -> Unit {
 }
 
 /**
+ * Debounce events. Only call func once per waitMs period. If triggered in started period then the period is restarted.
+ * Example:
+ * * oninput = debounceEvent(250, 200) { inputEvent: InputEvent -> doSomething(inputEvent) }
+ * * window.addEventListener("resize", debounceEvent(200, 200) { resizeEvent:  doResize() })
+ */
+fun <T> debounceEvent(waitMs: Int, waitFirstMs: Int, func: (T) -> Unit) : (T) -> Unit {
+    var timeoutHandle: Int? = null;
+    return { event: T ->
+        var waitingFunc = { event: T ->
+            timeoutHandle = null
+            func(event)
+        }
+
+        timeoutHandle = if (timeoutHandle == null) {
+            // First time in period handle directly
+            window.setTimeout(waitingFunc, waitFirstMs);
+        } else {
+            window.clearTimeout(timeoutHandle!!)
+            window.setTimeout(waitingFunc, waitMs);
+        }
+    }
+}
+
+/**
  * Modifies a HTML element by setting the onchange handler.
  */
 open class EventHandler(val eventName: String, val eventHandler: ((Event) -> dynamic)) : HtmlElementModifier {
