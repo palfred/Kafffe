@@ -19,7 +19,7 @@ class BootstrapPopoverModifier() : HtmlElementModifier {
     }
 
     companion object {
-        fun remove() {
+        fun removeAll() {
             bsJquery(".popover").remove();
         }
     }

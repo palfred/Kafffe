@@ -5,6 +5,7 @@ import kafffe.core.modifiers.CssClassModifier
 import kafffe.core.modifiers.HtmlElementModifier
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTableCellElement
+import org.w3c.dom.HTMLTableRowElement
 import org.w3c.dom.get
 
 class BootstrapTableColumn<Data : Any>(val title: Model<String>) {
@@ -35,7 +36,7 @@ class BootstrapTable<Data : Any>(data: Model<List<Data>>) : KafffeComponentWithM
     val columns = mutableListOf<BootstrapTableColumn<Data>>()
     val modifiersHeader = mutableListOf<HtmlElementModifier>()
     val modifiersBody = mutableListOf<HtmlElementModifier>()
-    var rowClickHandler: (rowData: Data) -> Unit = {}
+    var rowClickHandler: (rowData: Data, trElement: HTMLTableRowElement) -> Unit = {_,_ -> }
 
     companion object {
         fun <D : Any> create(data: List<D>, block: BootstrapTable<D>.() -> Any): BootstrapTable<D> = BootstrapTable<D>(Model.of(data)).apply { block() }
@@ -102,11 +103,12 @@ class BootstrapTable<Data : Any>(data: Model<List<Data>>) : KafffeComponentWithM
                 tbody {
                     for (row in data) {
                         tr {
+                            val trElement = element!!
                             for (col in columns) {
                                 td {
                                     if (col.rowClick) {
                                         withElement {
-                                            onclick = { rowClickHandler(row) }
+                                            onclick = { rowClickHandler(row, trElement) }
                                         }
                                     }
                                     val contentCell = col.contentCell(row, this.element!!)
