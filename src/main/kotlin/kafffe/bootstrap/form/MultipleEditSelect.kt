@@ -181,6 +181,7 @@ abstract class MultipleEditSelect<T : Any>(
             "ArrowDown" -> selectNext()
             "ArrowUp" -> selectPrev()
             "Enter" -> {
+                keyEvent.preventDefault()
                 val m = matches();
                 if (selectIndex in 0 until m.size) {
                     addSelection(m[selectIndex])
