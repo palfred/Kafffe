@@ -17,7 +17,7 @@ class AlertsPanel : KafffeComponent() {
     }
 
     fun addAlert(alert: Alert) {
-        alerts += alert
+        alerts = alerts + alert
     }
 
     fun setAlertWithDismiss(alert: Alert, dismissAfterSeconds: Int = 5) {
@@ -26,7 +26,7 @@ class AlertsPanel : KafffeComponent() {
     }
 
     fun addAlertWithDismiss(alert: Alert, dismissAfterSeconds: Int = 5) {
-        alerts += alert
+        alerts = alerts + alert
         window.setTimeout({removeAlert(alert)}, dismissAfterSeconds * 1000)
     }
 
@@ -53,7 +53,7 @@ class AlertsPanel : KafffeComponent() {
 
 
     fun removeAlert(alert: Alert) {
-        alerts -= alert
+        alerts = alerts - alert
     }
 
     override fun KafffeHtmlBase.kafffeHtml() =

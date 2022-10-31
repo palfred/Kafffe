@@ -69,8 +69,7 @@ open class KafffeComponent {
     var html: HTMLElement
         set(newValue) {
             val oldValue = _html;
-            if (oldValue == null) {
-            } else {
+            if (oldValue != null) {
                 val parentNode = oldValue.parentNode
                 if (parentNode != null) {
                     parentNode.replaceChild(newValue, oldValue)
