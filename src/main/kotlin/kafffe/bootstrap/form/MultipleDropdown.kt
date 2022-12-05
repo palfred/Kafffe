@@ -43,7 +43,7 @@ abstract class MultipleDropdown<T : Any>(
                 addClass("form-control dropdown-toggle")
                 withElement {
                     id = "dropdownMenuButton"
-                    setAttribute("data-toggle", "dropdown")
+                    setAttribute("data-bs-toggle", "dropdown")
                     setAttribute("aria-haspopup", "true")
                     setAttribute("aria-expanded", "false")
                     style.textAlign = "left"

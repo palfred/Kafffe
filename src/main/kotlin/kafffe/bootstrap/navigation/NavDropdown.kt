@@ -37,7 +37,7 @@ open class NavDropdown(
                     addClass("dropdown-toggle")
                     href = "#"
                     setAttribute("role", "button")
-                    setAttribute("data-toggle", "dropdown")
+                    setAttribute("data-bs-toggle", "dropdown")
                     setAttribute("aria-haspopup", "true")
                     setAttribute("aria-expanded", "false")
                 }

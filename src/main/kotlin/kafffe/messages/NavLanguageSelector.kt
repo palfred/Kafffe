@@ -34,7 +34,7 @@ open class NavLanguageSelector(titleModel: Model<String>, val iconClasses: Strin
                         addClass("dropdown-toggle")
                         href = "#"
                         setAttribute("role", "button")
-                        setAttribute("data-toggle", "dropdown")
+                        setAttribute("data-bs-toggle", "dropdown")
                         setAttribute("aria-haspopup", "true")
                         setAttribute("aria-expanded", "false")
                     }

@@ -37,7 +37,7 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
                 withElement {
                     addClass("navbar-toggler")
                     type = "button"
-                    setAttribute("data-toggle", "collapse")
+                    setAttribute("data-bs-toggle", "collapse")
                     setAttribute("data-target", "#" + toggleId)
                     setAttribute("aria-controls", toggleId)
                     setAttribute("aria-expanded", "false")
