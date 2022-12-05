@@ -13,7 +13,8 @@ class CamelCaseWordsStrategy : LabelStrategy {
 
     override fun label(key: String): Model<String> {
         val words: List<String> = "[A-Z\\d]".toRegex().replace(key, { mr -> " ${mr.value}" }).split(' ')
-        val text = words.map { s -> s.capitalize() }.joinToString(" ")
+        val text =
+            words.joinToString(" ") { s -> s.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() } }
         return Model.of(text.trim());
     }
 

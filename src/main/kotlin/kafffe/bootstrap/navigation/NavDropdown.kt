@@ -66,7 +66,7 @@ open class NavDropdown(
     }
 
     companion object {
-        private var _navId = 1
-        fun navId() = _navId++
+        private var navId: Int = 1
+        fun navId() = navId++
     }
 }
