@@ -21,7 +21,7 @@ class Checkbox(var idInput: String, valueModel: Model<Boolean>, val labelModel: 
 
     override fun KafffeHtmlBase.kafffeHtml() =
         div {
-            addClass(if (useCustom) "custom-control custom-checkbox" else "form-check")
+            addClass("form-check")
             input {
                 withElement {
                     htmlInput = this

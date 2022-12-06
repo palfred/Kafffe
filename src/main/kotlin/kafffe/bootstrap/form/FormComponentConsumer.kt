@@ -137,7 +137,7 @@ interface FormComponentConsumer<T : Any> {
 
     fun <S : Any> row(subModel: Model<S>, block: FormLayout<S>.() -> Unit): FormLayout<S> =
         FormLayout<S>(this, subModel).also {
-            it.modifiers.add(CssClassModifier("form-row"))
+            it.modifiers.add(CssClassModifier("row"))
             it.block()
             addChild(it)
         }
@@ -146,7 +146,7 @@ interface FormComponentConsumer<T : Any> {
 
     fun <S : Any> group(subModel: Model<S>, block: FormLayout<S>.() -> Unit): FormLayout<S> =
         FormLayout<S>(this, subModel).also {
-            it.modifiers.add(CssClassModifier("form-group"))
+            it.modifiers.add(CssClassModifier("form-group")) // TODO ?
             it.block()
             addChild(it)
         }

@@ -104,7 +104,7 @@ abstract class SingleEditSelect<T : Any>(
      * @see valueCssClassDefault
      */
     var valueCssClasses: (T?) -> String = { valueCssClassDefault }
-    val valueCssClassDefault = "badge badge-info text-white ml-1"
+    val valueCssClassDefault = "badge bg-primary text-black "
 
     private fun KafffeHtml<HTMLDivElement>.renderInput() {
         span {

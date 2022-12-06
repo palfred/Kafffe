@@ -116,8 +116,6 @@ div.kf-single-edit {
 .badge.badge-multi-value {
     font-size: 90%;
     font-weight: 400;
-    background-color: #17a2b8 ; /* bg-info */
-    color: white ; /* text-white */
     margin-right: 0.25rem !important;
 }
 

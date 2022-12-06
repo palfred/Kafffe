@@ -51,7 +51,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                 renderInput()
             }
             a {
-                addClass("badge badge-info text-white ml-1")
+                addClass("badge bg-primary text-black ms-1")
                 text(cValue)
                 text(" ")
                 i {
