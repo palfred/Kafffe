@@ -10,6 +10,7 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
     inner class Brand(
         val title: String,
         val imageUrl: String = "",
+        val imageHeight: String = "",
         val path: NavigationPath = NavigationPath.fromString("/")
     ) : NavElement() {
         override fun KafffeHtmlBase.kafffeHtml() =
@@ -23,7 +24,12 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
                 }
                 if (!imageUrl.isEmpty()) {
                     img {
-                        withElement { src = imageUrl }
+                        withElement {
+                            src = imageUrl
+                            if (imageHeight.isNotEmpty()) {
+                                style.height = imageHeight
+                            }
+                        }
                     }
                 }
                 text(this@Brand.title)
@@ -38,7 +44,7 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
                     addClass("navbar-toggler")
                     type = "button"
                     setAttribute("data-bs-toggle", "collapse")
-                    setAttribute("data-target", "#" + toggleId)
+                    setAttribute("data-bs-target", "#" + toggleId)
                     setAttribute("aria-controls", toggleId)
                     setAttribute("aria-expanded", "false")
                     setAttribute("aria-label", "Toggle navigation")
@@ -103,7 +109,7 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
         return tb
     }
 
-    fun brand(title: String, imageUrl: String, path: NavigationPath = NavigationPath.fromString("/")) =
-        Brand(title, imageUrl, path).apply { thisContainer.addChild(this) }
+    fun brand(title: String, imageUrl: String, imageHeight: String = "", path: NavigationPath = NavigationPath.fromString("/")) =
+        Brand(title, imageUrl, imageHeight, path).apply { thisContainer.addChild(this) }
 
 }
