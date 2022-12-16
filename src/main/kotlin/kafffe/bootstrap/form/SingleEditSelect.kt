@@ -117,7 +117,7 @@ abstract class SingleEditSelect<T : Any>(
             }
             val container = this.element!!
             inputControl = input {
-                addClass("kf-single-edit-input ml-1")
+                addClass("kf-single-edit-input ms-1")
                 withElement {
                     id = htmlId
                     type = "text"

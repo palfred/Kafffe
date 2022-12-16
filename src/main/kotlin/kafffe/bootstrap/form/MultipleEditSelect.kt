@@ -75,6 +75,7 @@ abstract class MultipleEditSelect<T : Any>(
             }
             a {
                 addClass(valueCssClasses(choice))
+                addClass("me-1")
                 text(display(choice))
                 text(" ")
                 i {
@@ -116,7 +117,7 @@ abstract class MultipleEditSelect<T : Any>(
                 }
             }
             inputControl = input {
-                addClass("kf-multiple-edit-input ml-1")
+                addClass("kf-multiple-edit-input ms-1")
                 withElement {
                     type = "text"
                     onfocus = {

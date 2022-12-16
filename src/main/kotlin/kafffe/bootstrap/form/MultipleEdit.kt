@@ -81,7 +81,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                 }
             }
             inputControl = input {
-                addClass("kf-multiple-edit-input ml-1")
+                addClass("kf-multiple-edit-input ms-1")
                 withElement {
                     type = "text"
                     value = currentInputValue
