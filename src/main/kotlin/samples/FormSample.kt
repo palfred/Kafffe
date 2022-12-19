@@ -54,8 +54,8 @@ class FormSample : KafffeComponent() {
                     // Example of customised look classes and others
                     valueCssClasses = { choice ->
                         when (choice) {
-                            "First" -> "badge badge-secondary text-white ml-1"
-                            "Second" -> "badge badge-success text-white ml-1"
+                            "First" -> "badge bg-secondary text-white ml-1"
+                            "Second" -> "badge bg-success text-white ml-1"
                             else -> valueCssClassDefault
                         }
                     }
@@ -78,8 +78,8 @@ class FormSample : KafffeComponent() {
                     // Example of customised look classes and others
                     valueCssClasses = { choice ->
                         when (choice) {
-                            "First" -> "badge badge-secondary text-white ml-1"
-                            "Second" -> "badge badge-success text-white ml-1"
+                            "First" -> "badge bg-secondary text-white ml-1"
+                            "Second" -> "badge bg-success text-white ml-1"
                             else -> valueCssClassDefault
                         }
                     }

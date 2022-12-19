@@ -15,17 +15,16 @@ class Checkbox(var idInput: String, valueModel: Model<Boolean>, val labelModel: 
 
     var required: Boolean by rerenderOnChange(false)
     var readOnly: Boolean by rerenderOnChange(false)
-    var useCustom: Boolean = true
 
     private lateinit var htmlInput: HTMLInputElement
 
     override fun KafffeHtmlBase.kafffeHtml() =
         div {
-            addClass(if (useCustom) "custom-control custom-checkbox" else "form-check")
+            addClass("form-check")
             input {
                 withElement {
                     htmlInput = this
-                    addClass(if (useCustom) "custom-control-input" else "form-check-input")
+                    addClass("form-check-input")
                     type = "checkbox"
                     id = idInput
                     required = this@Checkbox.required
@@ -36,7 +35,7 @@ class Checkbox(var idInput: String, valueModel: Model<Boolean>, val labelModel: 
             label {
                 withElement {
                     htmlFor = idInput
-                    addClass(if (useCustom) "custom-control-label" else "form-check-label")
+                    addClass("form-check-label")
                 }
                 text(labelModel.data)
             }

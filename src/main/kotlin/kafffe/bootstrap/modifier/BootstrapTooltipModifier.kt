@@ -13,13 +13,13 @@ class BootstrapTooltipModifier(val model: Model<String>) : HtmlElementModifier {
 
     override fun modify(element: HTMLElement) {
         element.title = model.data
-        element.attributes["data-toggle"]?.value = "tooltip"
+        element.attributes["data-bs-toggle"]?.value = "tooltip"
         bsJquery(element).tooltip(options)
     }
 
     companion object {
         fun remove() {
-            bsJquery("[data-toggle='tooltip']").remove();
+            bsJquery("[data-bs-toggle='tooltip']").remove();
         }
     }
 }

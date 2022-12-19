@@ -67,7 +67,7 @@ fun addStuff() {
                 addExpand(ResponsiveSize.md)
                 style = ColorStrength.dark
                 //backgroundColor = "#4bb7e5"
-                background = BasicColor.secondary
+                background = BasicColor.primary
                 brand("", "images/BrandLogo.png").apply { modifiers.add(HtmlElementModifier.create { (this.getElementsByTagName("img")[0] as HTMLImageElement).style.maxHeight = "3rem" }) }
                 toggle("menuToggle")
                 toggleBlock("menuToggle") {

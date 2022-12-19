@@ -14,7 +14,7 @@ class BootstrapPopoverModifier() : HtmlElementModifier {
     }
 
     override fun modify(element: HTMLElement) {
-        //element.attributes["data-toggle"]?.value = "popover"
+        //element.attributes["data-bs-toggle"]?.value = "popover"
         bsJquery(element).popover(options)
     }
 
