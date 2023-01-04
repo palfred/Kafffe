@@ -1,4 +1,4 @@
-rootProject.name = "Kafffe"
+rootProject.name = "kafffe"
 
 pluginManagement {
     val kotlinVersion: String by settings
@@ -12,3 +12,4 @@ pluginManagement {
         }
     }
 }
+

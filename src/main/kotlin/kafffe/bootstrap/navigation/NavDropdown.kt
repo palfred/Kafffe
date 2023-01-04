@@ -37,7 +37,7 @@ open class NavDropdown(
                     addClass("dropdown-toggle")
                     href = "#"
                     setAttribute("role", "button")
-                    setAttribute("data-toggle", "dropdown")
+                    setAttribute("data-bs-toggle", "dropdown")
                     setAttribute("aria-haspopup", "true")
                     setAttribute("aria-expanded", "false")
                 }
@@ -66,7 +66,7 @@ open class NavDropdown(
     }
 
     companion object {
-        private var _navId = 1
-        fun navId() = _navId++
+        private var navId: Int = 1
+        fun navId() = navId++
     }
 }

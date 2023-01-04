@@ -9,3 +9,4 @@
 /.settings/
 /buildSrc/.gradle/
 *~
+/kotlin-js-store/

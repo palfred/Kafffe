@@ -110,9 +110,8 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
         h4 { text(model.data) }
         button {
             withElement {
-                addClass("close")
+                addClass("btn-close")
                 onclick = { this@Modal.detach() }
-                innerHTML = "&times;"
             }
         }
     }

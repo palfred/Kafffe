@@ -43,7 +43,7 @@ abstract class MultipleDropdown<T : Any>(
                 addClass("form-control dropdown-toggle")
                 withElement {
                     id = "dropdownMenuButton"
-                    setAttribute("data-toggle", "dropdown")
+                    setAttribute("data-bs-toggle", "dropdown")
                     setAttribute("aria-haspopup", "true")
                     setAttribute("aria-expanded", "false")
                     style.textAlign = "left"
@@ -83,9 +83,9 @@ abstract class MultipleDropdown<T : Any>(
                 }
                 if (choice in currentChoices) {
                     span {
-                        addClass("badge badge-pill badge-info ml-1")
+                        addClass("badge badge-pill bg-primary text-black  ms-1")
                         i {
-                            addClass("fas fa-check fa-fw pr-1")
+                            addClass("fas fa-check fa-fw pe-1")
                         }
                         text(display(choice))
                     }
@@ -127,7 +127,7 @@ abstract class MultipleDropdown<T : Any>(
      * @see valueCssClassDefault
      */
     var valueCssClasses: (T) -> String = { valueCssClassDefault }
-    val valueCssClassDefault = "badge badge-info text-white ml-1"
+    val valueCssClassDefault = "badge bg-primary text-black "
 
     private fun currentChoices() = currentChoiceIndexes.map { choiceModel.data[it] }
     private fun isSelected(choice: T): Boolean = currentChoices().contains(choice)

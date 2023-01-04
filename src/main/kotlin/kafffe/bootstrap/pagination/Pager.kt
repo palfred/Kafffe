@@ -39,5 +39,18 @@ open class Pager(nofPages: Int) {
     fun last() {
         currentPage = nofPages
     }
+
+    fun prev() {
+        if (currentPage > 1) {
+            currentPage -= 1
+        }
+    }
+
+    fun next() {
+        if (currentPage < nofPages) {
+            currentPage += 1
+        }
+    }
+
 }
 

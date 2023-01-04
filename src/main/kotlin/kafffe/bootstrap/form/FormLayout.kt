@@ -35,7 +35,7 @@ open class FormLayout<T : Any>(val container: FormComponentConsumer<*>, model: M
             div {
                 fieldset {
                     if (useBorder) {
-                        addClass("border mr-2 mb-2 p-2")
+                        addClass("border me-2 mb-2 p-2")
                     }
                     children.forEach { add(it.html) }
                 }

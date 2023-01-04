@@ -20,12 +20,20 @@ class BootstrapPagination(pager: Pager) : KafffeComponent() {
         }
 
     var maxPageLinks: Int = 6
-    var itemWidth: String = "2.7em"
+    var itemWidth: String = "0rem"
+
+    var prevNextPage: Boolean = false
+    var firstLastPage: Boolean = true
 
     override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut {
-       return ul {
+        return ul {
             addClass("pagination")
-            firstPageItem()
+            if (firstLastPage) {
+                firstPageItem()
+            }
+            if (prevNextPage) {
+                prevPageItem()
+            }
 
             // Handle large number of pages only x on each side and some indicator
             var start = max(pager.currentPage - maxPageLinks / 2, 1)
@@ -49,35 +57,75 @@ class BootstrapPagination(pager: Pager) : KafffeComponent() {
             if (needEnd) {
                 fillItem()
             }
-            lastPageItem()
+            if (prevNextPage) {
+                nextPageItem()
+            }
+            if (firstLastPage) {
+                lastPageItem()
+            }
         }
     }
 
+    private fun KafffeHtml<HTMLUListElement>.prevPageItem() {
+        if (pager.currentPage > 1) {
+            li {
+                addClass("page-item")
+                a {
+                    withElement {
+                        href = "#"
+                        addClass("page-link")
+                        onclick = { pager.prev() }
+                    }
+                    faIcon("fas", "fa-angle-left")
+                }
+            }
+        }
+    }
+
+    private fun KafffeHtml<HTMLUListElement>.nextPageItem() {
+        if (pager.currentPage < pager.nofPages) {
+            li {
+                addClass("page-item")
+                a {
+                    withElement {
+                        href = "#"
+                        addClass("page-link")
+                        onclick = { pager.next() }
+                    }
+                    faIcon("fas", "fa-angle-right")
+                }
+            }
+        }
+    }
 
     private fun KafffeHtml<HTMLUListElement>.firstPageItem() {
-        li {
-            addClass("page-item")
-            a {
-                withElement {
-                    href = "#"
-                    addClass("page-link")
-                    onclick = { pager.first() }
+        if (pager.currentPage > 2) {
+            li {
+                addClass("page-item")
+                a {
+                    withElement {
+                        href = "#"
+                        addClass("page-link")
+                        onclick = { pager.first() }
+                    }
+                    faIcon("fas", "fa-angle-double-left")
                 }
-                faIcon("fas", "fa-fast-backward")
             }
         }
     }
 
     private fun KafffeHtml<HTMLUListElement>.lastPageItem() {
-        li {
-            addClass("page-item")
-            a {
-                withElement {
-                    href = "#"
-                    addClass("page-link")
-                    onclick = { pager.last() }
+        if (pager.currentPage < (pager.nofPages - 1)) {
+            li {
+                addClass("page-item")
+                a {
+                    withElement {
+                        href = "#"
+                        addClass("page-link")
+                        onclick = { pager.last() }
+                    }
+                    faIcon("fas", "fa-angle-double-right")
                 }
-                faIcon("fas", "fa-fast-forward")
             }
         }
     }

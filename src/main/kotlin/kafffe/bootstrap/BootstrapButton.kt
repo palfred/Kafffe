@@ -32,12 +32,12 @@ open class BootstrapButton(label: Model<String>, val onClick: (source: Bootstrap
                         disabled = true
                     }
                 }
-                if (iconBefore && !iconClasses.isNullOrEmpty()) {
+                if (iconBefore && !iconClasses.isEmpty()) {
                     icon()
                     text(" ")
                 }
                 text(label)
-                if (!iconBefore && !iconClasses.isNullOrEmpty()) {
+                if (!iconBefore && !iconClasses.isEmpty()) {
                     text(" ")
                     icon()
                 }

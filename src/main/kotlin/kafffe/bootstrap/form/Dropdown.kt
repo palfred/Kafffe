@@ -36,7 +36,7 @@ abstract class Dropdown<T : Any>(val idInput: String, valueModel: Model<T>, choi
         select {
             withElement {
                 htmlSelect = this
-                addClass(if (useCustom) "custom-select" else "form-control")
+                addClass("form-select")
                 id = idInput
                 value = valueToString(this@Dropdown.model.data)
                 required = this@Dropdown.required

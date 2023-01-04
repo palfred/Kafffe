@@ -75,6 +75,7 @@ abstract class MultipleEditSelect<T : Any>(
             }
             a {
                 addClass(valueCssClasses(choice))
+                addClass("me-1")
                 text(display(choice))
                 text(" ")
                 i {
@@ -104,7 +105,7 @@ abstract class MultipleEditSelect<T : Any>(
      * @see valueCssClassDefault
      */
     var valueCssClasses: (T) -> String = { valueCssClassDefault }
-    val valueCssClassDefault = "badge badge-info text-white ml-1"
+    val valueCssClassDefault = "badge bg-primary text-black "
 
 
     private fun KafffeHtml<HTMLDivElement>.renderInput() {
@@ -116,7 +117,7 @@ abstract class MultipleEditSelect<T : Any>(
                 }
             }
             inputControl = input {
-                addClass("kf-multiple-edit-input ml-1")
+                addClass("kf-multiple-edit-input ms-1")
                 withElement {
                     type = "text"
                     onfocus = {
