@@ -2,7 +2,8 @@
 
 package kafffe.bootstrap.external
 
-import js.externals.jquery.`$`
+import js.externals.jquery.JQuery
+import js.externals.jquery.invoke
 import js.externals.jquery.jQuery
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
@@ -12,7 +13,10 @@ import org.w3c.dom.HTMLElement
  */
 fun <T> jsCreate() = js("({})") as T
 
-fun bsJquery(element: HTMLElement): BootstrapJQuery = jQuery.invoke(element as Element) as BootstrapJQuery
+fun bsJquery(element: HTMLElement): BootstrapJQuery {
+    val jq : JQuery = jQuery.invoke(element as Element)
+    return jq as BootstrapJQuery
+}
 fun bsJquery(selector: String): BootstrapJQuery = jQuery.invoke(selector) as BootstrapJQuery
 
 enum class Placement {
