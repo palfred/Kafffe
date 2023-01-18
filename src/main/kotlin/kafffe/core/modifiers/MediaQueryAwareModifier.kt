@@ -13,6 +13,7 @@ class MediaQueryAwareModifier(val mediaQuery: String, val onMatch: () -> Unit, v
 
     override fun attach(component: KafffeComponent) {
         matchMedia = window.matchMedia(mediaQuery)
+        if (matchMedia.matches) onMatch() else onNoMatch()
         matchMedia.addListener(callback)
     }
 

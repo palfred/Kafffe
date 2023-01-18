@@ -59,8 +59,8 @@ fun <T> debounceEvent(waitMs: Int, waitFirstMs: Int, func: (T) -> Unit) : (T) ->
  */
 open class EventHandler(val eventName: String, val eventHandler: ((Event) -> dynamic)) : HtmlElementModifier {
     override fun modify(element: HTMLElement) {
-        val onEventName = if (eventName.startsWith("on")) eventName else "on$eventName"
-        element.asDynamic()[onEventName] = eventHandler
+        if (eventName.startsWith("on")) throw Exception("eventName must not start with 'on'")
+        element.addEventListener(eventName, eventHandler)
     }
 }
 
