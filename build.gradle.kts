@@ -25,6 +25,8 @@ val kotlinVersion: String by project
 println("kotlinVersion $kotlinVersion")
 dependencies {
     implementation(kotlin("stdlib-js", kotlinVersion))
+    implementation(npm("bootstrap", "5.2.3"))
+    implementation(npm("@popperjs/core", "2.11.6"))
     // implementation(npm("jquery", "^3.6.2"))
 }
 
