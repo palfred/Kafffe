@@ -12,9 +12,6 @@ class BootstrapRoot : RootComponent() {
             addCss("bootstrap-grid", "css/bootstrap-grid.css")
             addCss("bootstrap-reboot", "css/bootstrap-reboot.css")
             addCss("fontawesome", "fontawesome/css/all.css")
-            // The  following needs to be loaded before this
-//        addJsScriptRef("jquery", "js/jquery-3.6.2.js")
-//        addJsScriptRef("bootstrap-bundle", "js/bootstrap.bundle.js")
         }
     }
 
