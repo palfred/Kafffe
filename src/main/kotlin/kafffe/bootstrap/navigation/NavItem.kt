@@ -8,11 +8,15 @@ class NavItem(
     val titleModel: Model<String>,
     val path: NavigationPath,
     val icon: String = "",
+    val iconPlacement: IconPlacement = IconPlacement.BEGIN,
     val labelCssClass: String = ""
 ) : NavElement() {
     constructor(navigationTarget: NavigationElement, title: String, path: NavigationPath, icon: String = "") :
             this(navigationTarget, Model.of(title), path, icon)
 
+    public enum class IconPlacement {
+        BEGIN, END;
+    }
     override fun attach() {
         super.attach()
         titleModel.listeners.add(onModelChanged)
@@ -38,17 +42,27 @@ class NavItem(
                     navigationTarget.navigateTo(path)
                 }
             }
-            if (!icon.isEmpty()) {
-                i() {
-                    addClass(icon)
+            if (iconPlacement == IconPlacement.BEGIN) {
+                if (!icon.isEmpty()) {
+                    i() {
+                        addClass(icon)
+                    }
+                    text(" ")
                 }
-                text(" ")
             }
             span {
                 if (labelCssClass.isNotEmpty()) {
                     addClass(labelCssClass)
                 }
                 text(titleModel.data)
+            }
+            if (iconPlacement == IconPlacement.END) {
+                if (!icon.isEmpty()) {
+                    text(" ")
+                    i() {
+                        addClass(icon)
+                    }
+                }
             }
         }
 

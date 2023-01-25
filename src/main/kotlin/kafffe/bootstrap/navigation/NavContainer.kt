@@ -82,12 +82,12 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
     }
 
 
-    fun item(titleModel: Model<String>, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
-        NavItem(navigationTarget, titleModel, path, icon, labelCssClass)
+    fun item(titleModel: Model<String>, path: NavigationPath, icon: String = "", iconPlacement: NavItem.IconPlacement = NavItem.IconPlacement.BEGIN, labelCssClass: String = "") =
+        NavItem(navigationTarget, titleModel, path, icon, iconPlacement, labelCssClass)
             .apply { thisContainer.addChild(this) }
 
-    fun item(title: String, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
-        NavItem(navigationTarget, Model.of(title), path, icon, labelCssClass)
+    fun item(title: String, path: NavigationPath, icon: String = "", iconPlacement: NavItem.IconPlacement = NavItem.IconPlacement.BEGIN, labelCssClass: String = "") =
+        NavItem(navigationTarget, Model.of(title), path, icon, iconPlacement, labelCssClass)
             .apply { thisContainer.addChild(this) }
 
     fun dropdown(titleModel: Model<String>, path: NavigationPath, icon: String = "", labelCssClass: String = "") =

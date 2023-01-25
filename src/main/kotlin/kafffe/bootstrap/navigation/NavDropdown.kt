@@ -13,11 +13,11 @@ open class NavDropdown(
 ) : KafffeComponentWithModel<String>(titleModel) {
     val dropdownId = "nav-${navId()}"
 
-    fun item(titleModel: Model<String>, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
-        NavItem(navigationElement, titleModel, path, icon, labelCssClass).also { this.addChild(it) }
+    fun item(titleModel: Model<String>, path: NavigationPath, icon: String = "", iconPlacement: NavItem.IconPlacement = NavItem.IconPlacement.BEGIN, labelCssClass: String = "") =
+        NavItem(navigationElement, titleModel, path, icon, iconPlacement, labelCssClass).also { this.addChild(it) }
 
-    fun item(title: String, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
-        NavItem(navigationElement, Model.of(title), path, icon, labelCssClass).also { this.addChild(it) }
+    fun item(title: String, path: NavigationPath, icon: String = "", iconPlacement: NavItem.IconPlacement = NavItem.IconPlacement.BEGIN, labelCssClass: String = "") =
+        NavItem(navigationElement, Model.of(title), path, icon, iconPlacement, labelCssClass).also { this.addChild(it) }
 
     /**
      * Adds a menu divider. Can be used if extending the menu with further items @see addhild
