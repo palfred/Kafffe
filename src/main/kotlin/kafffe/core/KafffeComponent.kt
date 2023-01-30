@@ -102,7 +102,7 @@ open class KafffeComponent {
      */
     fun setNotRendered() {
         if (isRendered) {
-            console.log(this::class.simpleName + " HTMLModifiers: "  + modifiersTyped<HtmlElementModifier>().size + " here of  AttachAwareModifier:" + modifiersTyped<HtmlElementModifier>().filter { it is AttachAwareModifier }.size)
+//            console.log(this::class.simpleName + " HTMLModifiers: "  + modifiersTyped<HtmlElementModifier>().size + " here of  AttachAwareModifier:" + modifiersTyped<HtmlElementModifier>().filter { it is AttachAwareModifier }.size)
             // Call detach on HTMLModifiers to the current
             attachAwareHtmlModifiers().reversed().forEach { it.detach(this) }
             _html = null
