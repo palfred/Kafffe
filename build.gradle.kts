@@ -89,8 +89,6 @@ publishing {
             credentials {
                 val githubUser: String? by project
                 val githubToken: String? by project
-                println("User: " + System.getenv("githubUser"))
-                println("Token: " + System.getenv("githubToken"))
                 username = githubUser ?:  System.getenv("githubUser")
                 password = githubToken ?:  System.getenv("githubToken")
 

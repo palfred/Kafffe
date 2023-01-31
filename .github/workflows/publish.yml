@@ -1,10 +1,10 @@
-name: Gradle develop publish
+name: Gradle publish
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "master" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "develop", "master"]
 
 permissions:
   contents: read
@@ -26,7 +26,11 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Execute Gradle build
+      - name: Execute Gradle publish
+        if: github.ref_name == 'develop'
+        run: ./gradlew checkForSnapshots
+
+      - name: Execute Gradle publish
         env:
           githubUser: ${{ secrets.GH_USER }}
           githubToken: ${{ secrets.GH_TOKEN }}
