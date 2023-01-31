@@ -87,11 +87,10 @@ publishing {
             name = "Kafffe"
             url = uri("https://maven.pkg.github.com/palfred/kafffe") // Github Package
             credentials {
-                val githubUser: String by project
-                val githubToken: String by project
-                println("'$githubUser' '$githubToken'")
-                username = githubUser
-                password = githubToken
+                val githubUser: String? by project
+                val githubToken: String? by project
+                username = githubUser ?:  System.getenv("githubUser")
+                password = githubToken ?:  System.getenv("githubToken")
 
             }
         }
