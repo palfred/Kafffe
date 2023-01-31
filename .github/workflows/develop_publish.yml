@@ -27,4 +27,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle build
-        run: ./gradlew publish -PgithubUser=${{ secrets.GH_USER }} -PgithubToken=${{ secrets.GH_TOKEN }}
+        env:
+          githubUser: ${{ secrets.GH_USER }}
+          githubToken: ${{ secrets.GH_TOKEN }}
+        run: ./gradlew publish
