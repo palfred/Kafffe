@@ -61,7 +61,6 @@ tasks.register("checkForSnapshots") {
                 .map { "$it" }
                 .toSet()
         if (allViolations.isNotEmpty()) {
-            val violation = allViolations.first()
             val violationsString = allViolations.joinToString("\n")
             error("Snapshot dependencies found for this project version ${project.version}:\n$violationsString")
         }
@@ -73,17 +72,17 @@ tasks.register("checkForSnapshots") {
 
 publishing {
     repositories {
-        maven {
-            name = "CS_Aware_Next"
-            url = uri("https://maven.pkg.github.com/cs-aware-next/data-visualisation") // Github Package
-            credentials {
-                val githubUser: String by project
-                val githubToken: String by project
-                username = githubUser
-                password = githubToken
-
-            }
-        }
+//        maven {
+//            name = "CS_Aware_Next"
+//            url = uri("https://maven.pkg.github.com/cs-aware-next/data-visualisation") // Github Package
+//            credentials {
+//                val githubUser: String by project
+//                val githubToken: String by project
+//                username = githubUser
+//                password = githubToken
+//
+//            }
+//        }
         maven {
             name = "Kafffe"
             url = uri("https://maven.pkg.github.com/palfred/kafffe") // Github Package
