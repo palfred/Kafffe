@@ -8,7 +8,6 @@ import kafffe.core.Model
 import kafffe.core.modifiers.AttachAwareModifier
 import kafffe.core.modifiers.HtmlElementModifier
 import kotlinx.browser.document
-import org.w3c.dom.HTMLCollection
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.NodeList
 import org.w3c.dom.get

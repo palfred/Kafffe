@@ -46,6 +46,31 @@ kotlin {
     }
 }
 
+tasks.register("checkForSnapshots") {
+    group = "verification"
+    description = "Check whether there are any SNAPSHOT dependencies or this project is a SNAPSHOT."
+    doLast {
+        val allViolations =
+            project.configurations
+                .filter { it.isCanBeResolved }
+                .flatMap { configuration ->
+                    configuration.resolvedConfiguration.resolvedArtifacts
+                        .map { it.moduleVersion.id }
+                        .filter { it.version.endsWith("-SNAPSHOT") }
+                }
+                .map { "$it" }
+                .toSet()
+        if (allViolations.isNotEmpty()) {
+            val violation = allViolations.first()
+            val violationsString = allViolations.joinToString("\n")
+            error("Snapshot dependencies found for this project version ${project.version}:\n$violationsString")
+        }
+        if (project.version.toString().endsWith("-SNAPSHOT")) {
+            error("The project is self a SNAPSHOT:\n${project.version}")
+        }
+    }
+}
+
 publishing {
     repositories {
         maven {
