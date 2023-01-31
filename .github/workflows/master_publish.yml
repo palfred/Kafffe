@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: Gradle master publish
 
 on:
   push:
@@ -27,4 +27,4 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle build
-        run: ./gradlew checkForSnapshots publish -PgithubUser=palfred@rheasoft.dk -PgithubUser=${{secrets.GITHUB_TOKEN}}
+        run: ./gradlew checkForSnapshots publish -PgithubUser=${{secrets.GH_USER}} -PgithubUser=${{secrets.GH_TOKEN}}
