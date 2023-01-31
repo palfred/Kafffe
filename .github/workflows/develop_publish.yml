@@ -30,4 +30,4 @@ jobs:
         env:
           githubUser: ${{ secrets.GH_USER }}
           githubToken: ${{ secrets.GH_TOKEN }}
-        run: ./gradlew publish
+        run: ./gradlew publish -PgithubUser=$githubUser -PgithubToken=$githubToken
