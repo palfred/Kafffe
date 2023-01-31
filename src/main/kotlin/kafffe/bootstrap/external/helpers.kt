@@ -2,18 +2,14 @@
 
 package kafffe.bootstrap.external
 
-import js.externals.jquery.`$`
-import js.externals.jquery.jQuery
-import org.w3c.dom.Element
+import bootstrap.Popover
+import bootstrap.Tooltip
 import org.w3c.dom.HTMLElement
 
 /**
  * Creates an empty java script obejct and gives access to it using interface (ie TooltipOption)
  */
 fun <T> jsCreate() = js("({})") as T
-
-fun bsJquery(element: HTMLElement): BootstrapJQuery = jQuery.invoke(element as Element) as BootstrapJQuery
-fun bsJquery(selector: String): BootstrapJQuery = jQuery.invoke(selector) as BootstrapJQuery
 
 enum class Placement {
     auto,
@@ -41,19 +37,19 @@ inline fun <reified T : Enum<T>> fromDynamic(value: dynamic): T? {
     return null
 }
 
-var TooltipOption.placementEnum: Placement?
+var Tooltip.Options.placementEnum: Placement?
     get() = fromDynamic<Placement>(placement)
     set(value) {
         placement = value.toString()
     }
 
-var TooltipOption.triggerEnum: Trigger?
+var Tooltip.Options.triggerEnum: Trigger?
     get() = fromDynamic<Trigger>(trigger)
     set(value) {
         trigger = value.toString()
     }
 
-var TooltipOption.triggersEnum: Set<Trigger>
+var Tooltip.Options.triggersEnum: Set<Trigger>
     get() {
         val trigs = trigger?.toString()?.split(" ") ?: listOf()
         return trigs.map { fromDynamic<Trigger>(it.asDynamic()) }.filter { it != null }.map { it!! }.toSet()
@@ -67,5 +63,8 @@ enum class TooltipAction {
     toggle, hide, show, enable, disable, dispose, toggleEnabled, update;
 }
 
-fun BootstrapJQuery.tooltip(action: TooltipAction) = tooltip(action.toString())
-fun BootstrapJQuery.popover(action: TooltipAction) = popover(action.toString())
+fun createTooltip(element: HTMLElement) = Tooltip(element)
+fun createTooltip(element: HTMLElement, options: Tooltip.Options) = Tooltip(element, options)
+
+fun createPopover(element: HTMLElement) = Popover(element)
+fun createPopover(element: HTMLElement, options: Popover.Options) = Popover(element, options)

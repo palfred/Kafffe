@@ -17,6 +17,8 @@ fun initServices() {
     ServiceRegistry.register("msg_da", Messages_da())
 }
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 fun addStuff() {
     initServices()
 

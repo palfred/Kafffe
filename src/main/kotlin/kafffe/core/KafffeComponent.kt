@@ -63,22 +63,28 @@ open class KafffeComponent {
      */
     val modifiers = mutableListOf<Any>()
     inline fun <reified T> modifiersTyped(): List<T> = modifiers.filter { it is T }.map { it as T}
-    
+    private fun attachAwareHtmlModifiers() =
+        modifiersTyped<HtmlElementModifier>().filter { it is AttachAwareModifier }.map { it as AttachAwareModifier }
+
     private var _html: HTMLElement? = null
 
     var html: HTMLElement
         set(newValue) {
             val oldValue = _html;
             if (oldValue != null) {
+                // Call detach on HTMLModifiers to the current
+                attachAwareHtmlModifiers().reversed().forEach { it.detach(this) }
+                _html = modifyHtml(newValue)
                 val parentNode = oldValue.parentNode
                 if (parentNode != null) {
-                    parentNode.replaceChild(newValue, oldValue)
+                    parentNode.replaceChild(_html!!, oldValue)
                 }
+            } else {
+                _html = if (newValue != null)  modifyHtml(newValue) else null
             }
-            _html = newValue
         }
         get() {
-            _html = _html ?: render()
+            _html = _html ?: modifyHtml(createHtml())
             return _html!!
         }
 
@@ -96,23 +102,27 @@ open class KafffeComponent {
      */
     fun setNotRendered() {
         if (isRendered) {
+//            console.log(this::class.simpleName + " HTMLModifiers: "  + modifiersTyped<HtmlElementModifier>().size + " here of  AttachAwareModifier:" + modifiersTyped<HtmlElementModifier>().filter { it is AttachAwareModifier }.size)
+            // Call detach on HTMLModifiers to the current
+            attachAwareHtmlModifiers().reversed().forEach { it.detach(this) }
             _html = null
         }
     }
+
+
 
     /**
      * Marks this and all children as not rendered (forget of previous rendered HTML)
      */
     fun setNotRenderedRecursive() {
         if (isRendered) {
-            _html = null
+            setNotRendered()
             for (child in children) {
                 child.setNotRenderedRecursive()
             }
         }
     }
 
-    protected fun render(): HTMLElement = modifyHtml(createHtml())
 
     protected open fun modifyHtml(element: HTMLElement): HTMLElement {
         modifiersTyped<HtmlElementModifier>().forEach { it.modify(element) }
@@ -139,16 +149,17 @@ open class KafffeComponent {
 
     fun rerender() {
         if (isRendered && isRenderingEnabled) {
-            html = render()
+            html = createHtml()
         }
     }
+
 
     fun rerenderRecursive() {
         if (isRendered) {
             for (child in children) {
                 child.setNotRenderedRecursive()
             }
-            html = render()
+            html = createHtml()
         }
     }
 
