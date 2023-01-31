@@ -89,6 +89,7 @@ publishing {
             credentials {
                 val githubUser: String by project
                 val githubToken: String by project
+                println("'$githubUser' '$githubToken'")
                 username = githubUser
                 password = githubToken
 
