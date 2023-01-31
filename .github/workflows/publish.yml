@@ -27,7 +27,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle publish
-        if: github.ref_name == 'develop'
+        if: github.ref_name == 'master'
         run: ./gradlew checkForSnapshots
 
       - name: Execute Gradle publish
