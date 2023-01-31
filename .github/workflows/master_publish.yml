@@ -27,4 +27,4 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle build
-        run: ./gradlew checkForSnapshots publish
+        run: ./gradlew checkForSnapshots publish -PgithubUser=palfred@rheasoft.dk -PgithubUser=${{secrets.GITHUB_TOKEN}}
