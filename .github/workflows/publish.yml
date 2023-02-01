@@ -26,7 +26,7 @@ jobs:
 
       - name: Check if using Snapshots
         if: github.ref_name == 'master'
-        run: ./gradlew checkForSnapshots -PgithubUser=${{ secrets.GH_USER }} -PgithubToken=${{ secrets.GH_TOKEN }}
+        run: ./gradlew checkForSnapshots -PgithubUser=${{ secrets.GH_USER }} -PgithubToken=${{ secrets.GH_TOKEN }} -PgithubBranch=${{ github.ref_name}}
 
       - name: Gradle publish
-        run: ./gradlew publish -PgithubUser=${{ secrets.GH_USER }} -PgithubToken=${{ secrets.GH_TOKEN }}
+        run: ./gradlew publish -PgithubUser=${{ secrets.GH_USER }} -PgithubToken=${{ secrets.GH_TOKEN }} -PgithubBranch=${{ github.ref_name}}
