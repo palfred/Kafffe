@@ -15,19 +15,20 @@ plugins {
 }
 
 group = "dk.rheasoft"
-val workingOnVersion = "1.4"
+val workingOnVersion = "1.3"
 
 // Setup SNAPSHOT version if not on master branch.
 val githubBranch: String? by project
+println("Gradle working on branch : $githubBranch")
 version = workingOnVersion + if ("master".equals(githubBranch)) "" else "-SNAPSHOT"
-println("Gradle working on ${project.version}")
+println("Gradle working on version: ${project.version}")
 
 repositories {
     mavenCentral()
 }
 
 val kotlinVersion: String by project
-println("kotlinVersion $kotlinVersion")
+println("kotlinVersion: $kotlinVersion")
 dependencies {
     implementation(kotlin("stdlib-js", kotlinVersion))
     implementation(npm("bootstrap", "5.2.3"))
