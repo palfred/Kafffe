@@ -3,8 +3,6 @@ name: Gradle publish
 on:
   push:
     branches: [ "develop", "master" ]
-  pull_request:
-    branches: [ "develop", "master"]
 
 permissions:
   contents: read
@@ -26,12 +24,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Execute Gradle publish
+      - name: Check if using Snapshots
         if: github.ref_name == 'master'
         run: ./gradlew checkForSnapshots
 
-      - name: Execute Gradle publish
-        env:
-          githubUser: ${{ secrets.GH_USER }}
-          githubToken: ${{ secrets.GH_TOKEN }}
-        run: ./gradlew publish
+      - name: Gradle publish
+        run: ./gradlew publish -PgithubUser=${{ secrets.GH_USER }} -PgithubToken=${{ secrets.GH_TOKEN }} -PgithubBranch=${{ github.ref_name }}
