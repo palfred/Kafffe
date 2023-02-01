@@ -15,7 +15,12 @@ plugins {
 }
 
 group = "dk.rheasoft"
-version = "1.2-SNAPSHOT"
+val workingOnVersion = "1.3"
+
+// Setup SNAPSHOT version if not on master branch.
+val githubBranch: String? by project
+version = workingOnVersion + if ("master".equals(githubBranch)) "" else "-SNAPSHOT"
+println("Gradle working  on ${project.version}")
 
 repositories {
     mavenCentral()
@@ -72,25 +77,14 @@ tasks.register("checkForSnapshots") {
 
 publishing {
     repositories {
-//        maven {
-//            name = "CS_Aware_Next"
-//            url = uri("https://maven.pkg.github.com/cs-aware-next/data-visualisation") // Github Package
-//            credentials {
-//                val githubUser: String by project
-//                val githubToken: String by project
-//                username = githubUser
-//                password = githubToken
-//
-//            }
-//        }
         maven {
             name = "Kafffe"
             url = uri("https://maven.pkg.github.com/palfred/kafffe") // Github Package
             credentials {
-                val githubUser: String? by project
-                val githubToken: String? by project
-                username = githubUser ?:  System.getenv("githubUser")
-                password = githubToken ?:  System.getenv("githubToken")
+                val githubUser: String by project
+                val githubToken: String by project
+                username = githubUser
+                password = githubToken
 
             }
         }
