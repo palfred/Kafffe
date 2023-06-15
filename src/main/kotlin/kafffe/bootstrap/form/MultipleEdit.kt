@@ -18,11 +18,12 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
     : KafffeComponentWithModel<List<String>>(valueModel), FormInput {
 
     private val currentValues: MutableList<String> = valueModel.data.toMutableList()
+    fun currentValues() = currentValues.toList()
 
     private var currentInputValue: String = ""
 
     // the value that was at current input index when starting the input field
-    private var inputIx = 1000;
+    private var inputIx = 1000
 
     private lateinit var formControl: KafffeHtml<HTMLDivElement>
     private lateinit var inputControl: KafffeHtml<HTMLInputElement>
@@ -95,7 +96,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                     }
                     onkeydown = { onkey(it) }
                     if (haveFocus) {
-                        window.setTimeout({ inputControl.element?.focus() }, 200);
+                        window.setTimeout({ inputControl.element?.focus() }, 200)
                     }
                 }
             }
@@ -174,9 +175,27 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
     }
 
     override fun component(): KafffeComponent = this
-    override fun validate(): Boolean = true
-    override var validationMessageModel: Model<String> = Model.of("")
 
+    private val extraValidation = ValidationExtra<MultipleEdit>()
+
+    fun addValidator(validator: Validator<MultipleEdit>) {
+        extraValidation.validators.add(validator)
+    }
+
+    fun removeValidator(validator: Validator<MultipleEdit>) {
+        extraValidation.validators.remove(validator)
+    }
+
+    override var validationMessageModel: Model<String> = Model.ofGet {
+        if (!extraValidation.result.valid) extraValidation.result.message else ""
+    }
+
+    override fun validate(): Boolean {
+        extraValidation.clear()
+        val valid = extraValidation.validate(this)
+        if (isRendered) html.applyInputValidCssClasses(valid)
+        return valid
+    }
 }
 
 

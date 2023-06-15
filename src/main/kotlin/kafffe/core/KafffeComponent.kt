@@ -12,29 +12,32 @@ open class KafffeComponent {
     /* hierarchy */
     var parent: KafffeComponent? = null
         set(value) {
-            if (root() != null && value == null) {
-                // we only do detach if we are part of hierarchy with root
+            if ((value == null || !value.isAttached) && isAttached) {
+                // detach if we are removed from a hierarchy or moved to a detached hierarchy
                 detachHierarchy()
             }
             field = value
-            if (root() != null && value != null) {
-                // we only do attach if we are part of hierarchy with root
+            if (value != null && value.isAttached && !isAttached) {
+                // attach if we are going to be part of attached hierarchy
                 attachHierarchy()
             }
         }
+
+    private var attached: Boolean = false
+    val isAttached get() = attached
 
     private val _children = mutableListOf<KafffeComponent>()
     val children: List<KafffeComponent> = _children
 
     open fun <Child : KafffeComponent> addChild(child: Child): Child {
         _children.add(child)
-        child.parent = this;
+        child.parent = this
         return child
     }
 
     open fun removeChild(child: KafffeComponent) {
         _children.remove(child)
-        child.parent = null;
+        child.parent = null
     }
 
     fun root(): RootComponent? {
@@ -70,7 +73,7 @@ open class KafffeComponent {
 
     var html: HTMLElement
         set(newValue) {
-            val oldValue = _html;
+            val oldValue = _html
             if (oldValue != null) {
                 // Call detach on HTMLModifiers to the current
                 attachAwareHtmlModifiers().reversed().forEach { it.detach(this) }
@@ -80,7 +83,7 @@ open class KafffeComponent {
                     parentNode.replaceChild(_html!!, oldValue)
                 }
             } else {
-                _html = if (newValue != null)  modifyHtml(newValue) else null
+                _html = modifyHtml(newValue)
             }
         }
         get() {
@@ -180,6 +183,7 @@ open class KafffeComponent {
      */
     open fun attach() {
         modifiersTyped<AttachAwareModifier>().forEach { it.attach(this) }
+        attached = true
     }
 
     /**
@@ -187,6 +191,7 @@ open class KafffeComponent {
      * Override this to remove listeners to models and other components setup in attach.
      */
     open fun detach() {
+        attached = false
         modifiersTyped<AttachAwareModifier>().reversed().forEach { it.detach(this) }
     }
 
@@ -232,7 +237,7 @@ open class KafffeComponent {
      * Reapply modifiers.
      */
     fun remodify() {
-        modifyHtml(html);
+        modifyHtml(html)
     }
 
     /**

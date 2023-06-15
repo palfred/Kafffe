@@ -1,10 +1,12 @@
 package kafffe.messages
 
 import kafffe.bootstrap.BasicColor
-import kafffe.bootstrap.ColorStrength
-import kafffe.core.*
-import org.w3c.dom.asList
+import kafffe.core.KafffeComponentWithModel
+import kafffe.core.KafffeHtmlBase
+import kafffe.core.KafffeHtmlOut
+import kafffe.core.Model
 import kotlinx.dom.removeClass
+import org.w3c.dom.asList
 
 /**
  * Dropdown selector for UI language to be put in a navbar
@@ -44,7 +46,7 @@ open class NavLanguageSelector(titleModel: Model<String>, val iconClasses: Strin
                         }
                         text(" ")
                     }
-                    text(Messages.get().languageSelect)
+                    text(MessagesObject.get().languageSelect)
                 }
                 div {
                     val dropdown = element!!
@@ -52,14 +54,14 @@ open class NavLanguageSelector(titleModel: Model<String>, val iconClasses: Strin
                         addClass("dropdown-menu $backgroundClass $textClass")
                         setAttribute("aria-labelledby", "langDropdown")
                     }
-                    for (message in Messages.allLanguages) {
-                        val active = (Messages.currentLanguage == message.language)
+                    for (message in MessagesObject.allLanguages) {
+                        val active = (MessagesObject.currentLanguage == message.language)
                         a {
                             withElement {
                                 addClass("dropdown-item")
                                 if (active) addClass("active")
                                 onclick = {
-                                    Messages.currentLanguage = message.language
+                                    MessagesObject.currentLanguage = message.language
                                     messagesModel.changed()
                                     root()?.rerenderRecursive()
                                     for (activeElm in dropdown.getElementsByClassName("active").asList()) {

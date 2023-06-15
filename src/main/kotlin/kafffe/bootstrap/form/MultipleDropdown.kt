@@ -135,8 +135,27 @@ abstract class MultipleDropdown<T : Any>(
     abstract fun display(choice: T): String
 
     override fun component(): KafffeComponent = this
-    override fun validate(): Boolean = true
-    override var validationMessageModel: Model<String> = Model.of("")
+
+    private val extraValidation = ValidationExtra<MultipleDropdown<T>>()
+
+    fun addValidator(validator: Validator<MultipleDropdown<T>>) {
+        extraValidation.validators.add(validator)
+    }
+
+    fun removeValidator(validator: Validator<MultipleDropdown<T>>) {
+        extraValidation.validators.remove(validator)
+    }
+
+    override var validationMessageModel: Model<String> = Model.ofGet {
+        if (!extraValidation.result.valid) extraValidation.result.message else ""
+    }
+
+    override fun validate(): Boolean {
+        extraValidation.clear()
+        val valid = extraValidation.validate(this)
+        if (isRendered) html.applyInputValidCssClasses(valid)
+        return valid
+    }
 }
 
 class MultipleDropdownString(idInput: String, valueModel: Model<List<String>>, choiceModel: Model<List<String>>) :

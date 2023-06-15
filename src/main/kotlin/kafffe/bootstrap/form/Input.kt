@@ -2,20 +2,37 @@ package kafffe.bootstrap.form
 
 import kafffe.core.*
 import kafffe.core.modifiers.AttributeSetModifier
-import kafffe.messages.Messages
-import org.w3c.dom.HTMLInputElement
 import kotlinx.dom.addClass
+import org.w3c.dom.HTMLInputElement
 
 /**
  * Holds a HTML form INPUT element
  */
-abstract class Input<T : Any>(var idInput: String, valueModel: Model<T>) : KafffeComponentWithModel<T>(valueModel), FormInput {
+abstract class Input<T : Any>(var idInput: String, valueModel: Model<T>) : KafffeComponentWithModel<T>(valueModel),
+    FormInput {
     override val htmlId: String
         get() = idInput
 
-    override var validationMessageModel: Model<String> = Model.ofGet{ if (required) Messages.get().validation_required else htmlInput.validationMessage}
+    private val extraValidation = ValidationExtra<Input<T>>()
+
+    fun addValidator(validator: Validator<Input<T>>) {
+        extraValidation.validators.add(validator)
+    }
+
+    fun removeValidator(validator: Validator<Input<T>>) {
+        extraValidation.validators.remove(validator)
+    }
+
+    override var validationMessageModel: Model<String> = Model.ofGet {
+        when {
+            !extraValidation.result.valid -> extraValidation.result.message
+            else -> htmlInput.validationMessage
+        }
+    }
+
     override fun validate(): Boolean {
-        val valid = htmlInput.checkValidity()
+        extraValidation.clear()
+        val valid = htmlInput.checkValidity() && extraValidation.validate(this)
         htmlInput.applyInputValidCssClasses(valid)
         return valid
     }
@@ -29,6 +46,7 @@ abstract class Input<T : Any>(var idInput: String, valueModel: Model<T>) : Kafff
     abstract fun valueFromString(strValue: String): T
 
     protected lateinit var htmlInput: HTMLInputElement
+    val htmlInputElement: HTMLInputElement get() = htmlInput
 
     override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut =
         input {

@@ -1,7 +1,7 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
-import kafffe.messages.Messages
+import kafffe.messages.MessagesObject
 import org.w3c.dom.HTMLSelectElement
 import kotlin.reflect.KProperty1
 
@@ -61,7 +61,7 @@ abstract class Dropdown<T : Any>(val idInput: String, valueModel: Model<T>, choi
     override fun component(): KafffeComponent = this
     override fun validate(): Boolean = htmlSelect.checkValidity()
     override var validationMessageModel: Model<String> =
-        Model.ofGet { if (required) Messages.get().validation_required else htmlSelect.validationMessage }
+        Model.ofGet { if (required) MessagesObject.get().validation_required else htmlSelect.validationMessage }
 }
 
 class DropdownString(idInput: String, valueModel: Model<String>, choiceModel: Model<List<String>>) :

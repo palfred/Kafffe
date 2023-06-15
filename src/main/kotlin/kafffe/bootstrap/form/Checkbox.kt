@@ -4,7 +4,7 @@ import kafffe.core.KafffeComponent
 import kafffe.core.KafffeComponentWithModel
 import kafffe.core.KafffeHtmlBase
 import kafffe.core.Model
-import kafffe.messages.Messages
+import kafffe.messages.MessagesObject
 import org.w3c.dom.HTMLInputElement
 
 /**
@@ -49,6 +49,6 @@ class Checkbox(var idInput: String, valueModel: Model<Boolean>, val labelModel: 
 
     override fun validate(): Boolean = htmlInput.checkValidity()
     override var validationMessageModel: Model<String> =
-        Model.ofGet { if (required) Messages.get().validation_required else htmlInput.validationMessage }
+        Model.ofGet { if (required) MessagesObject.get().validation_required else htmlInput.validationMessage }
 }
 

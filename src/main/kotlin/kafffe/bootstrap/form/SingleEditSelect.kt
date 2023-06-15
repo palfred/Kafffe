@@ -2,15 +2,15 @@ package kafffe.bootstrap.form
 
 import kafffe.core.*
 import kafffe.core.modifiers.HtmlElementModifier
+import kotlinx.browser.window
+import kotlinx.dom.addClass
+import kotlinx.dom.removeClass
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.asList
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
-import kotlinx.browser.window
-import kotlinx.dom.addClass
-import kotlinx.dom.removeClass
 import kotlin.reflect.KProperty1
 
 /**
@@ -130,7 +130,7 @@ abstract class SingleEditSelect<T : Any>(
                         haveFocus = false
                         container.style.width = "1%"
                         window.setTimeout({
-                            hideDropdown();
+                            hideDropdown()
                         }, 300)
                         it
                     }
@@ -162,7 +162,7 @@ abstract class SingleEditSelect<T : Any>(
             "ArrowDown" -> selectNext()
             "ArrowUp" -> selectPrev()
             "Enter" -> {
-                val m = matches();
+                val m = matches()
                 if (selectIndex in 0 until m.size) {
                     updateChoice(m[selectIndex])
                 }
@@ -255,8 +255,27 @@ abstract class SingleEditSelect<T : Any>(
     abstract fun display(choice: T?): String
 
     override fun component(): KafffeComponent = this
-    override fun validate(): Boolean = true
-    override var validationMessageModel: Model<String> = Model.of("")
+
+    private val extraValidation = ValidationExtra<SingleEditSelect<T>>()
+
+    fun addValidator(validator: Validator<SingleEditSelect<T>>) {
+        extraValidation.validators.add(validator)
+    }
+
+    fun removeValidator(validator: Validator<SingleEditSelect<T>>) {
+        extraValidation.validators.remove(validator)
+    }
+
+    override var validationMessageModel: Model<String> = Model.ofGet {
+        if (!extraValidation.result.valid) extraValidation.result.message else ""
+    }
+
+    override fun validate(): Boolean {
+        extraValidation.clear()
+        val valid = extraValidation.validate(this)
+        if (isRendered) html.applyInputValidCssClasses(valid)
+        return valid
+    }
 }
 
 class SingleEditSelectString(idInput: String, valueModel: Model<String?>, choiceModel: Model<List<String>>) :

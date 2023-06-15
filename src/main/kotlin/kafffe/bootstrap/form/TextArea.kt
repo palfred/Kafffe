@@ -1,9 +1,8 @@
 package kafffe.bootstrap.form
 
 import kafffe.core.*
-import kafffe.messages.Messages
-import org.w3c.dom.HTMLTextAreaElement
 import kotlinx.dom.addClass
+import org.w3c.dom.HTMLTextAreaElement
 import kotlin.reflect.KProperty1
 
 /**
@@ -11,8 +10,8 @@ import kotlin.reflect.KProperty1
  * "firstName" -> leads to id "firstName", a lookup for label in messages using a key based on "firstName" and
  * use a property submodel of the surrounding form model for property "firstname"
  */
-class TextArea(override val htmlId: String, valueModel: Model<String>)
-    : KafffeComponentWithModel<String>(valueModel), FormInput {
+class TextArea(override val htmlId: String, valueModel: Model<String>) : KafffeComponentWithModel<String>(valueModel),
+    FormInput {
 
     var required: Boolean by rerenderOnChange(false)
     var readOnly: Boolean by rerenderOnChange(false)
@@ -36,16 +35,38 @@ class TextArea(override val htmlId: String, valueModel: Model<String>)
     }
 
     override fun component(): KafffeComponent = this
-    override var validationMessageModel: Model<String> = Model.ofGet{ if (required) Messages.get().validation_required else htmlInput.validationMessage}
+
+    private val extraValidation = ValidationExtra<TextArea>()
+
+    fun addValidator(validator: Validator<TextArea>) {
+        extraValidation.validators.add(validator)
+    }
+
+    fun removeValidator(validator: Validator<TextArea>) {
+        extraValidation.validators.remove(validator)
+    }
+
+    override var validationMessageModel: Model<String> = Model.ofGet {
+        when {
+            !extraValidation.result.valid -> extraValidation.result.message
+            else -> htmlInput.validationMessage
+        }
+    }
+
     override fun validate(): Boolean {
-        val valid = htmlInput.checkValidity()
+        extraValidation.clear()
+        val valid = htmlInput.checkValidity() && extraValidation.validate(this)
         htmlInput.applyInputValidCssClasses(valid)
         return valid
     }
 }
 
 // DSL function for form component consumer DSL
-fun <T : Any> FormComponentConsumer<T>.textArea(idInput: String, labelModel: Model<String>, valueModel: Model<String>): TextArea {
+fun <T : Any> FormComponentConsumer<T>.textArea(
+    idInput: String,
+    labelModel: Model<String>,
+    valueModel: Model<String>
+): TextArea {
     val input = TextArea(idInput, valueModel)
     decorateAndAdd(labelModel, input)
     return input

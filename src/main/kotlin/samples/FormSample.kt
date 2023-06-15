@@ -6,16 +6,25 @@ import kafffe.core.*
 import kafffe.core.modifiers.CssClassModifier
 import kafffe.core.modifiers.HtmlElementModifier
 import kafffe.core.modifiers.StyleModifier
+import kafffe.messages.MessagesObject
 import kotlinx.browser.window
 
 class FormSample : KafffeComponent() {
 
-    data class Person(var firstName: String, var lastName: String, var age: Int, var choice: String, var tags: List<String>)
+    data class Person(
+        var firstName: String,
+        var lastName: String,
+        var age: Int,
+        var choice: String,
+        var tags: List<String>,
+        var hobbies: List<String>
+    )
 
     val choices = Model.of(listOf("Zero", "First", "Second", "Third", "Fourth", "Fifth", "Other"))
 
-    val personModel = Model.of<Person>(Person("Jens", "Hansen", 45, "Second", listOf("Fourth", "Other")))
+    val personModel = Model.of<Person>(Person("Jens", "Hansen", 45, "Second", listOf("Fourth", "Other"), listOf("Tennis", "Golf")))
     val form = BootstrapForm<Person>(personModel).apply {
+        labelStrategy = MessagesStrategy { MessagesObject.get() }
         inputDecorator = { labelModel, inputComp ->
             FormInputGroupDecorator(labelModel, inputComp).apply { useTooltipValidationMessages = true }
         }
@@ -31,10 +40,12 @@ class FormSample : KafffeComponent() {
             validationPattern = "Petersen|Jensen"
         }
         inputNum(Person::age).apply {
-            validationMessageModel = Model.of("Age must be between 0 and 200")
             required = true
             minimum = 0
             maximum = 200
+            addValidator{input: Input<Int> ->
+                   ValidationResult(input.htmlInputElement.value != "42", "42 is also not allowed")
+            }
         }
 
         row {
@@ -67,6 +78,13 @@ class FormSample : KafffeComponent() {
 
                     }
                 }
+
+                editMultiple(Person::hobbies).apply {
+                    addValidator {
+                        val match: String? = it.currentValues().find { value -> (value.contains('a'))}
+                        ValidationResult(match == null, if (match != null) "Hobbies containing 'a' like '$match' are not allowed" else "")}
+                    }
+
 
             }
 
@@ -107,7 +125,7 @@ class FormSample : KafffeComponent() {
         onSubmitOk = {
             //Default method to be called if not specified on the submit button.
             println("Form Model data is now: ${personModel.data} ")
-            personModel.data = Person("Test", "Successful", 42, "Second", listOf())
+            personModel.data = Person("Test", "Successful", 42, "Second", listOf(), listOf())
         }
     }.also { addChild(it) }
 
@@ -120,25 +138,27 @@ class FormSample : KafffeComponent() {
     }
 
     override fun KafffeHtmlBase.kafffeHtml() =
-            div {
-                bootstrapRow {
-                    bootstrapCol(ColWidth(ResponsiveSize.sm, 6)) {
-                        add(form.html)
-                    }
+        div {
+            bootstrapRow {
+                bootstrapCol(ColWidth(ResponsiveSize.sm, 6)) {
+                    add(form.html)
                 }
             }
+        }
 }
 
-class CustomInput(idInput: String, model: Model<String>) : InputString (idInput, model) {
+class CustomInput(idInput: String, model: Model<String>) : InputString(idInput, model) {
     init {
         modifiers.add(HtmlElementModifier.create {
             htmlInput.formNoValidate = true
         })
     }
+
     override fun validate(): Boolean {
         val valid = htmlInput.value.equals("Peter", ignoreCase = true)
         htmlInput.applyInputValidCssClasses(valid)
         return valid
     }
+
     override var validationMessageModel: Model<String> = Model.of("Custom message for field that needs to Peter")
 }
