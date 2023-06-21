@@ -34,6 +34,7 @@ dependencies {
     implementation(npm("bootstrap", "5.2.3"))
     implementation(npm("@popperjs/core", "2.11.6"))
     // implementation(npm("jquery", "^3.6.2"))
+    testImplementation("org.jetbrains.kotlin:kotlin-test-js")
 }
 
 kotlin {
@@ -46,6 +47,13 @@ kotlin {
         browser {
             webpackTask {
                 output.libraryTarget = KotlinWebpackOutput.Target.UMD2
+            }
+            testTask {
+                enabled = true // do not know how to load "mxclient.js" so mxshape and others are defined.
+                useKarma {
+                    useChromeHeadless()
+
+                }
             }
         }
         binaries.executable()
