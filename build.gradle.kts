@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackOutput
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
@@ -10,7 +11,7 @@ rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 }
 
 plugins {
-    kotlin("js")
+    kotlin("multiplatform")
     id("maven-publish")
 }
 
@@ -29,13 +30,6 @@ repositories {
 
 val kotlinVersion: String by project
 println("kotlinVersion: $kotlinVersion")
-dependencies {
-    implementation(kotlin("stdlib-js", kotlinVersion))
-    implementation(npm("bootstrap", "5.2.3"))
-    implementation(npm("@popperjs/core", "2.11.6"))
-    // implementation(npm("jquery", "^3.6.2"))
-    testImplementation("org.jetbrains.kotlin:kotlin-test-js")
-}
 
 kotlin {
     js(IR) {
@@ -57,6 +51,21 @@ kotlin {
             }
         }
         binaries.executable()
+    }
+
+    sourceSets {
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-js", kotlinVersion))
+                implementation(npm("bootstrap", "5.2.3"))
+                implementation(npm("@popperjs/core", "2.11.6"))
+            }
+        }
+        val jsTest by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test-js")
+            }
+        }
     }
 }
 
@@ -107,9 +116,6 @@ publishing {
             artifactId = project.name
             version = project.version.toString()
 
-            artifact(tasks.getByName<Zip>("kotlinSourcesJar"))
-
-            //configurePom(project)
         }
     }
 }
