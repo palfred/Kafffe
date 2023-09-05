@@ -103,7 +103,7 @@ class BootstrapTable<Data : Any>(data: Model<List<Data>>) : KafffeComponentWithM
                 tbody {
                     for (row in data) {
                         tr {
-                            val trElement = element!!
+                            val trElement = element
                             for (col in columns) {
                                 td {
                                     if (col.rowClick) {
@@ -111,7 +111,7 @@ class BootstrapTable<Data : Any>(data: Model<List<Data>>) : KafffeComponentWithM
                                             onclick = { rowClickHandler(row, trElement) }
                                         }
                                     }
-                                    val contentCell = col.contentCell(row, this.element!!)
+                                    val contentCell = col.contentCell(row, this.element)
                                     addCell(contentCell)
                                     add(contentCell.html)
                                 }

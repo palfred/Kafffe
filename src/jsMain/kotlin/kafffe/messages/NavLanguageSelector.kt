@@ -49,7 +49,7 @@ open class NavLanguageSelector(titleModel: Model<String>, val iconClasses: Strin
                     text(MessagesObject.get().languageSelect)
                 }
                 div {
-                    val dropdown = element!!
+                    val dropdown = element
                     withElement {
                         addClass("dropdown-menu $backgroundClass $textClass")
                         setAttribute("aria-labelledby", "langDropdown")

@@ -137,7 +137,7 @@ open class KafffeComponent {
      *  or override kafffeHtml instead to to use the KafffeHtml DSL
      */
     protected open fun createHtml(): HTMLElement {
-        return htmlStart.kafffeHtml().element!!
+        return htmlStart.kafffeHtml().element
     }
 
     /**
@@ -272,7 +272,7 @@ open class KafffeComponent {
     fun <Value> rerenderOnChange(value: Value) = RerenderDelegate<Value>(this, value)
 
     companion object {
-        val htmlStart = KafffeHtml.start
+        val htmlStart: KafffeHtmlBase = KafffeHtml.start
 
         fun ofHtml(htmlProvider: () -> HTMLElement): KafffeComponent =
                 object : KafffeComponent() {

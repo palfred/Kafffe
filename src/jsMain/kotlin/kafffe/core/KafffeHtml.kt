@@ -18,70 +18,18 @@ import org.w3c.dom.svg.SVGSVGElement
  */
 typealias KafffeHtmlConsumer<C> = KafffeHtml<C>.() -> Unit
 
-typealias KafffeHtmlBase = KafffeHtml<HTMLElement>
 typealias KafffeHtmlOut = KafffeHtml<out HTMLElement>
 
-class KafffeHtml<T : HTMLElement>(val element: T?) {
-    companion object {
-        val start = KafffeHtml<HTMLElement>(null)
-    }
+interface KafffeHtmlOperations {
+    open fun <C : HTMLElement> createElement(tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C>
 
-    fun <C : HTMLElement> add(child: KafffeHtml<C>): KafffeHtml<C> {
-        child.element?.let {
-            element?.appendChild(it)
-        }
-        return child
-    }
-
-    fun <C : HTMLElement> add(child: C): KafffeHtml<C> = add(KafffeHtml(child))
-
-    // child creators
-    @Suppress("UNCHECKED_CAST")
-    fun <C : HTMLElement> createElement(tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C> {
-        val child = document.createElement(tagName) as C
-        val kafffeHtml = add(child)
-        kafffeHtml.block()
-        return kafffeHtml
-    }
-
-    fun <C : HTMLElement> createElement(namespace: String, tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C> {
-        @Suppress("UNCHECKED_CAST")
-        val child = document.createElementNS(namespace, tagName) as C
-        val kafffeHtml = add(child)
-        kafffeHtml.block()
-        return kafffeHtml
-    }
-
-    /** Do with element if not null */
-    inline fun withElement(block: T.() -> Unit) {
-        element?.let {
-            element.block()
-        }
-    }
-
-    /** Do with element style if not null */
-    inline fun withStyle(block: CSSStyleDeclaration.() -> Unit) {
-        element?.style?.let { style: CSSStyleDeclaration ->
-            style.block()
-        }
-    }
-
-    fun addClass(cssClass: String) = element?.addClass(cssClass)
-    fun removeClass(cssClass: String) = element?.classList?.remove(cssClass)
-
-    fun onClick(eventHandler: ((Event) -> dynamic)) {
-        element?.onclick = eventHandler
-    }
-
-    fun text(txt: String) {
-        element?.appendChild(document.createTextNode(txt))
-    }
+   open fun <C : HTMLElement> createElement(namespace: String, tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C>
 
     // HTML tags
     fun a(block: KafffeHtmlConsumer<HTMLAnchorElement> = {}) = createElement("a", block)
 
     fun a(hrefValue: String, block: KafffeHtmlConsumer<HTMLAnchorElement> = {}) =
-            createElement<HTMLAnchorElement>("a", { withElement { href = hrefValue }; this.block()})
+        createElement<HTMLAnchorElement>("a", { withElement { href = hrefValue }; this.block()})
 
     fun abbr(block: KafffeHtmlConsumer<HTMLElement> = {}) = createElement("abbr", block)
     fun acronym(block: KafffeHtmlConsumer<HTMLElement> = {}) = createElement("acronym", block)
@@ -174,9 +122,81 @@ class KafffeHtml<T : HTMLElement>(val element: T?) {
 
     fun faIcon(vararg classes: String) = i { for (c in classes) addClass(c) }
 
+}
+
+class KafffeHtmlBase : KafffeHtmlOperations {     // child creators
+    override fun <C : HTMLElement> createElement(tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C> {
+        @kotlin.Suppress("UNCHECKED_CAST")
+        val child = document.createElement(tagName) as C
+        KafffeHtml(child).block()
+        return KafffeHtml(child)
+    }
+
+    override fun <C : HTMLElement> createElement(
+        namespace: String,
+        tagName: String,
+        block: KafffeHtmlConsumer<C>
+    ): KafffeHtml<C> {
+        @Suppress("UNCHECKED_CAST")
+        val child = document.createElementNS(namespace, tagName) as C
+        return KafffeHtml(child)
+    }
+}
+
+class KafffeHtml<T : HTMLElement>(val element: T) : KafffeHtmlOperations {
+
+    companion object {
+        val start = KafffeHtmlBase()
+    }
+
+    fun <C : HTMLElement> add(child: KafffeHtml<C>): KafffeHtml<C> {
+        element.appendChild(child.element)
+        return child
+    }
+
+    fun <C : HTMLElement> add(child: C): KafffeHtml<C> = add(KafffeHtml(child))
+
+    // child creators
+    @Suppress("UNCHECKED_CAST")
+    override fun <C : HTMLElement> createElement(tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C> {
+        val child = document.createElement(tagName) as C
+        val kafffeHtml = add(child)
+        kafffeHtml.block()
+        return kafffeHtml
+    }
+
+    override fun <C : HTMLElement> createElement(namespace: String, tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C> {
+        @Suppress("UNCHECKED_CAST")
+        val child = document.createElementNS(namespace, tagName) as C
+        val kafffeHtml = add(child)
+        kafffeHtml.block()
+        return kafffeHtml
+    }
+
+    /** Do with element if not null */
+    inline fun withElement(block: T.() -> Unit) {
+        element.block()
+    }
+
+    /** Do with element style if not null */
+    inline fun withStyle(block: CSSStyleDeclaration.() -> Unit) {
+        element.style.block()
+    }
+
+    fun addClass(cssClass: String) = element.addClass(cssClass)
+    fun removeClass(cssClass: String) = element.classList?.remove(cssClass)
+
+    fun onClick(eventHandler: ((Event) -> dynamic)) {
+        element.onclick = eventHandler
+    }
+
+    fun text(txt: String) {
+        element.appendChild(document.createTextNode(txt))
+    }
+
     fun svg(block: SvgDsl<SVGSVGElement>.() -> Unit = {}): SvgDsl<SVGSVGElement> {
         val svgDsl = SvgDsl<SVGSVGElement>("svg")
-        element!!.appendChild(svgDsl.element)
+        element.appendChild(svgDsl.element)
         svgDsl.block()
         return svgDsl
     }

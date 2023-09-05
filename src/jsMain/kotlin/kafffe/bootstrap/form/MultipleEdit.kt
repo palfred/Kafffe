@@ -38,7 +38,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
             addClass("form-control kf-multiple-edit")
             renderBadges()
             onClick {
-                inputControl.element?.focus()
+                inputControl.element.focus()
             }
         }
         return formControl
@@ -96,7 +96,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                     }
                     onkeydown = { onkey(it) }
                     if (haveFocus) {
-                        window.setTimeout({ inputControl.element?.focus() }, 200)
+                        window.setTimeout({ inputControl.element.focus() }, 200)
                     }
                 }
             }
@@ -104,7 +104,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
     }
 
     private fun onkey(keyEvent: KeyboardEvent) {
-        inputControl.element?.let { input ->
+        inputControl.element.let { input ->
             val atStart = input.selectionStart == 0
             val atEnd = input.selectionStart == input.value.length
             val hasValue = input.value.isNotBlank()
@@ -124,6 +124,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                         rerender()
                     }
                 }
+
                 "ArrowRight" -> {
                     if (atEnd) {
                         if (hasValue) {
@@ -139,6 +140,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                         rerender()
                     }
                 }
+
                 "Backspace" -> {
                     if (inputIx > 0 && !hasValue) {
                         inputIx--
@@ -146,12 +148,14 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                         rerender()
                     }
                 }
+
                 "Delete" -> {
                     if (inputIx < currentValues.size && !hasValue) {
                         currentValues.removeAt(inputIx)
                         rerender()
                     }
                 }
+
                 "Enter" -> {
                     if (input.value.isNotBlank()) {
                         currentValues.add(inputIx, input.value)
@@ -161,6 +165,7 @@ open class MultipleEdit(override val htmlId: String, valueModel: Model<List<Stri
                     rerender()
                     keyEvent.preventDefault()
                 }
+
                 "Escape" -> {
                     if (currentInputValue.isNotBlank()) {
                         currentValues.add(inputIx, currentInputValue)

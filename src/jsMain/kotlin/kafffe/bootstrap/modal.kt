@@ -75,28 +75,28 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
                                 }
                             }
                         }
-                        modifiersModal.forEach { it.modify(this.element!!) }
+                        modifiersModal.forEach { it.modify(this.element) }
 
                         div {
                             addClass("modal-content")
                             div {
                                 addClass("modal-header")
                                 createHeader()
-                                modifiersHeader.forEach { it.modify(this.element!!) }
+                                modifiersHeader.forEach { it.modify(this.element) }
                             }
                             div {
                                 addClass("modal-body")
                                 createBody()
-                                modifiersBody.forEach { it.modify(this.element!!) }
+                                modifiersBody.forEach { it.modify(this.element) }
                             }
                             if (footerChildren.isNotEmpty() || modifiersFooter.isNotEmpty()) {
                                 div {
                                     addClass("modal-footer")
                                     createFooter()
-                                    modifiersFooter.forEach { it.modify(this.element!!) }
+                                    modifiersFooter.forEach { it.modify(this.element) }
                                 }
                             }
-                            modifiersContent.forEach { it.modify(this.element!!) }
+                            modifiersContent.forEach { it.modify(this.element) }
                         }
                         for (child in this@Modal.children) {
                             add(child.html)

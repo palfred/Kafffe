@@ -59,7 +59,7 @@ abstract class MultipleEditSelect<T : Any>(
             addClass("form-control kf-multiple-edit")
             renderBadgesAndEdit()
             onClick {
-                inputControl.element?.focus()
+                inputControl.element.focus()
             }
         }
         return formControl
@@ -90,7 +90,7 @@ abstract class MultipleEditSelect<T : Any>(
                     it.preventDefault()
                 }
                 modifiersValue.forEach { mv ->
-                    mv(choice).modify(this.element!!)
+                    mv(choice).modify(this.element)
                 }
             }
         }
@@ -134,7 +134,7 @@ abstract class MultipleEditSelect<T : Any>(
                         renderMatches()
                     }
                     if (haveFocus) {
-                        window.setTimeout({ inputControl.element?.focus() }, 200)
+                        window.setTimeout({ inputControl.element.focus() }, 200)
                     }
                 }
             }
@@ -145,15 +145,15 @@ abstract class MultipleEditSelect<T : Any>(
     }
 
     private fun hideDropdown() {
-        dropdown.element?.style?.display = "none"
+        dropdown.element.style.display = "none"
     }
 
     private fun showDropdown() {
-        dropdown.element?.style?.display = "block"
+        dropdown.element.style.display = "block"
     }
 
     private fun onkey(keyEvent: KeyboardEvent) {
-        if (inputControl.element?.value?.isBlank() ?: false) {
+        if (inputControl.element.value.isBlank() ?: false) {
             when (keyEvent.key) {
                 "ArrowLeft" -> {
                     inputIx--
@@ -211,7 +211,7 @@ abstract class MultipleEditSelect<T : Any>(
         val matches = matches()
         if (index in 0 until matches.size) {
             // set and remove "sd_selected" class
-            dropdown.element?.children?.asList()?.forEachIndexed { i, element ->
+            dropdown.element.children.asList().forEachIndexed { i, element ->
                 if (i == index) {
                     element.addClass("sd_selected")
                 } else {
@@ -222,7 +222,7 @@ abstract class MultipleEditSelect<T : Any>(
     }
 
     fun matches(): List<T> {
-        val txt = inputControl.element?.value ?: ""
+        val txt = inputControl.element.value
         return if (txt.length > 0) {
             (
                     choiceModel.data.filter { display(it).startsWith(txt, ignoreCase = true) }
@@ -236,7 +236,7 @@ abstract class MultipleEditSelect<T : Any>(
 
     fun renderMatches() {
         selectIndex = -1
-        dropdown.element?.innerHTML = ""
+        dropdown.element.innerHTML = ""
         val htmlConsumer = KafffeHtml(dropdown.element)
         val matches = matches()
 

@@ -51,12 +51,12 @@ class FormInputGroupDecorator(val labelModel: Model<String>, val inputComponent:
         return div {
             addClass("form-group")
             if (useTooltipValidationMessages) {
-                element?.style?.position = "relative"
+                element.style.position = "relative"
             }
             labelElement = label {
-                element?.htmlFor = idInput
+                element.htmlFor = idInput
                 text(labelModel.data)
-            }.element!!
+            }.element
             add(inputComponent.component().html)
             add(messageComponent.html)
         }

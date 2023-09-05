@@ -20,7 +20,7 @@ object KafffeApplication {
         if (cssIds.contains(ident)) return
         KafffeHtml(document.head!!).apply {
             link {
-                with(element!!) {
+                with(element) {
                     id = ident
                     href = href_
                     type = "text/css"
@@ -35,7 +35,7 @@ object KafffeApplication {
         if (scriptIds.contains(ident)) return
         KafffeHtml(document.head!!).apply {
             script {
-                with(element!!) {
+                with(element) {
                     src = "$href#${ident}"
                     type = "text/javascript"
                 }

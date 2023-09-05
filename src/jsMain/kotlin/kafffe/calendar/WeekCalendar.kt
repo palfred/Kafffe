@@ -201,7 +201,7 @@ open class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeCompone
                         width = "${cellWidth}px"
                         height = "${cellHeight}px"
                     }
-                    cellResetStyle(element!!, current)
+                    cellResetStyle(element, current)
                     text(" ")
                 }
             }
@@ -239,7 +239,7 @@ open class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeCompone
     private fun removeEventNodesNotInModel() {
         val eventIds = eventsModel.data.map { it.id }
         eventElementMap.filterKeys { it !in eventIds }.forEach {
-            it.value.element?.remove()
+            it.value.element.remove()
             eventElementMap.remove(it.key)
         }
     }
@@ -289,11 +289,11 @@ open class WeekCalendar(val eventsModel: Model<List<WeekEvent>>) : KafffeCompone
                     overflowY = "hidden"
                 }
                 div {
-                    element?.style?.fontWeight = "700"
+                    element.style.fontWeight = "700"
                     text(event.title)
                 }
                 div {
-                    element?.style?.whiteSpace = "pre-wrap"
+                    element.style.whiteSpace = "pre-wrap"
                     text(event.description)
                 }
             }

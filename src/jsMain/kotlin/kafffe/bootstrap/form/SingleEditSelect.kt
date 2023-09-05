@@ -57,7 +57,7 @@ abstract class SingleEditSelect<T : Any>(
             span {
                 addClass(valueCssClasses(currentChoice))
                 choiceRender(currentChoice)
-                modifiersValue.forEach { mv -> mv(currentChoice).modify(element!!) }
+                modifiersValue.forEach { mv -> mv(currentChoice).modify(element) }
             }
     }
 
@@ -74,16 +74,16 @@ abstract class SingleEditSelect<T : Any>(
         set(value) {
             field = value
             if (value) {
-                inputControl.element?.value = display(currentChoice)
+                inputControl.element.value = display(currentChoice)
                 badge.html.style.display = "none"
             } else {
-                inputControl.element?.value = ""
+                inputControl.element.value = ""
                 badge.html.style.display = "inline-block"
             }
         }
 
     fun focusClaim() {
-        inputControl.element?.focus()
+        inputControl.element.focus()
     }
 
     override fun KafffeHtmlBase.kafffeHtml(): KafffeHtmlOut =
@@ -115,7 +115,7 @@ abstract class SingleEditSelect<T : Any>(
                     width = "1%"
                 }
             }
-            val container = this.element!!
+            val container = this.element
             inputControl = input {
                 addClass("kf-single-edit-input ms-1")
                 withElement {
@@ -149,11 +149,11 @@ abstract class SingleEditSelect<T : Any>(
     }
 
     private fun hideDropdown() {
-        dropdown.element?.style?.display = "none"
+        dropdown.element.style.display = "none"
     }
 
     private fun showDropdown() {
-        dropdown.element?.style?.display = "block"
+        dropdown.element.style.display = "block"
     }
 
     protected open fun onkey(keyEvent: KeyboardEvent) {
@@ -191,7 +191,7 @@ abstract class SingleEditSelect<T : Any>(
         val matches = matches()
         if (index in 0 until matches.size) {
             // set and remove "sd_selected" class
-            dropdown.element?.children?.asList()?.forEachIndexed { i, element ->
+            dropdown.element.children.asList().forEachIndexed { i, element ->
                 if (i == index) {
                     element.addClass("sd_selected")
                 } else {
@@ -202,7 +202,7 @@ abstract class SingleEditSelect<T : Any>(
     }
 
     fun matches(): List<T> {
-        val txt = inputControl.element?.value ?: ""
+        val txt = inputControl.element.value
         return if (txt.length > 0) {
             matchesText(txt)
         } else {
@@ -220,7 +220,7 @@ abstract class SingleEditSelect<T : Any>(
 
     fun renderMatches() {
         selectIndex = -1
-        dropdown.element?.innerHTML = ""
+        dropdown.element.innerHTML = ""
         val htmlConsumer = KafffeHtml(dropdown.element)
         val matches = matches()
 
@@ -246,7 +246,7 @@ abstract class SingleEditSelect<T : Any>(
         badge.rerender()
         if (haveFocus) {
             hideDropdown()
-            window.setTimeout({ inputControl.element?.blur() /* how to focus next focusable element */ }, 200)
+            window.setTimeout({ inputControl.element.blur() /* how to focus next focusable element */ }, 200)
         }
     }
 

@@ -53,7 +53,7 @@ open class NavDropdown(
                 }
             }
             div {
-                val dropdown = element!!
+                val dropdown = element
                 withElement {
                     addClass("dropdown-menu bg-secondary text-white")
                     setAttribute("aria-labelledby", dropdownId)

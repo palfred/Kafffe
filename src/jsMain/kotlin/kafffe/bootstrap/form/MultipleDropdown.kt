@@ -100,11 +100,11 @@ abstract class MultipleDropdown<T : Any>(
     private fun choiceChanged() {
         val currentChoices = currentChoices()
         dropdownButton?.let {
-            it.element?.innerHTML = ""
+            it.element.innerHTML = ""
             it.renderBadges(currentChoices)
         }
         dropdownMenu?.let {
-            it.element?.innerHTML = ""
+            it.element.innerHTML = ""
             it.renderDropdownChoices(currentChoices)
         }
     }
@@ -115,7 +115,7 @@ abstract class MultipleDropdown<T : Any>(
                 addClass(valueCssClasses(choice))
                 text(display(choice))
                 modifiersValue.forEach { mv ->
-                    mv(choice).modify(this.element!!)
+                    mv(choice).modify(this.element)
                 }
             }
         }
