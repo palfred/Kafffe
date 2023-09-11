@@ -90,8 +90,8 @@ open class NavContainer(val navigationTarget: NavigationElement) : NavElement() 
         NavItem(navigationTarget, Model.of(title), path, icon, iconPlacement, labelCssClass)
             .apply { thisContainer.addChild(this) }
 
-    fun dropdown(titleModel: Model<String>, path: NavigationPath, icon: String = "", labelCssClass: String = "") =
-        NavDropdown(navigationTarget, titleModel, icon, labelCssClass).also { addChild(it) }
+    fun dropdown(titleModel: Model<String>, path: NavigationPath, icon: String = "", labelCssClass: String = "", dropdownClasses: String = "") =
+        NavDropdown(navigationTarget, titleModel, icon, labelCssClass, dropdownClasses).also { addChild(it) }
 
     fun toggle(toggleId: String) = Toggle(toggleId).apply { thisContainer.addChild(this) }
 
