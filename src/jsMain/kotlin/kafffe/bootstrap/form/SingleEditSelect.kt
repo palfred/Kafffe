@@ -128,9 +128,9 @@ abstract class SingleEditSelect<T : Any>(
                     }
                     onblur = {
                         haveFocus = false
-                        container.style.width = "1%"
                         window.setTimeout({
                             hideDropdown()
+                            container.style.width = "1%"
                         }, 300)
                         it
                     }
@@ -143,7 +143,10 @@ abstract class SingleEditSelect<T : Any>(
             }
             dropdown = div {
                 addClass("sd_dropdown bg-light text-dark")
-                withElement { style.width = "100%" }
+                withStyle {
+                    width = "100%"
+                    minWidth = "20rem"
+                }
             }
         }
     }
@@ -244,10 +247,8 @@ abstract class SingleEditSelect<T : Any>(
     private fun updateChoice(newChoice: T?) {
         currentChoice = newChoice
         badge.rerender()
-        if (haveFocus) {
-            hideDropdown()
-            window.setTimeout({ inputControl.element.blur() /* how to focus next focusable element */ }, 200)
-        }
+        hideDropdown()
+        window.setTimeout({ inputControl.element.blur() /* how to focus next focusable element */ }, 200)
     }
 
     private fun isSelected(choice: T): Boolean = currentChoice == choice
