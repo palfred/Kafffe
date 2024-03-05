@@ -7,17 +7,11 @@ import kafffe.core.KafffeHtmlOut
 import org.w3c.dom.HTMLUListElement
 import kotlin.math.max
 
-class BootstrapPagination(pager: Pager) : KafffeComponent() {
+class BootstrapPagination(val pager: Pager) : KafffeComponent() {
     init {
         pager.changeListeners.add({ this.rerender() })
+        pager.nofPagesChangeListeners.add({ this.rerender() })
     }
-
-    var pager: Pager = pager
-        set(value) {
-            field = value
-            value.changeListeners.add({ this.rerender() })
-            rerender()
-        }
 
     var maxPageLinks: Int = 6
     var itemWidth: String = "0rem"

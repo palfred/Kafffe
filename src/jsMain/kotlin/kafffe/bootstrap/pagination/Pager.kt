@@ -6,6 +6,7 @@ import kafffe.core.ChangeListener
 
 open class Pager(nofPages: Int) {
     val changeListeners = mutableListOf<ChangeListener<Pager>>()
+    val nofPagesChangeListeners = mutableListOf<ChangeListener<Pager>>()
 
     /**
      * The current page number. Should be in the range 1 to nofPages (inclusive).
@@ -13,7 +14,7 @@ open class Pager(nofPages: Int) {
     var currentPage: Int by ChangeDelegate<Pager, Int>(1, changeListeners)
         private set
 
-    var nofPages: Int by ChangeDelegate<Pager, Int>(nofPages, changeListeners)
+    var nofPages: Int by ChangeDelegate<Pager, Int>(nofPages, nofPagesChangeListeners)
 
     fun changeNofPages(value: Int) {
         if (value > 1 && value == currentPage) {
