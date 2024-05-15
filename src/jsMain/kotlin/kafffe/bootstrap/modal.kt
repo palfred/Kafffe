@@ -9,7 +9,7 @@ import org.w3c.dom.HTMLDivElement
 import kotlinx.dom.addClass
 
 enum class ModalSize(val css: String) {
-    small("modal-sm"), medium("modal-md"), large("modal-lg")
+    small("modal-sm"), medium("modal-md"), large("modal-lg"), extra_large("modal-xl")
 }
 
 /**
