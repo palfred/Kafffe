@@ -21,9 +21,9 @@ typealias KafffeHtmlConsumer<C> = KafffeHtml<C>.() -> Unit
 typealias KafffeHtmlOut = KafffeHtml<out HTMLElement>
 
 interface KafffeHtmlOperations {
-    open fun <C : HTMLElement> createElement(tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C>
+    fun <C : HTMLElement> createElement(tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C>
 
-   open fun <C : HTMLElement> createElement(namespace: String, tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C>
+    fun <C : HTMLElement> createElement(namespace: String, tagName: String, block: KafffeHtmlConsumer<C>): KafffeHtml<C>
 
     // HTML tags
     fun a(block: KafffeHtmlConsumer<HTMLAnchorElement> = {}) = createElement("a", block)

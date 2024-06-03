@@ -13,6 +13,7 @@ rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 plugins {
     kotlin("multiplatform")
     id("maven-publish")
+    id("com.github.ben-manes.versions") version "0.51.0"
 }
 
 group = "dk.rheasoft"
@@ -33,11 +34,6 @@ println("kotlinVersion: $kotlinVersion")
 
 kotlin {
     js(IR) {
-        compilations.all {
-            kotlinOptions {
-                moduleKind = "umd"
-            }
-        }
         browser {
             webpackTask {
                 output.libraryTarget = KotlinWebpackOutput.Target.UMD2
