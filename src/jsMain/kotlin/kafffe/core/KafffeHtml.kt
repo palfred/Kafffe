@@ -53,6 +53,7 @@ interface KafffeHtmlOperations {
     fun dd(block: KafffeHtmlConsumer<HTMLElement> = {}) = createElement("dd", block)
     fun del(block: KafffeHtmlConsumer<HTMLModElement> = {}) = createElement("del", block)
     fun dfn(block: KafffeHtmlConsumer<HTMLElement> = {}) = createElement("dfn", block)
+    fun dialog(block: KafffeHtmlConsumer<HTMLDialogElement> = {}) = createElement("dialog", block)
     fun dir(block: KafffeHtmlConsumer<HTMLDirectoryElement> = {}) = createElement("dir", block)
     fun div(block: KafffeHtmlConsumer<HTMLDivElement> = {}) = createElement("div", block)
     fun dl(block: KafffeHtmlConsumer<HTMLDListElement> = {}) = createElement("dl", block)
