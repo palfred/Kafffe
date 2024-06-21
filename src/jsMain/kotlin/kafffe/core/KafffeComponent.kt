@@ -2,6 +2,7 @@ package kafffe.core
 
 import kafffe.core.modifiers.AttachAwareModifier
 import kafffe.core.modifiers.HtmlElementModifier
+import kafffe.core.modifiers.ReplaceContentInterceptor
 import org.w3c.dom.HTMLElement
 import kotlin.reflect.KClass
 
@@ -243,9 +244,18 @@ open class KafffeComponent {
     /**
      * Replace all children by one new child.
      * Intended for "Single child containers" ie a content container that receives a new component on some click in navigation or similar.
-     * Rerenders.
+     * Rerenders. The replacement can be "interceptet" if the previuos child implements ReplaceContentInterceptor
      */
     fun replaceContent(newChild: KafffeComponent) {
+        val interceptor = children.filterIsInstance<ReplaceContentInterceptor>().firstOrNull()
+        if (interceptor != null) {
+            interceptor.interceptReplaceContent { internalReplaceContent(newChild) }
+        } else {
+            internalReplaceContent(newChild)
+        }
+    }
+
+    private fun internalReplaceContent(newChild: KafffeComponent) {
         removeAllChildren()
         addChild(newChild)
         rerender()
