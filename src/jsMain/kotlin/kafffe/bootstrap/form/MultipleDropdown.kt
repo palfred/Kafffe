@@ -107,6 +107,9 @@ abstract class MultipleDropdown<T : Any>(
             it.element.innerHTML = ""
             it.renderDropdownChoices(currentChoices)
         }
+        if (updateModelOnChange) {
+            updateValueModel()
+        }
     }
 
     private fun KafffeHtml<HTMLButtonElement>.renderBadges(currentChoices: List<T>) {
@@ -120,6 +123,8 @@ abstract class MultipleDropdown<T : Any>(
             }
         }
     }
+
+    var updateModelOnChange: Boolean = false
 
     /**
      * Function that set value classes for each selected value.
