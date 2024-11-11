@@ -19,13 +19,21 @@ import kotlin.reflect.KProperty1
  */
 abstract class MultipleEditSelect<T : Any>(
     override val htmlId: String,
-    valueModel: Model<List<T>>,
+    val valueModel: Model<List<T>>,
     val choiceModel: Model<List<T>>
 ) : KafffeComponentWithModel<List<T>>(valueModel), FormInput {
 
     var allowDuplicates = false
 
-    private val currentChoiceIndexes: MutableList<Int> = choicesToIndexes(valueModel.data, choiceModel.data)
+    private var currentChoiceIndexes: MutableList<Int> = choicesToIndexes(valueModel.data, choiceModel.data)
+
+    /**
+     * Refresh the current choice from the valueModel
+     */
+    fun updateFromValueModel() {
+        currentChoiceIndexes = choicesToIndexes(valueModel.data, choiceModel.data)
+        rerender()
+    }
 
     /**
      * Modifiers to tweak look of selected values

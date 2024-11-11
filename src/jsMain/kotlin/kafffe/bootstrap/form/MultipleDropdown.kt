@@ -11,11 +11,19 @@ import kotlin.reflect.KProperty1
  */
 abstract class MultipleDropdown<T : Any>(
     override val htmlId: String,
-    valueModel: Model<List<T>>,
+    val valueModel: Model<List<T>>,
     val choiceModel: Model<List<T>>
 ) : KafffeComponentWithModel<List<T>>(valueModel), FormInput {
 
-    val currentChoiceIndexes: MutableSet<Int> = choicesToIndexes(valueModel.data, choiceModel.data)
+    private var currentChoiceIndexes: MutableSet<Int> = choicesToIndexes(valueModel.data, choiceModel.data)
+
+    /**
+     * Refresh the current choice from the valueModel
+     */
+    fun updateFromValueModel() {
+        currentChoiceIndexes = choicesToIndexes(valueModel.data, choiceModel.data)
+        rerender()
+    }
 
     private fun choicesToIndexes(values: List<T>, choices: List<T>): MutableSet<Int> =
         choices.mapIndexed { i, c -> if (c in values) i else -1 }.filter { it >= 0 }.toMutableSet()
