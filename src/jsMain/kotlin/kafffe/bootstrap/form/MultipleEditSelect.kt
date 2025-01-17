@@ -25,6 +25,14 @@ abstract class MultipleEditSelect<T : Any>(
 
     var allowDuplicates = false
 
+    var updateModelOnChange: Boolean = false
+
+    private fun choiceChanged() {
+        if (updateModelOnChange)  {
+           updateValueModel()
+        }
+    }
+
     private var currentChoiceIndexes: MutableList<Int> = choicesToIndexes(valueModel.data, choiceModel.data)
 
     /**
@@ -95,6 +103,7 @@ abstract class MultipleEditSelect<T : Any>(
                         inputIx--
                     }
                     rerender()
+                    choiceChanged()
                     it.preventDefault()
                 }
                 modifiersValue.forEach { mv ->
@@ -176,12 +185,15 @@ abstract class MultipleEditSelect<T : Any>(
                         inputIx--
                         currentChoiceIndexes.removeAt(inputIx)
                         rerender()
+                        choiceChanged()
+
                     }
                 }
                 "Delete" -> {
                     if (inputIx < currentChoiceIndexes.size) {
                         currentChoiceIndexes.removeAt(inputIx)
                         rerender()
+                        choiceChanged()
                     }
                 }
             }
@@ -268,6 +280,7 @@ abstract class MultipleEditSelect<T : Any>(
             inputIx++
         }
         rerender()
+        choiceChanged()
     }
 
     private fun addSelection(selection: T) {
