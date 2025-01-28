@@ -4,9 +4,13 @@ import kafffe.core.*
 import kafffe.core.modifiers.HtmlElementModifier
 import kafffe.messages.Messages
 import kafffe.messages.i18nText
+import kotlinx.browser.document
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLDivElement
 import kotlinx.dom.addClass
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.MouseEvent
 
 enum class ModalSize(val css: String) {
     small("modal-sm"), medium("modal-md"), large("modal-lg"), extra_large("modal-xl")
@@ -17,6 +21,7 @@ enum class ModalSize(val css: String) {
  */
 open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
     var size: ModalSize = ModalSize.medium
+
     // Absolut position to this point if not null
     var absolutePosition: DOMPoint? = null
 
@@ -25,6 +30,10 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
     val modifiersHeader = mutableListOf<HtmlElementModifier>()
     val modifiersBody = mutableListOf<HtmlElementModifier>()
     val modifiersFooter = mutableListOf<HtmlElementModifier>()
+    var moveable: Boolean by rerenderOnChange(true)
+
+    // data for moveable
+    private var isDragging: Boolean = false
 
     companion object {
 
@@ -36,7 +45,7 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
             question: Model<String>,
             absolutePosition: DOMPoint?,
             yesHandler: () -> Unit
-        ) {
+        ): TextDialog {
             val confirm = TextDialog(title, question)
             confirm.absolutePosition = absolutePosition
             confirm.yesNo({
@@ -44,9 +53,10 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
                 confirm.detach()
             })
             confirm.attach()
+            return confirm
         }
 
-        fun confirm(title: Model<String>, question: Model<String>, yesHandler: () -> Unit) =
+        fun confirm(title: Model<String>, question: Model<String>, yesHandler: () -> Unit): TextDialog =
             confirm(title, question, null, yesHandler)
     }
 
@@ -54,57 +64,92 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
     val footerChildren = mutableListOf<KafffeComponent>()
 
     override fun KafffeHtmlBase.kafffeHtml() =
-            div {
-                withElement {
-                    addClass("modal")
-                    addClass("fade")
-                    addClass("show")
-                    style.display = "block"
-                    style.backgroundColor = "rgba(0,0,0,0.4)"
-                    div {
-                        addClass("modal-dialog")
-                        addClass(size.css)
-                        if (absolutePosition != null) {
-                            withElement {
-                                with(style) {
-                                    position = "fixed"
-                                    left = "${absolutePosition!!.x}px"
-                                    top = "${absolutePosition!!.y}px"
-                                    marginTop = "0"
-                                    paddingTop = "0"
-                                }
+        div {
+            withElement {
+                addClass("modal")
+                addClass("fade")
+                addClass("show")
+                style.display = "block"
+                style.backgroundColor = "rgba(0,0,0,0.4)"
+                div {
+                    addClass("modal-dialog")
+                    addClass(size.css)
+                    if (absolutePosition != null) {
+                        withElement {
+                            with(style) {
+                                position = "fixed"
+                                left = "${absolutePosition!!.x}px"
+                                top = "${absolutePosition!!.y}px"
+                                marginTop = "0"
+                                paddingTop = "0"
                             }
-                        }
-                        modifiersModal.forEach { it.modify(this.element) }
-
-                        div {
-                            addClass("modal-content")
-                            div {
-                                addClass("modal-header")
-                                createHeader()
-                                modifiersHeader.forEach { it.modify(this.element) }
-                            }
-                            div {
-                                addClass("modal-body")
-                                createBody()
-                                modifiersBody.forEach { it.modify(this.element) }
-                            }
-                            if (footerChildren.isNotEmpty() || modifiersFooter.isNotEmpty()) {
-                                div {
-                                    addClass("modal-footer")
-                                    createFooter()
-                                    modifiersFooter.forEach { it.modify(this.element) }
-                                }
-                            }
-                            modifiersContent.forEach { it.modify(this.element) }
-                        }
-                        for (child in this@Modal.children) {
-                            add(child.html)
                         }
                     }
-
+                    modifiersModal.forEach { it.modify(this.element) }
+                    div {
+                        addClass("modal-content")
+                        div {
+                            addClass("modal-header")
+                            if (moveable) {
+                                 withElement {
+                                    style.cursor = "move"
+                                    var currentX = 0
+                                    var currentY = 0
+                                    onmousedown = { startEvent ->
+                                        console.log("Mousedown $startEvent")
+                                        isDragging = true
+                                        var eventX: Int = startEvent.clientX
+                                        var eventY: Int = startEvent.clientY
+                                        val drag: (Event) -> Unit = { e ->
+                                            if (e is MouseEvent) {
+                                                e.preventDefault()
+                                                currentX += (e.clientX - eventX)
+                                                currentY += (e.clientY - eventY)
+                                                eventX = e.clientX
+                                                eventY = e.clientY
+                                                val modal = (this.parentElement as HTMLElement)
+                                                if (modal != null) {
+                                                    modal.style.transform =
+                                                        "translate3d(${currentX}px, ${currentY}px, 0)"
+                                                }
+                                            }
+                                        }
+                                        document.addEventListener("mousemove", drag)
+                                        var dragEnd: (Event) -> Unit = {}
+                                        dragEnd = {
+                                            isDragging = false
+                                            // remove event handlers
+                                            document.removeEventListener("mousemove", drag)
+                                            document.removeEventListener("mouseup", dragEnd)
+                                        }
+                                        document.addEventListener("mouseup", dragEnd)
+                                    }
+                                }
+                            }
+                            createHeader()
+                            modifiersHeader.forEach { it.modify(this.element) }
+                        }
+                        div {
+                            addClass("modal-body")
+                            createBody()
+                            modifiersBody.forEach { it.modify(this.element) }
+                        }
+                        if (footerChildren.isNotEmpty() || modifiersFooter.isNotEmpty()) {
+                            div {
+                                addClass("modal-footer")
+                                createFooter()
+                                modifiersFooter.forEach { it.modify(this.element) }
+                            }
+                        }
+                        modifiersContent.forEach { it.modify(this.element) }
+                    }
+                    for (child in this@Modal.children) {
+                        add(child.html)
+                    }
                 }
+
             }
+        }
 
     protected open fun KafffeHtml<HTMLDivElement>.createHeader() {
         h4 { text(model.data) }
@@ -128,7 +173,11 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
         }
     }
 
-    fun addOkCancelButtons(okHandler: () -> Unit, ok: Model<String> = Model.of("OK"), cancel: Model<String> = Model.of("Cancel")) {
+    fun addOkCancelButtons(
+        okHandler: () -> Unit,
+        ok: Model<String> = Model.of("OK"),
+        cancel: Model<String> = Model.of("Cancel")
+    ) {
         with(footerChildren) {
             add(BootstrapButton(ok, { okHandler() }).apply {
                 iconClasses = "fas fa-check"
@@ -142,9 +191,15 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
 
     }
 
-    fun okCancel(okHandler: () -> Unit) = this.addOkCancelButtons(okHandler, ok = i18nText(Messages::ok), cancel = i18nText(Messages::cancel))
+    fun okCancel(okHandler: () -> Unit) =
+        this.addOkCancelButtons(okHandler, ok = i18nText(Messages::ok), cancel = i18nText(Messages::cancel))
 
-    fun addYesNoButtons(yesHandler: () -> Unit, noHandler: () -> Unit, yes: Model<String> = Model.of("Yees"), no: Model<String> = Model.of("No")) {
+    fun addYesNoButtons(
+        yesHandler: () -> Unit,
+        noHandler: () -> Unit,
+        yes: Model<String> = Model.of("Yees"),
+        no: Model<String> = Model.of("No")
+    ) {
         with(footerChildren) {
             add(BootstrapButton(yes, { yesHandler() }).apply {
                 iconClasses = "fas fa-thumbs-up"
@@ -158,7 +213,8 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
 
     }
 
-    fun yesNo(yesHandler: () -> Unit = { detach() }, noHandler: () -> Unit = { detach() }) = this.addYesNoButtons(yesHandler, noHandler, yes = i18nText(Messages::yes), no = i18nText(Messages::no))
+    fun yesNo(yesHandler: () -> Unit = { detach() }, noHandler: () -> Unit = { detach() }) =
+        this.addYesNoButtons(yesHandler, noHandler, yes = i18nText(Messages::yes), no = i18nText(Messages::no))
 
 }
 

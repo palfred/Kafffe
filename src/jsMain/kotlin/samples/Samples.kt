@@ -48,7 +48,7 @@ fun addStuff() {
                         Modal.confirm(Model.of("Please Confirm"), Model.of("Is this a position dialog ?"), absolutePosition = DOMPoint(left, top)) {
                             println("Yes Pressed")
                             labelModel.data = "Yes pressed"
-                        }
+                        }.moveable = true
                     }
                     )
                     cell(btn2, md.col(2))
