@@ -2,15 +2,12 @@ package kafffe.bootstrap
 
 import kafffe.core.*
 import kafffe.core.modifiers.HtmlElementModifier
+import kafffe.core.modifiers.MoveableElementModifier
 import kafffe.messages.Messages
 import kafffe.messages.i18nText
-import kotlinx.browser.document
+import kotlinx.dom.addClass
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLDivElement
-import kotlinx.dom.addClass
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.MouseEvent
 
 enum class ModalSize(val css: String) {
     small("modal-sm"), medium("modal-md"), large("modal-lg"), extra_large("modal-xl")
@@ -32,8 +29,10 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
     val modifiersFooter = mutableListOf<HtmlElementModifier>()
     var moveable: Boolean by rerenderOnChange(true)
 
-    // data for moveable
-    private var isDragging: Boolean = false
+    /**
+     * Makes Modal moveable by dragging the header
+     */
+    private val moveableModifier = MoveableElementModifier("modal-header")
 
     companion object {
 
@@ -90,42 +89,6 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
                         addClass("modal-content")
                         div {
                             addClass("modal-header")
-                            if (moveable) {
-                                 withElement {
-                                    style.cursor = "move"
-                                    var currentX = 0
-                                    var currentY = 0
-                                    onmousedown = { startEvent ->
-                                        console.log("Mousedown $startEvent")
-                                        isDragging = true
-                                        var eventX: Int = startEvent.clientX
-                                        var eventY: Int = startEvent.clientY
-                                        val drag: (Event) -> Unit = { e ->
-                                            if (e is MouseEvent) {
-                                                e.preventDefault()
-                                                currentX += (e.clientX - eventX)
-                                                currentY += (e.clientY - eventY)
-                                                eventX = e.clientX
-                                                eventY = e.clientY
-                                                val modal = (this.parentElement as HTMLElement)
-                                                if (modal != null) {
-                                                    modal.style.transform =
-                                                        "translate3d(${currentX}px, ${currentY}px, 0)"
-                                                }
-                                            }
-                                        }
-                                        document.addEventListener("mousemove", drag)
-                                        var dragEnd: (Event) -> Unit = {}
-                                        dragEnd = {
-                                            isDragging = false
-                                            // remove event handlers
-                                            document.removeEventListener("mousemove", drag)
-                                            document.removeEventListener("mouseup", dragEnd)
-                                        }
-                                        document.addEventListener("mouseup", dragEnd)
-                                    }
-                                }
-                            }
                             createHeader()
                             modifiersHeader.forEach { it.modify(this.element) }
                         }
@@ -142,6 +105,9 @@ open class Modal(title: Model<String>) : RootComponentWithModel<String>(title) {
                             }
                         }
                         modifiersContent.forEach { it.modify(this.element) }
+                        if (moveable) {
+                            moveableModifier.modify(element)
+                        }
                     }
                     for (child in this@Modal.children) {
                         add(child.html)
