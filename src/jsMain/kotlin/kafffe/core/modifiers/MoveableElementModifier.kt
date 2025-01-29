@@ -1,5 +1,6 @@
 package kafffe.core.modifiers
 
+import kafffe.core.KafffeComponent
 import kotlinx.browser.document
 import org.w3c.dom.HTMLCollection
 import org.w3c.dom.HTMLElement
@@ -7,12 +8,15 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 
 /**
- * MOdifies a HTMLELement to be moveable.
+ * Modifies a HTMLELement to be moveable.
  * The handle element is selected as child with the give classname.
  * When the user click and drag the element is moed by a CSS translated.
  * Used on Modal content.
  */
 class MoveableElementModifier(
+    /**
+     *The css class of the nested element to use handle for dragging
+     */
    private val handleCssClass: String
 ) : HtmlElementModifier {
 
@@ -58,11 +62,25 @@ class MoveableElementModifier(
         movingElement = element
         currentX = 0
         currentY = 0
-        val byClassName: HTMLCollection = element.getElementsByClassName(handleCssClass)
-        if (byClassName.length == 0) return
-        handleElement = byClassName.item(0) as HTMLElement
+        if (handleCssClass.isNotEmpty()) {
+            val byClassName: HTMLCollection =
+                element.getElementsByClassName(handleCssClass)
+            if (byClassName.length == 0) return
+            handleElement = byClassName.item(0) as HTMLElement
+        } else {
+            handleElement = element
+        }
         handleElement.style.cursor = "move"
         handleElement.addEventListener("mousedown", startDrag)
     }
 
+    companion object {
+        /**
+         * Shorthand form of adding MoveableElementModifier
+         * @param handleCssClass the css class of the nested element to use handle for dragging
+         */
+        fun KafffeComponent.makeMoveable(handleCssClass: String = "") {
+            this.modifiers.add(MoveableElementModifier(handleCssClass))
+        }
+    }
 }

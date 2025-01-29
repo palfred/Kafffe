@@ -6,6 +6,7 @@ import kafffe.bootstrap.navigation.Nav
 import kafffe.core.*
 import kafffe.core.modifiers.CssClassModifier.Companion.cssClassModifier
 import kafffe.core.modifiers.HtmlElementModifier
+import kafffe.core.modifiers.MoveableElementModifier.Companion.makeMoveable
 import kafffe.messages.*
 import org.w3c.dom.DOMPoint
 import org.w3c.dom.HTMLImageElement
@@ -48,10 +49,10 @@ fun addStuff() {
                         Modal.confirm(Model.of("Please Confirm"), Model.of("Is this a position dialog ?"), absolutePosition = DOMPoint(left, top)) {
                             println("Yes Pressed")
                             labelModel.data = "Yes pressed"
-                        }.moveable = true
+                        }.moveable = false
                     }
                     )
-                    cell(btn2, md.col(2))
+                    cell(btn2.apply { makeMoveable() }, md.col(2))
 
                     cell(Label(labelModel), md.col())
                 }
