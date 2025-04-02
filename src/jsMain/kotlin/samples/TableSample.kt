@@ -34,9 +34,12 @@ class TableSample : KafffeComponent() {
     }
 
     val pager = ListModelPager(personsModel, 10)
-    val table = createTable().also { addChild(it) };
-    val pagination = BootstrapPagination(pager).also { addChild(it) };
-    val topPagination = BootstrapPagination(pager).also { addChild(it) };
+    val table = createTable().also { addChild(it) }
+    val pagination = addChild(BootstrapPagination(pager).apply {
+        includePageInfo = true
+        includePageSizeSelector = true
+    })
+    val topPagination = BootstrapPagination(pager).also { addChild(it) }
     val newPersonsButton = BootstrapButton(Model.of("Generate Persons"), { newPersons() }).also { addChild(it) }
 
     fun createTable(): BootstrapTable<Person> {
@@ -58,34 +61,12 @@ class TableSample : KafffeComponent() {
             div {
                 add(topPagination.html)
                 add(table.html)
+                add(pagination.html)
                 bootstrapRow {
-                    bootstrapCol(ColWidth(ResponsiveSize.sm, 6)) {
-                        add(pagination.html)
-                    }
                     bootstrapCol(ColWidth(ResponsiveSize.md, 6)) {
-                        addClass("row")
+                        addClass("row mt-4")
                         bootstrapColAuto() {
                             add(newPersonsButton.html)
-                        }
-                        bootstrapColAuto() {
-
-                            select {
-                                addClass("form-control")
-                                withElement {
-                                    onchange = {
-                                        pager.pageSize = value.toInt()
-                                        true
-                                    }
-                                }
-                                for (pageSize in listOf(5, 10, 20, 40, 80))
-                                    option {
-                                        withElement {
-                                            value = pageSize.toString()
-                                            text(pageSize.toString())
-                                            selected = (pageSize == pager.pageSize)
-                                        }
-                                    }
-                            }
                         }
                     }
                 }

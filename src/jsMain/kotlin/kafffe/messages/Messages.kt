@@ -42,6 +42,9 @@ interface Messages {
 
     val validation_required: String
 
+    val countOutOf: String
+    val pageSize: String
+
 }
 
 object MessagesObject {

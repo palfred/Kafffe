@@ -36,4 +36,8 @@ open class Messages_delegate(val json: Json) : Messages_en() {
     override val timestamp by MapDelegate()
 
     override val validation_required by MapDelegate()
+
+    override val countOutOf  by MapDelegate()
+    override val pageSize by MapDelegate()
+
 }

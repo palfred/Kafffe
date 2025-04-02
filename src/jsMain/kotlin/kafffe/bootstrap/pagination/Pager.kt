@@ -2,11 +2,30 @@ package kafffe.bootstrap.pagination
 
 import kafffe.core.ChangeDelegate
 import kafffe.core.ChangeListener
+import kotlin.math.ceil
+import kotlin.math.max
 
 
-open class Pager(nofPages: Int) {
+abstract class Pager(nofPages: Int, pageSize: Int = 10) {
     val changeListeners = mutableListOf<ChangeListener<Pager>>()
     val nofPagesChangeListeners = mutableListOf<ChangeListener<Pager>>()
+
+    var pageSize: Int = pageSize
+        set(value) {
+            field = value
+            recalcPages()
+        }
+
+    protected fun recalcPages() {
+        nofPages = max(ceil(totalCount().toDouble() / pageSize.toDouble()).toInt(), 1)
+        if (currentPage > nofPages) {
+            last()
+        }
+        updatePageModel()
+    }
+
+    abstract fun totalCount() : Int
+    abstract fun updatePageModel()
 
     /**
      * The current page number. Should be in the range 1 to nofPages (inclusive).

@@ -27,4 +27,7 @@ open class Messages_el : Messages {
     override val timestamp = "Χρόνος"
 
     override val validation_required = "Απαιτείται"
+
+    override val countOutOf = "από"
+    override val pageSize: String = "Μέγεθος σελίδων"
 }

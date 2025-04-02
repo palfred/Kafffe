@@ -27,4 +27,7 @@ open class Messages_de : Messages {
     override val timestamp = "Zeit"
 
     override val validation_required = "Pflichtfeld"
+
+    override val countOutOf = "von"
+    override val pageSize: String = "Seitengröße"
 }

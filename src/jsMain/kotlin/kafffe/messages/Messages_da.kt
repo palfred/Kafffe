@@ -30,4 +30,6 @@ open class Messages_da : Messages {
 
     override val validation_required = "Påkrævet"
 
+    override val countOutOf = "ud af"
+    override val pageSize: String = "Sidestørrelse"
 }
