@@ -6,7 +6,7 @@ import kotlin.math.ceil
 import kotlin.math.max
 
 
-abstract class Pager(nofPages: Int, pageSize: Int = 10) {
+open class Pager(nofPages: Int, pageSize: Int = 10) {
     val changeListeners = mutableListOf<ChangeListener<Pager>>()
     val nofPagesChangeListeners = mutableListOf<ChangeListener<Pager>>()
 
@@ -17,15 +17,16 @@ abstract class Pager(nofPages: Int, pageSize: Int = 10) {
         }
 
     protected fun recalcPages() {
-        nofPages = max(ceil(totalCount().toDouble() / pageSize.toDouble()).toInt(), 1)
+        nofPages = max(ceil(totalCount.toDouble() / pageSize.toDouble()).toInt(), 1)
         if (currentPage > nofPages) {
             last()
         }
         updatePageModel()
     }
 
-    abstract fun totalCount() : Int
-    abstract fun updatePageModel()
+    open var totalCount: Int = 0
+
+    open fun updatePageModel() {}
 
     /**
      * The current page number. Should be in the range 1 to nofPages (inclusive).

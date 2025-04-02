@@ -24,7 +24,7 @@ class ListModelPager<T : Any>(val listModel: Model<List<T>>, pageSize: Int = 10)
         pageModel.data = listModel.data.subList(offset, end)
     }
 
-    override fun totalCount(): Int =
-        listModel.data.size
-
+    override var totalCount: Int
+        get() = listModel.data.size
+        set(value) {}
 }

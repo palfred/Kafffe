@@ -69,11 +69,11 @@ class BootstrapPagination(val pager: Pager) : KafffeComponent() {
                     addClass("me-2")
                     val offset = (pager.currentPage -1) * pager.pageSize
                     val start = (offset + 1).toString()
-                    val end = (min(offset + pager.pageSize, pager.totalCount())).toString()
+                    val end = (min(offset + pager.pageSize, pager.totalCount)).toString()
                     text(pageInfoText
                         .replace("<start>", start)
                         .replace("<end>", end)
-                        .replace("<total>", pager.totalCount().toString())
+                        .replace("<total>", pager.totalCount.toString())
                     )
                 }
             }
