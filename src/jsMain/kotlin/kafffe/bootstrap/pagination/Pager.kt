@@ -11,6 +11,7 @@ open class Pager(nofPages: Int, pageSize: Int = 10) {
     val nofPagesChangeListeners = mutableListOf<ChangeListener<Pager>>()
 
     var pageSize: Int = pageSize
+        get() = field
         set(value) {
             field = value
             recalcPages()
