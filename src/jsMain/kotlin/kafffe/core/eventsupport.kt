@@ -22,10 +22,12 @@ class ChangeDelegate<Source, Value>(var value: Value, val listeners: Iterable<Ch
     }
 
     operator fun setValue(thisRef: Any?, prop: KProperty<*>, newValue: Value) {
-        value = newValue
-        for (listener in listeners) {
-            @Suppress("UNCHECKED_CAST")
-            listener(thisRef as Source)
+        if (newValue != value) {
+            value = newValue
+            for (listener in listeners) {
+                @Suppress("UNCHECKED_CAST")
+                listener(thisRef as Source)
+            }
         }
     }
 }

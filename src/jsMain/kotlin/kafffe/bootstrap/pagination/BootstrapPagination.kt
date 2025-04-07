@@ -7,7 +7,6 @@ import kafffe.core.KafffeHtmlOut
 import kafffe.messages.MessagesObject
 import org.w3c.dom.HTMLUListElement
 import kotlin.math.max
-import kotlin.math.min
 
 class BootstrapPagination(val pager: Pager) : KafffeComponent() {
     init {
@@ -67,9 +66,8 @@ class BootstrapPagination(val pager: Pager) : KafffeComponent() {
             if (includePageInfo) {
                 div {
                     addClass("me-2")
-                    val offset = (pager.currentPage -1) * pager.pageSize
-                    val start = (offset + 1).toString()
-                    val end = (min(offset + pager.pageSize, pager.totalCount)).toString()
+                    val start = (pager.currentOffset + 1).toString()
+                    val end = (pager.currentEnd).toString()
                     text(pageInfoText
                         .replace("<start>", start)
                         .replace("<end>", end)

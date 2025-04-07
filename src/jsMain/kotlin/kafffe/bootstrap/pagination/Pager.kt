@@ -4,6 +4,7 @@ import kafffe.core.ChangeDelegate
 import kafffe.core.ChangeListener
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.min
 
 
 open class Pager(nofPages: Int, pageSize: Int = 10) {
@@ -13,21 +14,28 @@ open class Pager(nofPages: Int, pageSize: Int = 10) {
     var pageSize: Int = pageSize
         get() = field
         set(value) {
-            field = value
-            recalcPages()
+            if (field != value) {
+                field = value
+                recalcNofPages()
+                changeListeners.forEach { listener -> listener(this) }
+            }
         }
 
-    protected fun recalcPages() {
+    protected fun recalcNofPages() {
         nofPages = max(ceil(totalCount.toDouble() / pageSize.toDouble()).toInt(), 1)
         if (currentPage > nofPages) {
             last()
         }
-        updatePageModel()
     }
 
     open var totalCount: Int = 0
-
-    open fun updatePageModel() {}
+        get() = field
+        set(value) {
+            if (field != value) {
+                field = value
+                recalcNofPages()
+            }
+        }
 
     /**
      * The current page number. Should be in the range 1 to nofPages (inclusive).
@@ -37,14 +45,8 @@ open class Pager(nofPages: Int, pageSize: Int = 10) {
 
     var nofPages: Int by ChangeDelegate<Pager, Int>(nofPages, nofPagesChangeListeners)
 
-    fun changeNofPages(value: Int) {
-        if (value > 1 && value == currentPage) {
-            nofPages = value
-            if (value < currentPage) {
-                currentPage = value
-            }
-        }
-    }
+    val currentOffset: Int get() = pageSize * (currentPage - 1)
+    val currentEnd: Int get()= min(currentOffset + pageSize, totalCount)
 
     fun changePage(page: Int) {
         when {
