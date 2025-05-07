@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackOutput
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
@@ -13,11 +12,11 @@ rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 plugins {
     kotlin("multiplatform")
     id("maven-publish")
-    id("com.github.ben-manes.versions") version "0.51.0"
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 group = "dk.rheasoft"
-val workingOnVersion = "1.7"
+val workingOnVersion = "1.8"
 
 // Setup SNAPSHOT version if not on master branch.
 val githubBranch: String? by project
